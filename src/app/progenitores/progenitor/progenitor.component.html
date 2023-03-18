@@ -1,0 +1,295 @@
+<!-- Cabecera -->
+<h1>
+  {{(progenitor.id)? 'Editando ': 'Nuevo Progenitor:'}}  {{ progenitor.apellido}} {{ progenitor.nombre }}
+</h1>
+<!-- divisor -->
+<mat-divider class="pb-2 pt-2"></mat-divider>
+
+<ng-container *ngIf="!precarga;else elseTemplate">
+  <!-- Form -->
+  <div class="containter" id="form">
+
+    <!-- fila 1  Nombre y Apellido-->
+    <div class="row">
+      <!-- nombre -->
+      <div class="col-md-3">
+
+        <mat-form-field>
+          <mat-label>Apellido</mat-label>
+          <input
+            type="text"
+            id="apellido"
+            [(ngModel)]="progenitor.apellido"
+            matInput
+            required
+          >
+        </mat-form-field>
+
+      </div>
+
+      <div class="col-md-3">
+
+        <mat-form-field>
+          <mat-label>Segundo Apellido</mat-label>
+          <input
+            type="text"
+            id="segundo_apellido"
+            [(ngModel)]="progenitor.segundo_apellido"
+            matInput
+            required
+          >
+        </mat-form-field>
+
+      </div>
+
+      <div class="col-md-3">
+
+        <mat-form-field>
+          <mat-label>Nombre</mat-label>
+          <input
+            type="text"
+            id="nombre"
+            [(ngModel)]="progenitor.nombre"
+            matInput
+            required
+          >
+        </mat-form-field>
+
+      </div>
+
+      <div class="col-md-3">
+
+        <mat-form-field>
+          <mat-label>Otros Nombres</mat-label>
+          <input
+            type="text"
+            id="otros_nombres"
+            [(ngModel)]="progenitor.otros_nombres"
+            matInput
+            required
+          >
+        </mat-form-field>
+
+      </div>
+
+    </div>
+    <!-- fila 2  Nacionalidad TipoDocumento EmisorDocumento NumeroDoc-->
+    <div class="row">
+
+      <!-- tipo_documento -->
+      <div class="col-md-3">
+
+        <mat-form-field >
+          <mat-label>Tipo de Documento</mat-label>
+          <mat-select [(ngModel)]="progenitor.type_document_id">
+            <mat-option *ngFor="let tipoDocumento of tipoDocumentos"
+              [value]="tipoDocumento.id"
+            >
+            {{ tipoDocumento.descripcion}}
+            </mat-option>
+          </mat-select>
+
+        </mat-form-field>
+
+      </div>
+
+      <!-- numero documento -->
+      <div class="col-md-3">
+
+        <mat-form-field >
+          <mat-label>Numero de Documento</mat-label>
+          <input
+            type="text"
+            id="numero_de_documento"
+            [(ngModel)]="progenitor.numero_de_documento"
+            matInput
+            required
+          >
+        </mat-form-field>
+
+      </div>
+
+    </div>
+
+    <!-- boton enviar -->
+    <div class="row mt-5 ">
+      <div class="col-md-4">
+        <button
+          class="float-start"
+          mat-raised-button
+          color="secondary"
+          (click)="cancelar()">Cancelar</button>
+
+      </div>
+
+      <div class="col-md-4">
+        <button
+          class="float-end"
+          mat-raised-button
+          color="primary"
+          (click)="guardar()">Guardar</button>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- cierra el div form -->
+</ng-container>
+
+<ng-template #elseTemplate>
+
+   <!-- Form -->
+   <div class="containter" id="form">
+
+    <!-- fila 1 Apellido y Segundo Apellido-->
+    <div class="row">
+
+      <!-- apellido -->
+      <div class="col-md-6">
+
+        <mat-form-field appearance="fill" class="w-100">
+
+          <mat-label>Apellido</mat-label>
+
+          <input
+            type="text"
+            id="apellido"
+            [(ngModel)]="progenitor.apellido"
+            matInput
+            required
+          >
+
+        </mat-form-field>
+
+      </div>
+
+      <!-- Segundo apellido -->
+      <div class="col-md-6">
+
+        <mat-form-field appearance="fill" class="w-100">
+
+          <mat-label>Segundo Apellido</mat-label>
+
+          <input
+            type="text"
+            id="segundo_apellido"
+            [(ngModel)]="progenitor.segundo_apellido"
+            matInput
+          >
+
+        </mat-form-field>
+
+      </div>
+
+    </div>
+
+    <!-- fila 2 Nombre y Otros Nombres-->
+    <div class="row">
+
+      <!-- Nombre -->
+      <div class="col-md-6">
+
+        <mat-form-field appearance="fill" class="w-100">
+
+          <mat-label>Nombre</mat-label>
+
+          <input
+            type="text"
+            id="nombre"
+            [(ngModel)]="progenitor.nombre"
+            matInput
+            required
+          >
+
+        </mat-form-field>
+
+      </div>
+
+      <!-- Otros Nombre -->
+      <div class="col-md-6">
+
+        <mat-form-field appearance="fill" class="w-100">
+
+          <mat-label>Otros Nombres</mat-label>
+
+          <input
+            type="text"
+            id="otros_nombres"
+            [(ngModel)]="progenitor.otros_nombres"
+            matInput
+          >
+
+        </mat-form-field>
+
+      </div>
+
+    </div>
+
+    <!-- fila 3  TipoDocumento EmisorDocumento NumeroDoc-->
+    <div class="row">
+
+      <!-- tipo_documento -->
+      <div class="col-md-6">
+
+        <mat-form-field appearance="fill" class="w-100">
+
+          <mat-label>Tipo de Documento</mat-label>
+
+          <mat-select [(ngModel)]="progenitor.type_document_id">
+
+            <mat-option *ngFor="let tipoDocumento of tipoDocumentos"
+              [value]="tipoDocumento.id"
+            >
+
+            {{ tipoDocumento.descripcion}}
+
+            </mat-option>
+
+          </mat-select>
+
+        </mat-form-field>
+
+      </div>
+
+      <!-- numero documento -->
+      <div class="col-md-6">
+
+        <mat-form-field appearance="fill" class="w-100">
+
+          <mat-label>Numero de Documento</mat-label>
+
+          <input
+            type="text"
+            id="numero_de_documento"
+            [(ngModel)]="progenitor.numero_de_documento"
+            matInput
+            required
+          >
+
+        </mat-form-field>
+
+      </div>
+
+    </div>
+
+    <!-- fila 9 botones -->
+    <div class="row">
+
+      <div class="col-md-8"></div>
+
+      <!-- botones -->
+      <div class="col-md-4">
+
+        <button class="float-end w-100" mat-raised-button color="primary" (click)="guardar()">
+          Guardar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+  <!-- cierra el div form -->
+
+</ng-template>
+

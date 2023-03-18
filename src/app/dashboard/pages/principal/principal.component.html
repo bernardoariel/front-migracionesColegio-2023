@@ -1,0 +1,145 @@
+<mat-sidenav-container fullscreen>
+
+  <!-- menu que se despliega -->
+  <mat-sidenav #sidenav mode="push">
+
+    <mat-toolbar>
+
+      <span>Menu</span>
+      <span class="spacer"></span>
+
+      <button mat-icon-button (click)="sidenav.toggle()" >
+        <mat-icon>menu</mat-icon>
+      </button>
+
+    </mat-toolbar>
+
+    <mat-nav-list>
+
+      <a routerLink='/escribanos/listado'
+         (click)="sidenav.toggle()"
+         *ngIf="usuario<= maximoNumberUser"
+         mat-list-item>
+        <mat-icon>groups_2</mat-icon>
+
+        <span class="spacer"></span>
+        <span> Escribanos  </span>
+
+      </a>
+
+      <a routerLink='/menores/listado'
+         (click)="sidenav.toggle()"
+         mat-list-item>
+        <mat-icon>child_care</mat-icon>
+
+        <span class="spacer"></span>
+        <span> Menores</span>
+
+      </a>
+      <a routerLink='/autorizantes/listado'
+         (click)="sidenav.toggle()"
+         mat-list-item>
+        <mat-icon>admin_panel_settings</mat-icon>
+
+        <span class="spacer"></span>
+        <span> Autorizantes</span>
+
+      </a>
+
+      <a routerLink='/progenitores/listado'
+         (click)="sidenav.toggle()"
+         mat-list-item>
+        <mat-icon>family_restroom</mat-icon>
+
+        <span class="spacer"></span>
+        <span> Progenitores</span>
+
+      </a>
+      <a routerLink='/acompaneantes/listado'
+         (click)="sidenav.toggle()"
+         mat-list-item>
+        <mat-icon>escalator_warning</mat-icon>
+
+        <span class="spacer"></span>
+        <span> Acompañantes</span>
+
+      </a>
+      <a routerLink='/ordenes/listado'
+         (click)="sidenav.toggle()"
+         mat-list-item>
+        <mat-icon>summarize</mat-icon>
+
+        <span class="spacer"></span>
+        <span> Ordenes</span>
+
+      </a>
+      <a *ngIf="usuario!= 1" routerLink='/precargas/nueva'
+         (click)="sidenav.toggle()"
+         mat-list-item>
+        <mat-icon>post_add</mat-icon>
+
+        <span class="spacer"></span>
+        <span> Nueva Orden</span>
+
+      </a>
+
+
+
+
+    </mat-nav-list>
+
+  </mat-sidenav>
+
+  <!-- el menu que se -->
+  <mat-toolbar >
+
+    <!-- boton menu LEFT-->
+    <button mat-icon-button (click)="sidenav.toggle()" >
+      <mat-icon>menu</mat-icon>
+    </button>
+    <!-- spaceador -->
+    <span class="spacer"></span>
+    <!-- boton menu RIGTH-->
+    <h3>{{ nombreUsuario | titlecase}}</h3>
+    <button mat-icon-button title="Notificaciones" >
+      <mat-icon>notifications</mat-icon>
+    </button>
+    <button mat-icon-button title="Videos explicativos" (click)="irVideos()">
+      <mat-icon>movie</mat-icon>
+    </button>
+    <!-- boton de setting -->
+    <button mat-icon-button [matMenuTriggerFor]="menu" title="Ingresá a la configuracion">
+      <mat-icon>settings</mat-icon>
+    </button>
+
+    <mat-menu #menu="matMenu">
+
+      <button mat-menu-item title="Editar mi Perfil">
+        <mat-icon>admin_panel_settings</mat-icon>
+        <span>Editar Perfil</span>
+      </button>
+
+      <button mat-menu-item title="Cambia los colores de preferencia de tu sistema">
+        <mat-icon>format_paint</mat-icon>
+        <span>Editar Preferencias</span>
+      </button>
+
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item title="Salir del sistema" (click)="salir()">
+        <mat-icon>logout</mat-icon>
+        <span>Salir</span>
+      </button>
+
+    </mat-menu>
+
+  </mat-toolbar>
+
+  <!-- router-outlet lo que se muestra -->
+  <div class="container">
+
+    <router-outlet></router-outlet>
+
+  </div>
+
+</mat-sidenav-container>

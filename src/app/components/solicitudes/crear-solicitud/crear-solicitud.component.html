@@ -1,0 +1,50 @@
+<div class="row mt-4">
+
+  <div class="col-md-10"><h1>Creacion de una Nueva Solicitud</h1></div>
+  <div class="col float-end"><button mat-button color="warn" mat-raised-button>Cancelar</button></div>
+
+</div>
+<hr class="pt-0">
+<mat-stepper orientation="vertical">
+
+    <mat-step>
+      <ng-template matStepLabel>Agregar un Menor</ng-template>
+      <ng-template matStepContent>
+        <app-menores-listado (onSeleccionarMenor)="agregarNuevoMenor($event)"></app-menores-listado>
+        <button mat-button matStepperNext>Siguiente Paso</button>
+      </ng-template>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Autorizante 1</ng-template>
+      <ng-template matStepContent>
+        <app-autorizantes-listado (onSeleccionarAutorizante)="agregarAutorizante1($event)"></app-autorizantes-listado>
+        <button mat-button matStepperNext>Siguiente Paso</button>
+      </ng-template>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Autorizante 2</ng-template>
+      <ng-template matStepContent>
+        <app-autorizantes-listado (onSeleccionarAutorizante)="agregarAutorizante2($event)"></app-autorizantes-listado>
+        <button mat-button matStepperNext>Siguiente Paso</button>
+      </ng-template>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Otro Progenitor</ng-template>
+      <ng-template matStepContent>
+       <app-progenitor-listado (onSeleccionarProgenitor)="agregarProgenitor($event)"></app-progenitor-listado>
+      </ng-template>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Finalizar</ng-template>
+      <app-form-orden (onCargarSolicitud)="actualizarSolicitud($event)"></app-form-orden>
+      <br><br><hr>
+      <button mat-button (click)="crearOrden()">Crear Solicitud</button>
+    </mat-step>
+  </mat-stepper>
+
+  <pre>aaa{{ miOrdenPersonas | json }}</pre>
+  <pre>aaa{{ miOrdenDatos | json }}</pre>

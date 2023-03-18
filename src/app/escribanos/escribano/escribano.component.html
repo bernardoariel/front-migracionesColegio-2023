@@ -1,0 +1,131 @@
+<!-- Cabecera -->
+<h1>
+  {{(escribano.id)? 'Editando ': 'Nuevo Escribano:'}}  {{ escribano.apellido | titlecase }} {{ escribano.nombre | titlecase }}
+</h1>
+<!-- divisor -->
+<mat-divider class="pb-2 pt-2"></mat-divider>
+
+<!-- Form -->
+<div class="containter" id="form">
+
+  <!-- fila 1  Nombre y Apellido-->
+  <div class="row">
+    <!-- nombre -->
+    <div class="col-md-4">
+
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input
+          type="text"
+          id="name"
+          [(ngModel)]="escribano.nombre"
+          matInput
+          required
+      >
+      </mat-form-field>
+    </div>
+    <!-- apellido -->
+    <div class="col-md-4">
+      <mat-form-field >
+        <mat-label>Apellido</mat-label>
+        <input
+          id="apellido"
+          type="text"
+          matInput
+          [(ngModel)]="escribano.apellido"
+          required
+        >
+      </mat-form-field>
+
+    </div>
+
+  </div>
+  <!-- fila 2  email y matricula-->
+  <div class="row">
+    <!-- email -->
+    <div class="col-md-4">
+
+      <mat-form-field >
+        <mat-label>Email</mat-label>
+        <input
+          type="text"
+          id="email"
+          [(ngModel)]="escribano.email"
+          matInput
+          required
+      >
+      </mat-form-field>
+    </div>
+    <!-- matricula -->
+    <div class="col-md-4">
+      <mat-form-field >
+        <mat-label>Matricula</mat-label>
+        <input
+          type="text"
+          id="matricula"
+          [(ngModel)]="escribano.matricula"
+          matInput
+          required
+        >
+      </mat-form-field>
+
+    </div>
+
+  </div>
+
+  <!-- fila 3 -->
+  <div class="row">
+    <div class="col-md-8">
+
+            <mat-form-field>
+              <mat-label>Estado del Escribano</mat-label>
+              <mat-select [(ngModel)]="escribano.habilitado">
+                <mat-option *ngFor="let estado of estados"
+                  [value]="estado.id"
+
+                >
+                {{ estado.desc}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+    </div>
+  </div>
+
+  <!-- boton enviar -->
+  <div class="row mt-5 ">
+    <div class="col-md-4">
+      <button
+        class="float-start"
+        mat-raised-button
+        color="secondary"
+        [routerLink]="['/escribanos']" >
+        Cancelar
+      </button>
+
+        <div *ngIf="escribano.id;">
+          <button
+            mat-raised-button
+            color="warn"
+            (click)="eliminarEscribano(escribano.id)">Eliminar</button>
+        </div>
+
+
+    </div>
+
+
+    <div class="col-md-4">
+      <button
+        class="float-end"
+        mat-raised-button
+        color="primary"
+        (click)="guardar()">Guardar</button>
+    </div>
+
+  </div>
+
+</div><!-- cierra el div form -->
+
+
+<pre>
+  <!-- {{ nombre.invalid  }} -->
+</pre>

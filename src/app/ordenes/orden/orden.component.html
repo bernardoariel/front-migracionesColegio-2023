@@ -1,0 +1,265 @@
+
+
+<div class="containter mt-5" id="form">
+
+  <!-- fila 1  FECHA DE INSTRUMENTO actuacionNotarial-->
+  <div class="row">
+
+    <!-- fecha Instrumento -->
+    <div class="col-md-4">
+
+      <mat-form-field class="w-100" appearance="fill">
+
+          <mat-label>Fecha...Instrumento</mat-label>
+
+          <input matInput [matDatepicker]="dp3" [(ngModel)]="orden.fecha_del_instrumento" required readonly>
+          <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+          <mat-datepicker #dp3></mat-datepicker>
+
+      </mat-form-field>
+
+    </div>
+
+    <!-- actuacionNotarial -->
+    <div class="col-md-6">
+
+      <mat-form-field class="w-100" appearance="fill">
+
+        <mat-label>Nro.Actuacion Notarial Cert.Firma</mat-label>
+
+        <input
+          type="number"
+          id="numero_actuacion_notarial_cert_firma"
+          [(ngModel)]="orden.numero_actuacion_notarial_cert_firma"
+          matInput
+          required
+          maxlength="50"
+          pattern="[0-9]*"
+          [ngStyle]="{'appearance': 'none'}"
+        >
+        <small *ngIf="orden.numero_actuacion_notarial_cert_firma.length === 51" class="text-danger">
+          Se ha alcanzado el máximo de caracteres permitidos (50)
+        </small>
+      </mat-form-field>
+
+    </div>
+
+    <!-- instrumento -->
+    <div class="col-md-2">
+
+      <mat-form-field class="w-100" appearance="fill">
+
+        <mat-label>Instrumento</mat-label>
+
+        <mat-select [(ngModel)]="orden.instrumento">
+
+          <mat-option  value="d"> DIGITAL </mat-option>
+          <mat-option  value="p"> PAPEL </mat-option>
+
+        </mat-select>
+
+        <!-- <input
+          type="text"
+          id="instrumento"
+          [(ngModel)]="orden.instrumento"
+          matInput
+          required
+          maxlength="1"
+        > -->
+        <small *ngIf="orden.instrumento.length === 2" class="text-danger">
+          Se ha alcanzado el máximo de caracteres permitidos (1)
+        </small>
+      </mat-form-field>
+
+    </div>
+
+  </div>
+
+  <!-- fila 2 paises y fojas -->
+  <div class="row">
+
+    <!-- Cualquier Pais -->
+    <div class="col-md-6">
+
+      <mat-form-field class="w-100" appearance="fill">
+
+          <mat-label>Cualquier Pais?</mat-label>
+
+          <mat-select [(ngModel)]="orden.cualquier_pais"
+          >
+
+            <mat-option  value="y"> SI </mat-option>
+            <mat-option  value="n"> NO </mat-option>
+
+          </mat-select>
+
+      </mat-form-field>
+
+    </div>
+
+    <!-- Paises Descripcion -->
+    <div class="col-md-6">
+
+      <mat-form-field class="w-100" appearance="fill">
+
+        <mat-label>Paises Descripcion</mat-label>
+
+        <textarea matInput
+          cols="50" rows="1" placeholder=""
+          [(ngModel)]="orden.paises_desc"
+          [ngModelOptions]="{updateOn: 'blur'}"
+          [disabled]="orden.cualquier_pais=='y'"
+          maxlength="200">
+        </textarea>
+
+      <!--   <small *ngIf="orden.paises_desc.length === 201" class="text-danger">
+          Se ha alcanzado el máximo de caracteres permitidos (200)
+        </small> -->
+      </mat-form-field>
+
+    </div>
+
+  </div>
+
+  <!-- fila 3 tipo de foja -->
+  <div class="row">
+
+    <!-- vigencia hasta mayoria de edad -->
+    <div class="col-md-4">
+
+      <mat-form-field class="w-100" appearance="fill">
+
+        <mat-label>Vigencia Hasta Mayoria de edad.</mat-label>
+
+        <mat-select [(ngModel)]="orden.vigencia_hasta_mayoria_edad" (valueChange)="onMayoriaEdad()">
+
+          <mat-option  value="y"> SI </mat-option>
+          <mat-option  value="n"> NO </mat-option>
+
+        </mat-select>
+
+      </mat-form-field>
+
+    </div>
+
+    <!-- fecha_vigencia_desde -->
+    <div class="col-md-4">
+
+      <mat-form-field class="w-100" appearance="fill">
+
+        <mat-label>Fecha...desde</mat-label>
+
+        <input matInput [matDatepicker]="dp" [(ngModel)]="orden.fecha_vigencia_desde" readonly>
+
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp></mat-datepicker>
+
+      </mat-form-field>
+
+    </div>
+
+     <!-- vigencia hasta -->
+     <div class="col-md-4">
+
+      <mat-form-field class="w-100" appearance="fill">
+
+          <mat-label>Fecha...Hasta</mat-label>
+
+          <input matInput [matDatepicker]="dp2" [(ngModel)]="orden.fecha_vigencia_hasta"
+                 [ngModelOptions]="{updateOn: 'blur'}"
+                 [disabled]="orden.vigencia_hasta_mayoria_edad=='y'"
+                  readonly>
+
+          <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+          <mat-datepicker #dp2></mat-datepicker>
+
+        </mat-form-field>
+
+    </div>
+
+  </div>
+
+
+  <div class="row">
+
+    <div class="col-6"></div>
+
+
+    <div class="col-md-6 mt-2">
+      <button
+        class="float-end w-100"
+        mat-raised-button
+        color="accent"
+        (click)="guardar()">
+        Validar Precargar
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- serie foja -->
+    <!-- <div class="col-md-6">
+
+      <mat-form-field class="w-100" appearance="fill">
+
+        <mat-label>Serie Foja</mat-label>
+
+        <input
+          type="text"
+          id="serie_foja"
+          [(ngModel)]="orden.serie_foja"
+          matInput
+          required
+          maxlength="25"
+        >
+        <small *ngIf="orden.serie_foja.length === 26" class="text-danger">
+          Se ha alcanzado el máximo de caracteres permitidos (25)
+        </small>
+
+      </mat-form-field>
+
+    </div>
+ -->
+
+ <!-- tipo foja -->
+   <!--  <div class="col-md-6">
+
+      <mat-form-field class="w-100" appearance="fill">
+
+        <mat-label>Tipo Foja</mat-label>
+
+        <input
+          type="text"
+          id="tipo_foja"
+          [(ngModel)]="orden.tipo_foja"
+          matInput
+          required
+        >
+
+      </mat-form-field>
+
+    </div> -->
+<!-- nro de foja -->
+   <!--  <div class="col-md-6">
+
+      <mat-form-field class="w-100" appearance="fill">
+
+        <mat-label>Nro. de Foja</mat-label>
+
+        <input
+          type="text"
+          id="nro_foja"
+          [(ngModel)]="orden.nro_foja"
+          matInput
+          required
+          maxlength="50"
+        >
+        <small *ngIf="orden.nro_foja.length === 51" class="text-danger">
+          Se ha alcanzado el máximo de caracteres permitidos (50)
+        </small>
+      </mat-form-field>
+
+    </div> -->

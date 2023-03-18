@@ -1,0 +1,235 @@
+<!-- titulo y boton cancelar -->
+<div class="row mt-4">
+
+  <div class="col-md-8">
+
+    <h1>{{ titulo }}</h1>
+
+  </div>
+
+  <div class="col float-end">
+
+    <button mat-button color="warn" mat-raised-button (click)="cancelar()">Cancelar</button>
+
+  </div>
+
+</div>
+
+<hr class="pt-0">
+
+<div class="row">
+
+  <div class="col-md-9">
+
+    <mat-stepper orientation="vertical">
+
+      <!-- fila menor -->
+      <mat-step>
+
+        <ng-template matStepLabel (click)="mostrarFormMenor()">Agregar un Menor</ng-template>
+
+        <ng-template matStepContent>
+
+          <button mat-button class="float-end amarillo" (click)="mostrarTemplateMenor()">{{ (!templateMenor)? 'Crear nuevo Menor': 'Cancelar'}}</button>
+
+          <app-listado-menores *ngIf="!templateMenor;else elseTemplateMenor" (onSeleccionarMenor)="agregarNuevoMenor($event)"></app-listado-menores>
+
+          <ng-template #elseTemplateMenor>
+
+            <app-menor (cambiarTemplateMenorEvent)="mostrarTemplateMenor()"></app-menor>
+
+          </ng-template>
+
+          <button mat-button matStepperNext>Siguiente Paso</button>
+
+        </ng-template>
+
+      </mat-step>
+
+      <!-- fila Autorizante 1-->
+      <mat-step>
+
+        <ng-template matStepLabel>Autorizante 1</ng-template>
+
+        <ng-template matStepContent>
+
+          <button mat-button class="float-end amarillo" (click)="mostrarTemplateAutorizante1()">{{ (!templateAutorizante1)? 'Crear nuevo Autorizante': 'Cancelar'}}</button>
+
+          <app-listado-autorizante *ngIf="!templateAutorizante1;else elseTemplateAutorizante1" (onSeleccionarAutorizante)="agregarAutorizante1($event)"></app-listado-autorizante>
+
+          <ng-template #elseTemplateAutorizante1>
+
+            <app-autorizante (cambiarTemplateAutorizante_aEvent)="mostrarTemplateAutorizante1()"></app-autorizante>
+
+          </ng-template>
+
+          <button mat-button matStepperNext>Siguiente Paso</button>
+
+        </ng-template>
+
+      </mat-step>
+
+      <!-- fila Autorizante 2 -->
+      <mat-step>
+
+        <ng-template matStepLabel>Autorizante 2</ng-template>
+
+        <ng-template matStepContent>
+
+          <button mat-button class="float-end amarillo mt-2" (click)="mostrarTemplateAutorizante2()">{{ (!templateAutorizante2)? 'Crear nuevo Autorizante': 'Cancelar'}}</button>
+
+          <app-listado-autorizante *ngIf="!templateAutorizante2;else elseTemplateAutorizante2" (onSeleccionarAutorizante)="agregarAutorizante2($event)"></app-listado-autorizante>
+
+          <ng-template #elseTemplateAutorizante2>
+
+            <app-autorizante (cambiarTemplateAutorizante_bEvent)="mostrarTemplateAutorizante2()"></app-autorizante>
+
+          </ng-template>
+
+          <button mat-button matStepperNext>Siguiente Paso</button>
+
+        </ng-template>
+
+      </mat-step>
+
+      <mat-step>
+
+        <ng-template matStepLabel>El Menor viaja Solo?</ng-template>
+
+       <!-- <mat-slide-toggle (click)="cambiarValorViajaSolo()">SI</mat-slide-toggle> -->
+       <div class="slide-toggle-container">
+        <span class="slide-toggle-label">NO</span>
+        <mat-slide-toggle color="warn" (click)="cambiarValorViajaSolo()">SI</mat-slide-toggle>
+      </div>
+
+
+      </mat-step>
+
+      <!-- fila Progenitores -->
+      <div *ngIf="viajaSolo">
+
+        <mat-step *ngFor="let progenitor of arrayRecorrer; let i = index;">
+
+            <ng-template matStepLabel>{{ i + 1 }} - Progenitor o Acompañante</ng-template>
+
+            <ng-template matStepContent>
+
+              <mat-tab-group dynamicHeight  (selectedTabChange)="tabActive($event)">
+
+                <mat-tab label="Progenitores">
+
+                  <!-- progenitores -->
+                  <button class="float-end amarillo mt-2" mat-button (click)="mostrarTemplateProgenitor()">{{ (!templateProgenitor)? 'Crear nuevo Progenitor': 'Cancelar'}}</button>
+
+                  <app-listado-progenitores *ngIf="!templateProgenitor;else elseTemplateProgenitor" (onSeleccionarProgenitor)="agregarProgenitor($event,i)"></app-listado-progenitores>
+
+                  <ng-template #elseTemplateProgenitor>
+
+                    <app-progenitor (cambiarTemplateProgenitorEvent)="mostrarTemplateProgenitor()"></app-progenitor>
+
+                  </ng-template>
+
+                </mat-tab>
+
+                <mat-tab label="Acompañanates">
+
+                  <!-- acompañantes -->
+                  <button class="float-end amarillo mt-2" mat-button (click)="mostrarTemplateAcompaneante()">{{ (!templateAcompaneante)? 'Crear nuevo Acompañante': 'Cancelar'}}</button>
+
+                  <app-listado-acompaneantes  *ngIf="!templateAcompaneante;else elseTemplateAcompaneante" (onSeleccionarAcompaneante)="agregarAcompaneante($event,i)"></app-listado-acompaneantes>
+
+                  <!-- <app-listado-progenitores *ngIf="!templateProgenitor;else elseTemplateProgenitor" (onSeleccionarProgenitor)="agregarProgenitor($event,i)"></app-listado-progenitores> -->
+                  <ng-template #elseTemplateAcompaneante>
+
+
+                    <app-acompaneante (cambiarTemplateAcompaneanteEvent)="mostrarTemplateAcompaneante()"></app-acompaneante>
+                  </ng-template>
+
+                </mat-tab>
+
+              </mat-tab-group>
+
+            </ng-template>
+
+
+        </mat-step>
+
+      </div>
+
+      <mat-step *ngIf="viajaSolo">
+
+        <ng-template matStepLabel>Elija: Agregar Otro Progenitor o Acompañante || FInalizar</ng-template>
+
+
+        <br><br><hr>
+
+        <button mat-button (click)="crearOtroAcompaneante()">+ Acompañante o Progenitor</button>
+        <button mat-button matStepperNext>Siguiente Paso</button>
+      </mat-step>
+
+    <mat-step>
+
+      <ng-template matStepLabel>Finalizar</ng-template>
+
+      <app-orden (onCargarSolicitud)="actualizarSolicitud($event)" [fechaMayorEdad]="fechaMayorEdad"></app-orden>
+
+      <br><br><hr>
+
+      <div class="col-12">
+
+        <button mat-button class="w-100 naranja" (click)="crearOrden()" [disabled]="btnSolicitud">{{ ( estado=='edit' )? 'Guardar edicion' : 'Crear Nueva solicitud'}}</button>
+        <small class="text-danger mt-0 pt-0 mx-auto" *ngIf="btnSolicitud">Para habilitar el botón deberá completar todos los campos</small>
+
+      </div>
+
+    </mat-step>
+
+    </mat-stepper>
+
+  </div>
+
+  <div class="col-md-3">
+
+    <mat-list>
+
+      <p class="mt-p pt-0 mb-0 mt-0">Menor</p>
+      <mat-divider></mat-divider>
+      <mat-list-item *ngIf="nombreMenor"><small class="text-warning ms-3"> {{ nombreMenor | titlecase}} </small>
+        <button mat-icon-button (click)="eliminarMenor()" color="warn"><mat-icon>delete</mat-icon></button>
+      </mat-list-item>
+
+      <p class="mt-p pt-0 mb-0 mt-0">Autorizante 1:</p>
+      <mat-divider></mat-divider>
+      <mat-list-item *ngIf="nombreAutorizante1"><small class="text-warning ms-3"> {{ nombreAutorizante1 | titlecase}} </small>
+        <button mat-icon-button (click)="eliminarAutorizante(1)" color="warn"><mat-icon>delete</mat-icon></button>
+      </mat-list-item>
+
+      <p class="mt-p pt-0 mb-0 mt-0">Autorizante 2:</p>
+      <mat-divider></mat-divider>
+      <mat-list-item *ngIf="nombreAutorizante2"><small class="text-warning ms-3"> {{ nombreAutorizante2 | titlecase}} </small>
+        <button mat-icon-button (click)="eliminarAutorizante(2)" color="warn"><mat-icon>delete</mat-icon></button>
+      </mat-list-item>
+
+      <p class="mt-p pt-0 mb-0 mt-0">Progenitores:</p>
+      <mat-divider></mat-divider>
+      <mat-list-item *ngFor="let progenitor of miOrdenPersonas.progenitores; let i = index;">
+        <small class="text-warning ms-3"> {{ traerNombreProgenitor(progenitor) | async }}   </small>
+        <button mat-icon-button (click)="eliminarProgenitor(i)" color="warn"><mat-icon>delete</mat-icon></button>
+      </mat-list-item>
+
+      <p class="mt-p pt-0 mb-0 mt-0">Acompañantes:</p>
+      <mat-divider></mat-divider>
+      <mat-list-item *ngFor="let acompanenante of miOrdenPersonas.acompaneantes; let i = index;">
+        <small class="text-warning ms-3"> {{ traerNombreAcompaneante(acompanenante) | async }}   </small>
+        <button mat-icon-button (click)="eliminarAcompanenante(i)" color="warn"><mat-icon>delete</mat-icon></button>
+      </mat-list-item>
+    </mat-list>
+
+
+  </div>
+</div>
+<!--
+<pre class="text-white">{{ miOrdenPersonas | json }}</pre>
+ <pre class="text-white">{{ miOrdenDatos | json }}</pre>
+<pre class="text-white">{{ arrayRecorrer | json }}</pre>-->
+

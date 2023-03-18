@@ -1,0 +1,24 @@
+<h1>Cambiar las Password</h1>
+<button class="btn btn-secondary" (click)="cambiarContrasenas()">Cambiar pass</button>
+
+<hr>
+
+<div *ngFor="let escribano of escribanos">
+  <hr class="mt-2">
+
+  <p>Señores Escribanos, les informamos que ya se encuentra habilitado, el portal de autorizaciones de migraciones.</p>
+  <p>En el mismo se van a realizar precargas de los datos de los menores y sus autorizantes y o acompañantes que luego, serán habilitados
+    por el colegio de escribanos de forma presencial una vez que realizen la carga de los mismos.</p><br><br>
+  <p>Estos son los videos que facilitaran la utilizacion del mismo.</p>
+  <p>http://sd-1671613-h00005.ferozo.net/videos</p>
+  <br>
+  <br>
+  <p>Para poder ingresar al sistema tendrá que ingresar su correo con la correspondiente contraseña que le suminstraremos.</p>
+  <p><b>Correo Habilitado:</b> {{escribano.email}}</p>
+  <p><b>Password:</b> {{escribano.password}}</p>
+  <p>http://sd-1671613-h00005.ferozo.net/</p>
+  <br>
+  <br>
+  <p>Saludos coordiales Ariel Bernardo</p>
+  <p>PD: se irán haciendo mejoras con el transcurso del tiempo</p>
+</div>
