@@ -6,6 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { ProgenitorService } from '../../services/progenitor.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
+import { AutorizantesService } from 'src/app/services/autorizantes.service';
 
 @Component({
   selector: 'app-listado-acompaneantes',
@@ -27,6 +28,7 @@ export class ListadoComponent implements OnInit {
 
   constructor(
     private acompaneantesService:AcompaneantesService,
+    private autorizantesService:AutorizantesService,
     private router: Router,
     private activatedRoute: ActivatedRoute) { }
 
@@ -52,7 +54,8 @@ export class ListadoComponent implements OnInit {
     }
 
     cargarProgenitores(){
-      this.acompaneantesService.getProgenitores().subscribe(
+      this.autorizantesService.getAutorizantes().subscribe(
+
         (progenitor)=>{
           this.progenitores = progenitor
           this.dataSource = new MatTableDataSource<IProgenitor>( this.progenitores );

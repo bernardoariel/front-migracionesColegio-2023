@@ -296,10 +296,6 @@ export class CrearComponent implements OnInit {
 
     }
 
-
-
-
-
     agregarAcompaneante(acompaneante:number,i: number){
 
       this.miOrdenPersonas.acompaneantes.push(acompaneante);
@@ -322,8 +318,12 @@ export class CrearComponent implements OnInit {
     crearOrden(){
 
       console.log(this.miOrdenDatos)
-
-      this.orden = { ...this.miOrdenPersonas , ...this.miOrdenDatos} ;
+      let datosFinales = {
+        "tipo_acompaniante":"2",
+        "descripcion_acompaniante":"Gabriel Gonzales Dni 11272829; Rosita Perez Dni 13561819"
+      }
+      this.orden = { ...this.miOrdenPersonas , ...this.miOrdenDatos , ...datosFinales} ;
+      console.log('this.orden::: ', this.orden);
 
       this.activatedRoute.params.subscribe((params) => {
 

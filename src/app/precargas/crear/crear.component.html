@@ -92,21 +92,19 @@
 
       </mat-step>
 
-      <mat-step>
 
-        <ng-template matStepLabel>El Menor viaja Solo?</ng-template>
+      <!-- <mat-step>
 
-       <!-- <mat-slide-toggle (click)="cambiarValorViajaSolo()">SI</mat-slide-toggle> -->
+       <ng-template matStepLabel>El Menor viaja Solo?</ng-template>
        <div class="slide-toggle-container">
         <span class="slide-toggle-label">NO</span>
         <mat-slide-toggle color="warn" (click)="cambiarValorViajaSolo()">SI</mat-slide-toggle>
-      </div>
+       </div>
 
-
-      </mat-step>
+      </mat-step> -->
 
       <!-- fila Progenitores -->
-      <div *ngIf="viajaSolo">
+      <div>
 
         <mat-step *ngFor="let progenitor of arrayRecorrer; let i = index;">
 
