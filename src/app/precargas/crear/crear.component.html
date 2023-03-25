@@ -21,6 +21,7 @@
 
   <div class="col-md-9">
 
+    <!-- MENOR -->
     <mat-stepper orientation="vertical">
 
       <!-- fila menor -->
@@ -154,15 +155,35 @@
 
       </div>
 
-      <mat-step *ngIf="viajaSolo">
+      <mat-step>
 
-        <ng-template matStepLabel>Elija: Agregar Otro Progenitor o Acompañante || FInalizar</ng-template>
+        <ng-template matStepLabel>Elija: Agregar Otro Progenitor o Acompañante </ng-template>
+
+        <mat-form-field>
+
+          <mat-label>Seleccione los Datos del Viaje</mat-label>
+
+          <mat-select class="w-100" [(ngModel)]="tipoAcompaneanteSeleccionado">
+
+            <mat-option *ngFor="let acompaneante of tipoAcompaneante"
+              [value]="acompaneante.id">
+
+              {{ acompaneante.descripcion}}
+
+            </mat-option>
+
+          </mat-select>
+
+        </mat-form-field>
+
+        <div *ngIf="tipoAcompaneanteSeleccionado !== 1 && tipoAcompaneanteSeleccionado !== undefined">
+          <br><br><hr>
+          <button mat-button (click)="crearOtroAcompaneante()">+ Acompañante o Progenitor</button>
+          <button mat-button matStepperNext>Siguiente Paso</button>
+        </div>
 
 
-        <br><br><hr>
 
-        <button mat-button (click)="crearOtroAcompaneante()">+ Acompañante o Progenitor</button>
-        <button mat-button matStepperNext>Siguiente Paso</button>
       </mat-step>
 
     <mat-step>

@@ -15,6 +15,7 @@ import { OrdenesItemsService } from '../../services/ordenes-items.service';
 import { AcompaneantesService } from '../../services/acompaneantes.service';
 import { shareReplay, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { AcompanianteTipoService } from 'src/app/services/acompaniante-tipo.service';
 
 @Component({
   selector: 'app-crear',
@@ -22,8 +23,10 @@ import { catchError, map, tap } from 'rxjs/operators';
   styleUrls: ['./crear.component.scss']
 })
 export class CrearComponent implements OnInit {
+
   private nombresProgenitores: {[key: number]: string} = {};
   private nombresAcompaneantes: {[key: number]: string} = {};
+
   templateMenor:boolean = false;
   templateAutorizante1:boolean = false;
   templateAutorizante2:boolean = false;
@@ -57,6 +60,7 @@ export class CrearComponent implements OnInit {
     nro_foja:'',
     paises_desc:'',
   }
+
   estado!:string;
   orden!:IOrden
   nombreMenor:string =''
@@ -69,7 +73,8 @@ export class CrearComponent implements OnInit {
   btnSolicitud: boolean = true;
   fechaMayorEdad!: Date | undefined | String;
   selectedIndex: any;
-
+  tipoAcompaneante: any;
+  tipoAcompaneanteSeleccionado: number | undefined;
   tabActive(event: { index: any; }) {
     // obtenemos el index del tab
     console.log(event.index);
@@ -80,6 +85,7 @@ export class CrearComponent implements OnInit {
   cargarArrayARecorrer(){
     this.arrayRecorrer = this.miOrdenPersonas.progenitores.slice().concat(this.miOrdenPersonas.acompaneantes.slice());
   }
+
   constructor(
     private ordenesService:OrdenesService,
     private router:Router,
@@ -88,7 +94,8 @@ export class CrearComponent implements OnInit {
     private progenitorService:ProgenitorService,
     private activatedRoute:ActivatedRoute,
     private ordenesItemsService:OrdenesItemsService,
-    private acompaneantesService: AcompaneantesService
+    private acompaneantesService: AcompaneantesService,
+    private acompanianteTipoService:AcompanianteTipoService
     ) {
 
 
@@ -96,7 +103,13 @@ export class CrearComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("prognitor _>"+this.progenitorSeleccionado)
+    this.acompanianteTipoService.getTipoCompania().subscribe(
+      (respuesta)=>{
+        this.tipoAcompaneante = respuesta
+        console.log('this.tipoAcompaneante::: ', this.tipoAcompaneante);
+      }
 
+    )
     this.activatedRoute.params.subscribe((params) => {
 
       if (params.hasOwnProperty('id')) {
@@ -190,7 +203,6 @@ export class CrearComponent implements OnInit {
   }
 
   agregarNuevoMenor( menor: number){
-
 
     this.miOrdenPersonas.minor_id = menor;
     console.log(this.miOrdenPersonas)
