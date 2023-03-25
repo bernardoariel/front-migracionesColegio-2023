@@ -159,22 +159,22 @@
 
         <ng-template matStepLabel>Elija: Agregar Otro Progenitor o Acompañante </ng-template>
 
-        <mat-form-field>
+        <div style="display: flex; justify-content: space-between;">
 
-          <mat-label>Seleccione los Datos del Viaje</mat-label>
+          <mat-form-field class="select-tipo-viaje">
+            <mat-label>Seleccione los Datos del Viaje</mat-label>
+            <mat-select [(ngModel)]="tipoAcompaneanteSeleccionado">
+              <mat-option *ngFor="let acompaneante of tipoAcompaneante" [value]="acompaneante.id">
+                {{ acompaneante.descripcion}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-          <mat-select class="w-100" [(ngModel)]="tipoAcompaneanteSeleccionado">
+          <div  *ngIf="tipoAcompaneanteSeleccionado == 1">
+            <button mat-button matStepperNext style="width: 100%;">Siguiente Paso</button>
+          </div>
 
-            <mat-option *ngFor="let acompaneante of tipoAcompaneante"
-              [value]="acompaneante.id">
-
-              {{ acompaneante.descripcion}}
-
-            </mat-option>
-
-          </mat-select>
-
-        </mat-form-field>
+        </div>
 
         <div *ngIf="tipoAcompaneanteSeleccionado !== 1 && tipoAcompaneanteSeleccionado !== undefined">
           <br><br><hr>
