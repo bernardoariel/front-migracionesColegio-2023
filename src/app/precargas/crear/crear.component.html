@@ -115,9 +115,9 @@
 
               <mat-tab-group dynamicHeight  (selectedTabChange)="tabActive($event)">
 
-                <mat-tab label="Progenitores">
+                <!-- <mat-tab label="Progenitores">
 
-                  <!-- progenitores -->
+
                   <button class="float-end amarillo mt-2" mat-button (click)="mostrarTemplateProgenitor()">{{ (!templateProgenitor)? 'Crear nuevo Progenitor': 'Cancelar'}}</button>
 
                   <app-listado-progenitores *ngIf="!templateProgenitor;else elseTemplateProgenitor" (onSeleccionarProgenitor)="agregarProgenitor($event,i)"></app-listado-progenitores>
@@ -128,7 +128,7 @@
 
                   </ng-template>
 
-                </mat-tab>
+                </mat-tab> -->
 
                 <mat-tab label="Acompañanates">
 
@@ -139,7 +139,6 @@
 
                   <!-- <app-listado-progenitores *ngIf="!templateProgenitor;else elseTemplateProgenitor" (onSeleccionarProgenitor)="agregarProgenitor($event,i)"></app-listado-progenitores> -->
                   <ng-template #elseTemplateAcompaneante>
-
 
                     <app-acompaneante (cambiarTemplateAcompaneanteEvent)="mostrarTemplateAcompaneante()"></app-acompaneante>
                   </ng-template>
@@ -162,25 +161,33 @@
         <div style="display: flex; justify-content: space-between;">
 
           <mat-form-field class="select-tipo-viaje">
-            <mat-label>Seleccione los Datos del Viaje</mat-label>
-            <mat-select [(ngModel)]="tipoAcompaneanteSeleccionado">
+            <mat-label>¿Como Viaja el Menor?</mat-label>
+            <!-- <mat-select [(ngModel)]="tipoAcompaneanteSeleccionado">
               <mat-option *ngFor="let acompaneante of tipoAcompaneante" [value]="acompaneante.id">
                 {{ acompaneante.descripcion}}
+              </mat-option>
+            </mat-select> -->
+            <mat-select [(ngModel)]="tipoViajeSeleccionado">
+              <mat-option *ngFor="let opcion of opcionesTipoViaje" [value]="opcion.valor">
+                {{ opcion.descripcion | titlecase}}
               </mat-option>
             </mat-select>
           </mat-form-field>
 
-          <div  *ngIf="tipoAcompaneanteSeleccionado == 1">
+          <div  *ngIf="tipoViajeSeleccionado == 1">
             <button mat-button matStepperNext style="width: 100%;">Siguiente Paso</button>
           </div>
 
         </div>
 
-        <div *ngIf="tipoAcompaneanteSeleccionado !== 1 && tipoAcompaneanteSeleccionado !== undefined">
+        <div *ngIf="tipoViajeSeleccionado == 2" style="width: 100%;">
+          <app-acompaneante></app-acompaneante>
+        </div>
+       <!--  <div *ngIf="tipoAcompaneanteSeleccionado !== 1 && tipoAcompaneanteSeleccionado !== undefined">
           <br><br><hr>
           <button mat-button (click)="crearOtroAcompaneante()">+ Acompañante o Progenitor</button>
           <button mat-button matStepperNext>Siguiente Paso</button>
-        </div>
+        </div> -->
 
 
 

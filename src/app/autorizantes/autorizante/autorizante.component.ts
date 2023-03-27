@@ -136,7 +136,7 @@ export class AutorizanteComponent implements OnInit {
     }
 
 
-    console.log("pregarga",this.precarga,this.autorizante.id )
+    // console.log("pregarga",this.precarga,this.autorizante.id )
     if(this.autorizante.id){
 
       this.autorizante.fecha_de_nacimiento = new Date(this.autorizante.fecha_de_nacimiento).toLocaleDateString('fr-CA')
@@ -160,12 +160,12 @@ export class AutorizanteComponent implements OnInit {
 
         })
     }else{
+
       this.autorizante.fecha_de_nacimiento = new Date(this.autorizante.fecha_de_nacimiento).toLocaleDateString('fr-CA')
       this.autorizantesService.agregarAutorizante(this.autorizante)
       .subscribe(resp =>{
         console.log('Respuesta', resp)
-      //  this.mostrarMensaje('Registro Creado')
-        //  this.router.navigate(['/autorizantes/listado'])
+
         if(!this.precarga) {
 
           this.router.navigate(['/autorizantes/listado'])

@@ -1,3 +1,4 @@
+import { MensajeConfirmacionComponent } from './../../components/shared/mensaje-confirmacion/mensaje-confirmacion.component';
 import { AcompaneantesService } from './../../services/acompaneantes.service';
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { IProgenitor } from 'src/app/interfaces/iprogenitor';
@@ -31,6 +32,7 @@ export class AcompaneanteComponent implements OnInit {
     type_document_id:4,
     numero_de_documento:''
   }
+  acompaneantes: IProgenitor[] = []
   constructor(
     private acompaneantesService: AcompaneantesService,
     private tipoDocumentoService:TipoDocumentoService,
@@ -39,7 +41,17 @@ export class AcompaneanteComponent implements OnInit {
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
   ) { }
+  openModal(): void {
+    const dialogRef = this.dialog.open(MensajeConfirmacionComponent, {
+      disableClose: true,
+      width: '400px'
+    });
 
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
   ngOnInit(): void {
     /* reviso si en la ruta existe la palabra nueva */
     this.activatedRoute.url.subscribe(url => {
@@ -88,10 +100,43 @@ export class AcompaneanteComponent implements OnInit {
     })
 
   }
+  addAcompaneante(){
+
+  if (!/^[0-9]+$/.test(this.progenitor.numero_de_documento) || this.progenitor.numero_de_documento.length < 4) {
+    alert('El campo de documento debe contener solamente números y tener al menos 4 dígitos.');
+    return false;
+  }
+
+  if (this.progenitor.nombre.length < 4) {
+    alert('El campo de nombre debe tener al menos 4 caracteres.');
+    return false;
+  }
+
+  if (this.progenitor.apellido.length < 4) {
+    alert('El campo de apellido debe tener al menos 4 caracteres.');
+    return false;
+  }
+  let nuevoAcompaneante: IProgenitor = {
+    apellido:this.progenitor.apellido,
+    segundo_apellido: this.progenitor.segundo_apellido ,
+    nombre:this.progenitor.nombre,
+    otros_nombres: this.progenitor.otros_nombres,
+    type_document_id: this.progenitor.type_document_id,
+    numero_de_documento: this.progenitor.numero_de_documento,
+    tipo_acompaneante:''
+  }
+    this.acompaneantes.push(nuevoAcompaneante)
+    console.log('this.acompaneantes::: ', this.acompaneantes);
+  this.openModal()
+
+    return null
+  }
   guardar(){
+
     if(this.progenitor.nombre.trim().length === 0){
       return;
     }
+
 
     if(this.progenitor.id){
 
@@ -117,6 +162,8 @@ export class AcompaneanteComponent implements OnInit {
       this.acompaneantesService.agregarProgenitor(this.progenitor)
       .subscribe(resp =>{
         console.log('Respuesta', resp)
+        console.log("->***",this.precarga);
+        return null;
       //  this.mostrarMensaje('Registro Creado')
       if(!this.precarga) {
 

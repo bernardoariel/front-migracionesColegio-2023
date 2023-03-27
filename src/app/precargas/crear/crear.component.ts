@@ -73,8 +73,14 @@ export class CrearComponent implements OnInit {
   btnSolicitud: boolean = true;
   fechaMayorEdad!: Date | undefined | String;
   selectedIndex: any;
+  tipoViajeSeleccionado: number | undefined;
   tipoAcompaneante: any;
-  tipoAcompaneanteSeleccionado: number | undefined;
+
+  opcionesTipoViaje = [
+    {valor: 1, descripcion: 'viaja solo'},
+    {valor: 2, descripcion: 'viaja acompañado'},
+  ];
+
   tabActive(event: { index: any; }) {
     // obtenemos el index del tab
     console.log(event.index);
