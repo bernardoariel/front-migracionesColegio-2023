@@ -7,6 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ITipoDocument } from '../../interfaces/ITipo-document';
+import { MensajeConfirmacionServiceService } from 'src/app/services/mensaje-confirmacion-service.service';
+import { FormGroup } from '@angular/forms';
 
 
 @Component({
@@ -40,6 +42,7 @@ export class AcompaneanteComponent implements OnInit {
     private router:Router,
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
+    private mensajeConfirmacionService:MensajeConfirmacionServiceService
   ) { }
   openModal(): void {
     const dialogRef = this.dialog.open(MensajeConfirmacionComponent, {
@@ -47,10 +50,20 @@ export class AcompaneanteComponent implements OnInit {
       width: '400px'
     });
 
-
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      this.progenitor = {
+        apellido:'',
+        segundo_apellido: null,
+        nombre:'',
+        otros_nombres: null,
+        type_document_id:4,
+        numero_de_documento:''
+      }
     });
+  }
+  onClearInputs() {
+    console.log('limpiandoInputs');
+    this.mensajeConfirmacionService.confirmClearInputs();
   }
   ngOnInit(): void {
     /* reviso si en la ruta existe la palabra nueva */
@@ -127,9 +140,28 @@ export class AcompaneanteComponent implements OnInit {
   }
     this.acompaneantes.push(nuevoAcompaneante)
     console.log('this.acompaneantes::: ', this.acompaneantes);
-  this.openModal()
+
+    this.openModal()
 
     return null
+  }
+  openConfirmationDialog() {
+    // aquí abres el diálogo de confirmación
+    this.mensajeConfirmacionService.clearInputs$.subscribe(() => {
+      this.onClearInputs();
+    });
+  }
+
+  limpiandoInputs(){
+    console.log('limpiandoInputs')
+    this.progenitor = {
+      apellido:'',
+      segundo_apellido: null,
+      nombre:'',
+      otros_nombres: null,
+      type_document_id:4,
+      numero_de_documento:''
+    }
   }
   guardar(){
 
@@ -195,4 +227,5 @@ export class AcompaneanteComponent implements OnInit {
     }
 
   }
+
 }
