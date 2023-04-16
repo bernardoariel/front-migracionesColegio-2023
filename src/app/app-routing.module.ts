@@ -36,7 +36,7 @@ const routes: Routes = [
   },
   {
     path: 'menores',
-    loadChildren: ()=> import('./menores/menores.module').then( m => m.MenoresModule),
+    loadChildren: ()=> import('./menor/menor.module').then( m => m.MenorModule),
     canActivate:[AuthGuard]
   },
   {
