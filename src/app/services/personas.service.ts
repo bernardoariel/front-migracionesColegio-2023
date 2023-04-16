@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
+
 export class PersonasService {
   private baseUrl: string = environment.baseUrl;
   private httpHeaders = new HttpHeaders({'Content-Type':'application/json'})
@@ -20,4 +21,11 @@ export class PersonasService {
     // console.log(`${ this.baseUrl }/personas/menores`)
     return this.http.get<IMenor[]>(`${ this.baseUrl }/personas/menoresjoin`);
   }
+
+  getMenorPersonasByNumeroDocumento(dni:number):Observable<any>{
+
+    return this.http.get<number>(`http://127.0.0.1:8000/api/personas/menores/documento/${dni}`);
+
+  }
+
 }

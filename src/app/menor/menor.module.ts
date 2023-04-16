@@ -5,17 +5,21 @@ import { MenorRoutingModule } from './menor-routing.module';
 import { MenorComponent } from './menor/menor.component';
 import { ListaComponent } from './lista/lista.component';
 import { AngularMaterialModule } from '../components/shared/angular-material/angular-material.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ConfirmComponent } from './confirm/confirm.component';
 
 
 @NgModule({
   declarations: [
     MenorComponent,
-    ListaComponent
+    ListaComponent,
+    ConfirmComponent
   ],
   imports: [
     CommonModule,
     MenorRoutingModule,
-    AngularMaterialModule
+    AngularMaterialModule,
+    ReactiveFormsModule
   ]
 })
 export class MenorModule { }

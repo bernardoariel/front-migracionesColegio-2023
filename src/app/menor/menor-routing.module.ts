@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ListaComponent } from './lista/lista.component';
+import { MenorComponent } from './menor/menor.component';
 
 const routes: Routes = [
   {
@@ -11,11 +12,11 @@ const routes: Routes = [
         component: ListaComponent,
         pathMatch:'full'
       },
-      // {
-      //   path:'agregar',
-      //   component: MenorComponent,
-      //   pathMatch:'full'
-      // },
+      {
+        path:'agregar',
+        component: MenorComponent,
+        pathMatch:'full'
+      },
       // {
       //   path:'editar/:id',
       //   component: MenorComponent,
