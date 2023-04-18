@@ -221,7 +221,7 @@ export class CrearComponent implements OnInit {
                             ${(respuesta.segundo_apellido!=null)? respuesta.segundo_apellido: ''}
                             ${respuesta.nombre} ${(respuesta.otros_nombres!=null)? respuesta.otros_nombres : ''}`
                             console.log(respuesta.fecha_de_nacimiento)
-        const fechaNacimiento = new Date(respuesta.fecha_de_nacimiento);
+        const fechaNacimiento = new Date(respuesta.fecha_de_nacimiento as string);
         this.fechaMayorEdad = new Date(fechaNacimiento.getFullYear() + this.mayoriaEdad, fechaNacimiento.getMonth(), fechaNacimiento.getDate());
         this.fechaMayorEdad  = this.fechaMayorEdad.toISOString().substring(0, 10);
 

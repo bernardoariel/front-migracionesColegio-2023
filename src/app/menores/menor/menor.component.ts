@@ -116,7 +116,7 @@ export class MenorComponent implements OnInit {
 
     if(this.menor.id){
 
-      this.menor.fecha_de_nacimiento = new Date(this.menor.fecha_de_nacimiento).toLocaleDateString('fr-CA')
+      this.menor.fecha_de_nacimiento = new Date(this.menor.fecha_de_nacimiento as string).toLocaleDateString('fr-CA')
       //Actualizar
       this.menoresService.actualizarMenor(this.menor)
         .subscribe(menor => {
@@ -135,7 +135,7 @@ export class MenorComponent implements OnInit {
 
     }else{
 
-      this.menor.fecha_de_nacimiento = new Date(this.menor.fecha_de_nacimiento).toLocaleDateString('fr-CA')
+      this.menor.fecha_de_nacimiento = new Date(this.menor.fecha_de_nacimiento as string).toLocaleDateString('fr-CA')
       this.menoresService.agregarMenor(this.menor)
       .subscribe(resp =>{
         console.log('Respuesta', resp)

@@ -1,5 +1,5 @@
 import { PersonasService } from './../../services/personas.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IEmisorDocumentos } from 'src/app/interfaces/IEmisor-documentos';
@@ -12,13 +12,20 @@ import { SexoService } from 'src/app/services/sexo.service';
 import { TipoDocumentoService } from 'src/app/services/tipo-documento.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
 import { IMenor } from 'src/app/interfaces/IMenor';
+import { Subscription } from 'rxjs';
+import { Router, Routes } from '@angular/router';
+
+
+
 
 @Component({
   selector: 'app-menor',
   templateUrl: './menor.component.html',
   styleUrls: ['./menor.component.scss']
 })
-export class MenorComponent implements OnInit {
+export class MenorComponent implements OnInit, OnDestroy {
+
+  private subscriptions = new Subscription();
 
   nacionalidades: INacionalidad[] = [];
   tipoDocumentos: ITipoDocument[] = [];
@@ -92,7 +99,7 @@ export class MenorComponent implements OnInit {
 
   menorForm = new FormGroup({
     apellido: this.apellidoControl,
-    segundoApellido: this.segundoApellidoControl,
+    segundoApellido: this.segundoApellidoControl ,
     nombre: this.nombreControl,
     otrosNombres: this.otrosNombresControl,
     nacionalidad: this.nacionalidadControl,
@@ -109,37 +116,75 @@ export class MenorComponent implements OnInit {
               private sexoService:SexoService,
               private personasService:PersonasService,
               private matDialog:MatDialog,
+              private routes:Router
               ) { }
 
   ngOnInit(): void {
-    this.nacionalidadesService.getNacionalidades().subscribe((nacionalidad)=>{
-      this.nacionalidades = nacionalidad
-      // console.log( this.nacionalidades)
-    })
-    this.tipoDocumentoService.getTipoDocumentos().subscribe((tipoDocumento)=>{
-      this.tipoDocumentos = tipoDocumento
-      // console.log(this.tipoDocumentos)
-    })
-
+    this.subscriptions.add(
+      this.nacionalidadesService.getNacionalidades().subscribe((nacionalidad)=>{
+        this.nacionalidades = nacionalidad
+        // console.log( this.nacionalidades)
+      })
+    )
+    this.subscriptions.add(
+      this.tipoDocumentoService.getTipoDocumentos().subscribe((tipoDocumento)=>{
+        this.tipoDocumentos = tipoDocumento
+        // console.log(this.tipoDocumentos)
+      })
+    )
+    this.subscriptions.add(
     this.emisorDocumentosService.getTipoDocumentos().subscribe((emisorDocumento)=>{
       this.emisorDocumentos = emisorDocumento
       // console.log("->",this.emisorDocumentos)
     })
+    )
 
+    this.subscriptions.add(
     this.sexoService.getSexo().subscribe((sexo)=>{
       this.sexo = sexo
       // console.log(this.sexo)
     })
+    )
 
 
 
 
   }
-
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 
   guardar(){
-    console.log(this.menorForm.value);
+
+    if (!this.menorForm.valid) return
+
+    const menorNuevo: IMenor = {
+      apellido: this.menorForm.value.apellido ?? '',
+      segundo_apellido: this.menorForm.value.segundoApellido,
+      nombre: this.menorForm.value.nombre ?? '',
+      otros_nombres: this.menorForm.value.otrosNombres,
+      nationality_id: this.menorForm.value.nacionalidad,
+      type_document_id: this.menorForm.value.tipoDocumento,
+      issuer_document_id: this.menorForm.value.emisorDocumento,
+      numero_de_documento: this.menorForm.value.numeroDocumento ?? '',
+      fecha_de_nacimiento: this.menorForm.value.fechaNacimiento ?? '',
+      sex_id: this.menorForm.value.sexo ?? '',
+      domicilio: this.menorForm.value.domicilio ?? ''
+    };
+    this.subscriptions.add(
+      this.personasService.agregarPersonaMenor(menorNuevo).subscribe((menor)=>{
+        this.matDialog.open(ConfirmComponent, {
+            data: {
+              titulo: 'Menor registrado',
+              message: 'Menor registrado correctamente'
+            }
+        });
+        this.menorForm.reset();
+        this.routes.navigate(['menores','listado']);
+      })
+    )
   }
+
   cancelar(){
     console.log('cancelar');
   }
@@ -188,17 +233,21 @@ export class MenorComponent implements OnInit {
   }
 
   verificarMayoriaEdad(fechaNacimiento:string){
+
+    if(!fechaNacimiento && typeof(fechaNacimiento)!= 'string') return 0
+
     const fechaNacimientoMenor = new Date(fechaNacimiento);
     const fechaActual = new Date();
 
     return fechaActual.getFullYear() - fechaNacimientoMenor.getFullYear();
+
   }
 
   openDialogConfirm(): void {
 
     if(!this.bsqMenorEncontrado) return
 
-    this.bsqMenorEdad =  this.verificarMayoriaEdad(this.bsqMenorEncontrado.fecha_de_nacimiento)
+      this.bsqMenorEdad =  this.verificarMayoriaEdad(this.bsqMenorEncontrado.fecha_de_nacimiento as string)
 
     const dialogRef: MatDialogRef<ConfirmComponent> = this.matDialog.open(ConfirmComponent, {
       width: '500px',
@@ -208,7 +257,6 @@ export class MenorComponent implements OnInit {
         bsqMenorEdad: this.bsqMenorEdad
       }
     });
-
 
     dialogRef.afterClosed().subscribe(result => {
 
@@ -227,5 +275,8 @@ export class MenorComponent implements OnInit {
 
     });
 
+
+
   }
+
 }
