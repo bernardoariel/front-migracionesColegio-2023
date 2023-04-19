@@ -41,7 +41,7 @@ const routes: Routes = [
   },
   {
     path: 'autorizantes',
-    loadChildren: ()=> import('./autorizantes/autorizantes.module').then( m => m.AutorizantesModule),
+    loadChildren: ()=> import('./autorizante/autorizante.module').then( m => m.AutorizanteModule),
     canActivate:[AuthGuard]
   },
   {
@@ -60,7 +60,7 @@ const routes: Routes = [
     canActivate:[AuthGuard]
   },
   {
-    path: 'acompaneantes',
+    path: 'acompaneante',
     loadChildren: ()=> import('./acompaneantes/acompaneantes.module').then( m => m.AcompaneantesModule),
     canActivate:[AuthGuard]
   },
@@ -70,13 +70,13 @@ const routes: Routes = [
     pathMatch: 'full'
   },
 
-
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+
 export class AppRoutingModule {
 
 }

@@ -1,4 +1,4 @@
-<form [formGroup]="menorForm" autocomplete="off">
+<form [formGroup]="autorizanteForm" autocomplete="off">
   <!-- fila 1  Nombre y Apellido-->
   <div class="row mt-3">
     <!-- nombre -->
@@ -133,10 +133,13 @@
 
       <mat-form-field appearance="fill" class="w-100">
         <mat-label>Fecha de Nacimiento</mat-label>
-        <input matInput [matDatepicker]="dp" [formControl]="fechaNacimientoControl"  (dateInput)="addEvent('input', $event)" (dateChange)="addEvent('change', $event)" readonly>
+        <input matInput
+        [matDatepicker]="dp"
+        [formControl]="fechaNacimientoControl"
+        (blur)="buscarPersonaExistente()"
+         readonly>
         <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-        
-        <mat-datepicker #dp></mat-datepicker>
+        <mat-datepicker #dp ></mat-datepicker>
         <mat-hint>dd/mm/yyyy</mat-hint>
       </mat-form-field>
 
@@ -196,7 +199,7 @@
       <button
         class="float-end"
         mat-flat-button
-        [disabled]="menorForm.invalid"
+        [disabled]="autorizanteForm.invalid"
         color="primary"
         (click)="guardar()">
         Guardar
@@ -213,3 +216,4 @@
 </ng-container>
 
  -->
+

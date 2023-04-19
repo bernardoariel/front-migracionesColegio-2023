@@ -29,6 +29,11 @@ export class PersonasService {
     return this.http.get<number>(`${this.baseUrl}/buscarMenorPorDocumento/${dni}`);
 
   }
+  getExistePersonaByNumeroDocumento(dni:number):Observable<any>{
+
+    return this.http.get<number>(`${this.baseUrl}/buscarMenorPorDocumento/${dni}`);
+
+  }
 
   agregarPersonaMenor( menor: IMenor ): Observable<IMenor>{
     return this.http.post<IMenor>(`${this.baseUrl}/menores/agregarmenor`,menor);

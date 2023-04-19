@@ -1,14 +1,15 @@
 <div style="margin: 10px;">
-  <h1>Lista de Menores</h1>
+
+  <h1>Lista de Autorizante</h1>
   <hr>
   <div class="row">
 
-    <div class="col-md-10">
+    <div class="col">
 
       <mat-form-field appearance="standard" class="w-100">
 
-        <mat-label>Filtro</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Filtro" #input>
+        <mat-label>Buscar</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese el dato a buscar" #input>
 
       </mat-form-field>
 
@@ -16,29 +17,25 @@
 
     <div class="col">
 
-      <button *ngIf="!botonSeleccionar"  mat-button
-              class="mt-3 float-end amarillo"
-              [routerLink]="['/menores/agregar']">
-        Crear Nuevo Menor
-
-      </button>
+      <button *ngIf="!botonSeleccionar"  mat-button color="primary" class="mt-3 float-end amarillo" (click)="crearAutorizante()">Crear Nuevo Autorizante</button>
 
     </div>
 
   </div>
+
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
 
     <!-- Name Column -->
     <ng-container matColumnDef="apellido">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellido/s </th>
-      <td mat-cell *matCellDef="let element;"> {{element.apellido}} {{element.segundo_apellido}}</td>
+      <td mat-cell *matCellDef="let element;"> {{element.apellido}} </td>
     </ng-container>
 
     <!-- Position Column -->
     <ng-container matColumnDef="nombre">
       <th mat-header-cell *matHeaderCellDef> Nombre/s </th>
-      <td mat-cell *matCellDef="let element;"> {{element.nombre}} {{element.otros_nombres}} </td>
+      <td mat-cell *matCellDef="let element;"> {{element.nombre}} </td>
     </ng-container>
 
     <!-- Weight Column -->
@@ -82,12 +79,11 @@
 
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
-
       <td mat-cell *matCellDef="let element;">
-        <button *ngIf="!botonSeleccionar" mat-flat-button (click)="formMenor(element.id)" color="accent"> Editar! </button>
-        <button *ngIf="botonSeleccionar" class="ms-3 float-left" mat-flat-button matStepperNext  (click)="asignarMenor(element.id)"> Seleccionar </button>
-      </td>
 
+        <button mat-flat-button color="accent" (click)="formMenor(element.id)"> Editar! </button>
+
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -98,3 +94,4 @@
   aria-label="Select page of periodic elements">
   </mat-paginator>
 </div>
+

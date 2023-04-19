@@ -1,30 +1,27 @@
-import { PersonasService } from './../../services/personas.service';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { IEmisorDocumentos } from 'src/app/interfaces/IEmisor-documentos';
+import { IMenor } from 'src/app/interfaces/IMenor';
 import { INacionalidad } from 'src/app/interfaces/INacionalidad';
+import { IPersona } from 'src/app/interfaces/IPersona';
 import { ITipoDocument } from 'src/app/interfaces/ITipo-document';
 import { ISexo } from 'src/app/interfaces/isexo';
 import { EmisorDocumentosService } from 'src/app/services/emisor-documentos.service';
 import { NacionalidadesService } from 'src/app/services/nacionalidades.service';
+import { PersonasService } from 'src/app/services/personas.service';
 import { SexoService } from 'src/app/services/sexo.service';
 import { TipoDocumentoService } from 'src/app/services/tipo-documento.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
-import { IMenor } from 'src/app/interfaces/IMenor';
-import { Subscription } from 'rxjs';
-import { Router, Routes } from '@angular/router';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-
-
-
 
 @Component({
-  selector: 'app-menor',
-  templateUrl: './menor.component.html',
-  styleUrls: ['./menor.component.scss']
+  selector: 'app-autorizante',
+  templateUrl: './autorizante.component.html',
+  styleUrls: ['./autorizante.component.scss']
 })
-export class MenorComponent implements OnInit, OnDestroy {
+export class AutorizanteComponent implements OnInit {
 
   private subscriptions = new Subscription();
 
@@ -33,7 +30,7 @@ export class MenorComponent implements OnInit, OnDestroy {
   emisorDocumentos: IEmisorDocumentos[] = [];
   sexo: ISexo[] = [];
 
-  menor: IMenor = {
+  menor: IPersona = {
     apellido:'',
     segundo_apellido: null,
     nombre:'',
@@ -46,8 +43,7 @@ export class MenorComponent implements OnInit, OnDestroy {
     sex_id: null,
     domicilio:'',
   }
-
-  bsqMenorEncontrado?: IMenor
+  bsqMenorEncontrado?: IPersona
   bsqMenorEdad?: number
 
 
@@ -99,7 +95,7 @@ export class MenorComponent implements OnInit, OnDestroy {
     Validators.maxLength(200),
   ]);
 
-  menorForm = new FormGroup({
+  autorizanteForm = new FormGroup({
     apellido: this.apellidoControl,
     segundoApellido: this.segundoApellidoControl ,
     nombre: this.nombreControl,
@@ -112,25 +108,6 @@ export class MenorComponent implements OnInit, OnDestroy {
     sexo: this.sexoControl,
     domicilio: this.domicilioControl
   });
-  events: string[] = [];
-
-  addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
-    // this.events.push(`${type}: ${event.value}`);
-    console.log(event.value)
-    const fechaNacimiento = event.value!;
-    const fechaNacimientoMenor = new Date(fechaNacimiento);
-    const fechaActual = new Date();
-    const edad = fechaActual.getFullYear() - fechaNacimientoMenor.getFullYear();
-
-    if (edad >= 18) {
-      console.log('Mayor de edad');
-    } else {
-      console.log('Menor de edad');
-    }
-
-
-  }
-
   constructor( private nacionalidadesService: NacionalidadesService,
               private tipoDocumentoService:TipoDocumentoService,
               private emisorDocumentosService:EmisorDocumentosService,
@@ -174,31 +151,31 @@ export class MenorComponent implements OnInit, OnDestroy {
 
   guardar(){
 
-    if (!this.menorForm.valid) return
+    if (!this.autorizanteForm.valid) return
 
-    const menorNuevo: IMenor = {
-      apellido: this.menorForm.value.apellido ?? '',
-      segundo_apellido: this.menorForm.value.segundoApellido,
-      nombre: this.menorForm.value.nombre ?? '',
-      otros_nombres: this.menorForm.value.otrosNombres,
-      nationality_id: this.menorForm.value.nacionalidad,
-      type_document_id: this.menorForm.value.tipoDocumento,
-      issuer_document_id: this.menorForm.value.emisorDocumento,
-      numero_de_documento: this.menorForm.value.numeroDocumento ?? '',
-      fecha_de_nacimiento: this.menorForm.value.fechaNacimiento ?? '',
-      sex_id: this.menorForm.value.sexo ?? '',
-      domicilio: this.menorForm.value.domicilio ?? ''
+    const autorizanteNuevo: IPersona = {
+      apellido: this.autorizanteForm.value.apellido ?? '',
+      segundo_apellido: this.autorizanteForm.value.segundoApellido,
+      nombre: this.autorizanteForm.value.nombre ?? '',
+      otros_nombres: this.autorizanteForm.value.otrosNombres,
+      nationality_id: this.autorizanteForm.value.nacionalidad,
+      type_document_id: this.autorizanteForm.value.tipoDocumento,
+      issuer_document_id: this.autorizanteForm.value.emisorDocumento,
+      numero_de_documento: this.autorizanteForm.value.numeroDocumento ?? '',
+      fecha_de_nacimiento: this.autorizanteForm.value.fechaNacimiento ?? '',
+      sex_id: this.autorizanteForm.value.sexo ?? '',
+      domicilio: this.autorizanteForm.value.domicilio ?? ''
     };
     this.subscriptions.add(
-      this.personasService.agregarPersonaMenor(menorNuevo).subscribe((menor)=>{
+      this.personasService.agregarPersonaMenor(autorizanteNuevo).subscribe((autorizante)=>{
         this.matDialog.open(ConfirmComponent, {
             data: {
-              titulo: 'Menor registrado',
-              message: 'Menor registrado correctamente'
+              titulo: 'Autorizante registrado',
+              message: 'Autorizante registrado correctamente'
             }
         });
-        this.menorForm.reset();
-        this.routes.navigate(['menores','listado']);
+        this.autorizanteForm.reset();
+        this.routes.navigate(['autorizantes','listado']);
       })
     )
   }
@@ -223,7 +200,7 @@ export class MenorComponent implements OnInit, OnDestroy {
 
   buscarPersonaExistente(){
     console.log('blur::: ');
-    this.personasService.getExistePersonaByNumeroDocumento(this.menorForm.controls['numeroDocumento'].value as number)
+    this.personasService.getExistePersonaByNumeroDocumento(this.autorizanteForm.controls['numeroDocumento'].value as number)
     .subscribe((persona)=>{
       console.log('Persona::: ', persona);
 
@@ -234,13 +211,13 @@ export class MenorComponent implements OnInit, OnDestroy {
           if(edadMenor < 21){
             console.log('Menor::: ', edadMenor);
 
-            this.menorForm.controls['numeroDocumento'].setErrors({'repetido':true})
+            this.autorizanteForm.controls['numeroDocumento'].setErrors({'repetido':true})
             this.bsqMenorEncontrado = persona
             this.openDialogConfirm()
 
           }else{
 
-            this.menorForm.controls['numeroDocumento'].setErrors({'repetido':true})
+            this.autorizanteForm.controls['numeroDocumento'].setErrors({'repetido':true})
             this.bsqMenorEncontrado = persona
             this.openDialogConfirm()
 
@@ -250,7 +227,7 @@ export class MenorComponent implements OnInit, OnDestroy {
     })
   }
 
-  verificarMayoriaEdad(fechaNacimiento:string | Date){
+  verificarMayoriaEdad(fechaNacimiento:string){
 
     if(!fechaNacimiento && typeof(fechaNacimiento)!= 'string') return 0
 
@@ -260,7 +237,6 @@ export class MenorComponent implements OnInit, OnDestroy {
     return fechaActual.getFullYear() - fechaNacimientoMenor.getFullYear();
 
   }
-
 
   openDialogConfirm(): void {
 
