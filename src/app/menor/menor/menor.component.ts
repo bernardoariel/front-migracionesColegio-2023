@@ -166,7 +166,7 @@ export class MenorComponent implements OnInit, OnDestroy {
         this.idPersona = params['id']
         this.subscriptions.add(
 
-          this.personasService.getPersonaId(params['id']).subscribe((persona) => {
+          this.personasService.getPersonaById(params['id']).subscribe((persona) => {
             this.persona = persona
             this.personaForm.setValue({
               apellido: this.persona.apellido,
@@ -201,7 +201,7 @@ export class MenorComponent implements OnInit, OnDestroy {
 
     if (!this.personaForm.valid) return
 
-    let menorNuevo: IPersona = {
+    let personaNuevo: IPersona = {
       apellido: this.personaForm.value.apellido ?? '',
       segundo_apellido: this.personaForm.value.segundoApellido,
       nombre: this.personaForm.value.nombre ?? '',
@@ -217,7 +217,7 @@ export class MenorComponent implements OnInit, OnDestroy {
     if(!this.idPersona){
 
       this.subscriptions.add(
-        this.personasService.agregarPersonaMenor(menorNuevo).subscribe((menor)=>{
+        this.personasService.agregarPersona(personaNuevo).subscribe((persona)=>{
           this.matDialog.open(ConfirmComponent, {
               data: {
                 titulo: 'Menor registrado',
@@ -230,14 +230,14 @@ export class MenorComponent implements OnInit, OnDestroy {
       )
 
     }else{
-      menorNuevo = {
-        ...menorNuevo,
+      personaNuevo = {
+        ...personaNuevo,
         id: this.idPersona
       };
 
       this.subscriptions.add(
 
-        this.personasService.updatePersona(menorNuevo).subscribe((menor)=>{
+        this.personasService.updatePersona(personaNuevo).subscribe((persona)=>{
           this.matDialog.open(ConfirmComponent, {
               data: {
                 titulo: 'Menor registrado',
@@ -269,12 +269,12 @@ export class MenorComponent implements OnInit, OnDestroy {
 
   buscarPersonaExistente(){
 
-    this.personasService.getExistePersonaByNumeroDocumento(this.personaForm.controls['numeroDocumento'].value as number)
+    this.personasService.getPersonaByDocumento(this.personaForm.controls['numeroDocumento'].value as number)
     .subscribe((persona:IPersona)=>{
-      console.log('persona::: ', persona);
+   /*    console.log('persona::: ', persona);
       console.log('formCOntrol::: ', this.personaForm.controls['numeroDocumento'].value);
       console.log('del persona::: ', this.persona.numero_de_documento);
-      console.log('del input::: ', this.numeroDocumentoControl.value);
+      console.log('del input::: ', this.numeroDocumentoControl.value); */
       if(persona && persona.id){
         if(this.persona.numero_de_documento != this.numeroDocumentoControl.value){
 
@@ -287,15 +287,6 @@ export class MenorComponent implements OnInit, OnDestroy {
     })
   }
 
-/*   verificarMayoriaEdad(fechaNacimiento:string | Date){
 
-    if(!fechaNacimiento && typeof(fechaNacimiento)!= 'string') return 0
-
-    const fechaNacimientoMenor = new Date(fechaNacimiento);
-    const fechaActual = new Date();
-
-    return fechaActual.getFullYear() - fechaNacimientoMenor.getFullYear();
-
-  } */
 
 }

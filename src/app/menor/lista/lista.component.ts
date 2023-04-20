@@ -59,7 +59,7 @@ export class ListaComponent implements OnInit {
    }
 
    cargarMenores(){
-      this.personasService.getMenoresJoin().subscribe(
+      this.personasService.getMenoresJoinPersonas().subscribe(
        (menores)=>{
         console.log('menores::: ', menores);
          this.menores = menores.filter(menor => menor.id !== 1);

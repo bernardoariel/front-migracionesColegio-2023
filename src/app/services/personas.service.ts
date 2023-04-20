@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { IMenor } from '../interfaces/IMenor';
 import { Observable } from 'rxjs';
+import { IPersona } from '../interfaces/IPersona';
 
 
 
@@ -15,38 +16,53 @@ export class PersonasService {
   private httpHeaders = new HttpHeaders({'Content-Type':'application/json'})
   constructor( private http:HttpClient) { }
 
+
+  agregarPersona( persona: IPersona ): Observable<IPersona>{
+    return this.http.post<IPersona>(`${this.baseUrl}/persona/new`,persona);
+  }
+
+  updatePersona(persona:IPersona):Observable<IMenor>{
+    return this.http.put<IPersona>(`${ this.baseUrl }/persona/update/${persona.id}`,persona,{headers: this.httpHeaders})
+  }
+
+  getPersonaByDocumento(dni:number):Observable<any>{
+
+    return this.http.get<number>(`${this.baseUrl}/getPersonaByDocumento/${dni}`);
+
+  }
+
+  getPersonaById(id:number):Observable<IMenor>{
+    console.log(`${ this.baseUrl }/persona/${id}`)
+    return this.http.get<IMenor>(`${ this.baseUrl }/personaById/${id}`)
+  }
+
+ /*  getMenorPersonasByNumeroDocumento(dni:number):Observable<any>{
+
+    return this.http.get<number>(`${this.baseUrl}/buscarMenorPorDocumento/${dni}`);
+
+  } */
+
+  /* tendria que ir en menores */
   getMenores(): Observable<IMenor[]>{
     // console.log(`${ this.baseUrl }/personas/menores`)
     return this.http.get<IMenor[]>(`${ this.baseUrl }/menores`);
   }
-  getMenoresJoin(): Observable<IMenor[]>{
-    // console.log(`${ this.baseUrl }/personas/menores`)
-    return this.http.get<IMenor[]>(`${ this.baseUrl }/menoresjoin`);
+  getMenoresJoinPersonas(): Observable<IMenor[]>{
+
+    return this.http.get<IMenor[]>(`${ this.baseUrl }/menoresJoinPersonas`);
   }
 
-  getPersonaId(id:number):Observable<IMenor>{
-    console.log(`${ this.baseUrl }/persona/${id}`)
-    return this.http.get<IMenor>(`${ this.baseUrl }/persona/${id}`)
+
+
+
+
+
+
+
+
+  /* para compatibilidad */
+  agregarPersonaMenor( persona: IPersona ): Observable<IPersona>{
+    // crear un observable con el operador of
+    return this.http.post<IPersona>(`${this.baseUrl}/persona/new`,persona);
   }
-  getMenorPersonasByNumeroDocumento(dni:number):Observable<any>{
-
-    return this.http.get<number>(`${this.baseUrl}/buscarMenorPorDocumento/${dni}`);
-
-  }
-  getExistePersonaByNumeroDocumento(dni:number):Observable<any>{
-
-    return this.http.get<number>(`${this.baseUrl}/buscarMenorPorDocumento/${dni}`);
-
-  }
-
-  agregarPersonaMenor( menor: IMenor ): Observable<IMenor>{
-    return this.http.post<IMenor>(`${this.baseUrl}/menores/agregarmenor`,menor);
-  }
-
-  updatePersona(menor:IMenor):Observable<IMenor>{
-    console.log('menor::: ', menor);
-    console.log(`${ this.baseUrl }/persona/update/${menor.id}`)
-    return this.http.put<IMenor>(`${ this.baseUrl }/persona/update/${menor.id}`,menor,{headers: this.httpHeaders})
-  }
-
 }

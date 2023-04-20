@@ -22,6 +22,11 @@ import { PipesModule } from '../pipes/pipes.module';
     AngularMaterialModule,
     ReactiveFormsModule,
     PipesModule
+  ],
+  exports: [
+    MenorComponent,
+    ListaComponent,
+    ConfirmComponent
   ]
 })
 export class MenorModule { }

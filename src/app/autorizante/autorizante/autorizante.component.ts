@@ -200,7 +200,7 @@ export class AutorizanteComponent implements OnInit {
 
   buscarPersonaExistente(){
     console.log('blur::: ');
-    this.personasService.getExistePersonaByNumeroDocumento(this.autorizanteForm.controls['numeroDocumento'].value as number)
+    this.personasService.getPersonaByDocumento(this.autorizanteForm.controls['numeroDocumento'].value as number)
     .subscribe((persona)=>{
       console.log('Persona::: ', persona);
 

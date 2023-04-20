@@ -1,3 +1,4 @@
+import { MenorModule } from './menor/menor.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -21,14 +22,6 @@ import { LoginModule } from './login/login.module';
 import { EscribanosModule } from './escribanos/escribanos.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { VideosComponent } from './components/shared/videos/videos.component';
-// import { ControlErrorPipe } from './pipes/control-error.pipe';
-
-
-
-
-
-
-
 
 
 
@@ -36,8 +29,6 @@ import { VideosComponent } from './components/shared/videos/videos.component';
   declarations: [
     AppComponent,
     VideosComponent,
-    // ControlErrorPipe,
-
 
   ],
   imports: [
@@ -45,12 +36,12 @@ import { VideosComponent } from './components/shared/videos/videos.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    // FormsModule,
     ReactiveFormsModule,
     AngularMaterialModule,
     LoginModule,
     EscribanosModule,
-    DashboardModule
+    DashboardModule,
+    MenorModule
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'es-AR'}
