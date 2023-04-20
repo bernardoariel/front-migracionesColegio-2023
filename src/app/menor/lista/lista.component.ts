@@ -1,6 +1,6 @@
 import { PersonasService } from './../../services/personas.service';
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +13,8 @@ import { MenoresService } from 'src/app/services/menores.service';
   styleUrls: ['./lista.component.scss']
 })
 export class ListaComponent implements OnInit {
-
+  titulo:string = 'Listado de Menores';
+  paginatorItems:string = 'Menores por página';
    // esto es para tomar la ruta actual y crear una variable del tipo boolean
    rutaActual: string ='';
    precarga: boolean = false;
@@ -30,7 +31,10 @@ export class ListaComponent implements OnInit {
    constructor(     private menoresService:MenoresService,
      private router: Router,
      private activatedRoute:ActivatedRoute,
-     private personasService: PersonasService) { }
+     private personasService: PersonasService,
+     private matPaginatorIntl: MatPaginatorIntl) {
+      this.matPaginatorIntl.itemsPerPageLabel = this.paginatorItems;
+     }
 
    ngOnInit(): void {
 

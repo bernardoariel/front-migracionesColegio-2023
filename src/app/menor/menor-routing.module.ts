@@ -17,11 +17,11 @@ const routes: Routes = [
         component: MenorComponent,
         pathMatch:'full'
       },
-      // {
-      //   path:'editar/:id',
-      //   component: MenorComponent,
-      //   pathMatch:'full'
-      // },
+      {
+        path:'editar/:id',
+        component: MenorComponent,
+        pathMatch:'full'
+      },
       // {
       //   path: '**',
       //   redirectTo: 'menores/listado'

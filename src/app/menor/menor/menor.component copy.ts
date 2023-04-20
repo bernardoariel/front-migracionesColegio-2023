@@ -11,10 +11,9 @@ import { NacionalidadesService } from 'src/app/services/nacionalidades.service';
 import { SexoService } from 'src/app/services/sexo.service';
 import { TipoDocumentoService } from 'src/app/services/tipo-documento.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
-
+import { IMenor } from 'src/app/interfaces/IMenor';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IPersona } from 'src/app/interfaces/IPersona';
 
 
 
@@ -27,17 +26,17 @@ import { IPersona } from 'src/app/interfaces/IPersona';
 })
 export class MenorComponent implements OnInit, OnDestroy {
 
-  private subscriptions = new Subscription(); /// para hacer el Ondestroy
+  private subscriptions = new Subscription();
 
-  /* para el template */
   titulo = 'Agregando un Menor';
-
-  /* para obtener una sola persona */
   rutaActual: string ='';
   idPersona: number | null = null;
+  nacionalidades: INacionalidad[] = [];
+  tipoDocumentos: ITipoDocument[] = [];
+  emisorDocumentos: IEmisorDocumentos[] = [];
+  sexo: ISexo[] = [];
 
-  /* Persona Por defecto */
-  persona: IPersona = {
+  menor: IMenor = {
     apellido:'',
     segundo_apellido: null,
     nombre:'',
@@ -50,13 +49,6 @@ export class MenorComponent implements OnInit, OnDestroy {
     sex_id: null,
     domicilio:'',
   }
-  /* para los select de los controles */
-  nacionalidades: INacionalidad[] = [];
-  tipoDocumentos: ITipoDocument[] = [];
-  emisorDocumentos: IEmisorDocumentos[] = [];
-  sexo: ISexo[] = [];
-
-  /*  Controles */
 
   apellidoControl = new FormControl('', [
     Validators.required,
@@ -64,34 +56,33 @@ export class MenorComponent implements OnInit, OnDestroy {
     Validators.maxLength(40),
     Validators.pattern(/^[^0-9]+$/),
   ]);
+
   segundoApellidoControl = new FormControl('', [
     Validators.pattern(/^[^0-9]+$/),
   ]);
+
   nombreControl = new FormControl('', [
     Validators.required,
     Validators.minLength(3),
     Validators.maxLength(40),
     Validators.pattern(/^[^0-9]+$/),
   ]);
+
   otrosNombresControl = new FormControl('', [
     Validators.pattern(/^[^0-9]+$/),
   ]);
+
   nacionalidadControl = new FormControl<number>(11, [Validators.required]);
   documentosControl = new FormControl<number>(4, [Validators.required]);
   emisorControl = new FormControl<number>(13, [Validators.required]);
+
   numeroDocumentoControl = new FormControl<number | null>(null, [
     Validators.required,
     Validators.minLength(3),
     Validators.maxLength(40),
   ]);
+
   fechaNacimientoControl = new FormControl('', [this.fechaNacimientoValidator()]);
-  sexoControl = new FormControl<number | null>(null, [Validators.required]);
-  domicilioControl = new FormControl('', [
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(200),
-  ]);
-  /* validador especifico */
   fechaNacimientoValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const fechaSeleccionada = control.value;
@@ -107,8 +98,19 @@ export class MenorComponent implements OnInit, OnDestroy {
     };
   }
 
-  /* persona Form */
-  personaForm = new FormGroup({
+  sexoControl = new FormControl<number | null>(null, [Validators.required]);
+
+  domicilioControl = new FormControl('', [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(200),
+  ]);
+
+  // bsqMenorEncontrado?: IMenor
+  bsqMenorEdad?: number
+
+
+  menorForm = new FormGroup({
     apellido: this.apellidoControl,
     segundoApellido: this.segundoApellidoControl ,
     nombre: this.nombreControl,
@@ -121,6 +123,26 @@ export class MenorComponent implements OnInit, OnDestroy {
     sexo: this.sexoControl,
     domicilio: this.domicilioControl
   });
+
+  events: string[] = [];
+
+  /* addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
+    this.events.push(`${type}: ${event.value}`);
+    console.log(event.value)
+    const fechaNacimiento = event.value!;
+    const fechaNacimientoMenor = new Date(fechaNacimiento);
+    const fechaActual = new Date();
+    const edad = fechaActual.getFullYear() - fechaNacimientoMenor.getFullYear();
+
+    if (edad >= 21) {
+
+      this.openDialogMayorORMenor(edad)
+    } else {
+      console.log('Menor de edad');
+    }
+
+
+  } */
 
   constructor( private nacionalidadesService: NacionalidadesService,
               private tipoDocumentoService:TipoDocumentoService,
@@ -167,19 +189,19 @@ export class MenorComponent implements OnInit, OnDestroy {
         this.subscriptions.add(
 
           this.personasService.getPersonaId(params['id']).subscribe((persona) => {
-            this.persona = persona
-            this.personaForm.setValue({
-              apellido: this.persona.apellido,
-              segundoApellido: this.persona.segundo_apellido ?? '',
-              nombre: this.persona.nombre ?? '',
-              otrosNombres: this.persona.otros_nombres ?? '',
-              nacionalidad: this.persona.nationality_id ?? null,
-              tipoDocumento: this.persona.type_document_id ?? null,
-              emisorDocumento: this.persona.issuer_document_id ?? null,
-              numeroDocumento:  Number(this.persona.numero_de_documento) ?? null,
-              fechaNacimiento: this.persona.fecha_de_nacimiento ?? '',
-              sexo: Number(this.persona.sex_id ?? null),
-              domicilio: this.persona.domicilio ?? '',
+            this.menor = persona
+            this.menorForm.setValue({
+              apellido: this.menor.apellido,
+              segundoApellido: this.menor.segundo_apellido ?? '',
+              nombre: this.menor.nombre ?? '',
+              otrosNombres: this.menor.otros_nombres ?? '',
+              nacionalidad: this.menor.nationality_id ?? null,
+              tipoDocumento: this.menor.type_document_id ?? null,
+              emisorDocumento: this.menor.issuer_document_id ?? null,
+              numeroDocumento:  Number(this.menor.numero_de_documento) ?? null,
+              fechaNacimiento: this.menor.fecha_de_nacimiento ?? '',
+              sexo: Number(this.menor.sex_id ?? null),
+              domicilio: this.menor.domicilio ?? '',
             })
           })
         )
@@ -199,20 +221,20 @@ export class MenorComponent implements OnInit, OnDestroy {
 
   guardar(){
 
-    if (!this.personaForm.valid) return
+    if (!this.menorForm.valid) return
 
-    let menorNuevo: IPersona = {
-      apellido: this.personaForm.value.apellido ?? '',
-      segundo_apellido: this.personaForm.value.segundoApellido,
-      nombre: this.personaForm.value.nombre ?? '',
-      otros_nombres: this.personaForm.value.otrosNombres,
-      nationality_id: this.personaForm.value.nacionalidad,
-      type_document_id: this.personaForm.value.tipoDocumento,
-      issuer_document_id: this.personaForm.value.emisorDocumento,
-      numero_de_documento: this.personaForm.value.numeroDocumento ?? '',
-      fecha_de_nacimiento: this.personaForm.value.fechaNacimiento ?? '',
-      sex_id: this.personaForm.value.sexo ?? '',
-      domicilio: this.personaForm.value.domicilio ?? ''
+    let menorNuevo: IMenor = {
+      apellido: this.menorForm.value.apellido ?? '',
+      segundo_apellido: this.menorForm.value.segundoApellido,
+      nombre: this.menorForm.value.nombre ?? '',
+      otros_nombres: this.menorForm.value.otrosNombres,
+      nationality_id: this.menorForm.value.nacionalidad,
+      type_document_id: this.menorForm.value.tipoDocumento,
+      issuer_document_id: this.menorForm.value.emisorDocumento,
+      numero_de_documento: this.menorForm.value.numeroDocumento ?? '',
+      fecha_de_nacimiento: this.menorForm.value.fechaNacimiento ?? '',
+      sex_id: this.menorForm.value.sexo ?? '',
+      domicilio: this.menorForm.value.domicilio ?? ''
     };
     if(!this.idPersona){
 
@@ -224,7 +246,7 @@ export class MenorComponent implements OnInit, OnDestroy {
                 message: 'Menor registrado correctamente'
               }
           });
-          this.personaForm.reset();
+          this.menorForm.reset();
           this.routes.navigate(['menores','listado']);
         })
       )
@@ -244,7 +266,7 @@ export class MenorComponent implements OnInit, OnDestroy {
                 message: 'Menor registrado correctamente'
               }
           });
-          this.personaForm.reset();
+          this.menorForm.reset();
           this.routes.navigate(['menores','listado']);
         })
       )
@@ -268,26 +290,41 @@ export class MenorComponent implements OnInit, OnDestroy {
   }
 
   buscarPersonaExistente(){
+    console.log('pasoporaca')
+    /* cuando estoy creando */
+    this.personasService.getExistePersonaByNumeroDocumento(this.menorForm.controls['numeroDocumento'].value as number)
+    .subscribe((persona:IMenor)=>{
+      console.log('persona::: ', persona.numero_de_documento);
+      console.log('persona::: ', this.numeroDocumentoControl.value);
+      if(persona.numero_de_documento != this.numeroDocumentoControl.value){
 
-    this.personasService.getExistePersonaByNumeroDocumento(this.personaForm.controls['numeroDocumento'].value as number)
-    .subscribe((persona:IPersona)=>{
-      console.log('persona::: ', persona);
-      console.log('formCOntrol::: ', this.personaForm.controls['numeroDocumento'].value);
-      console.log('del persona::: ', this.persona.numero_de_documento);
-      console.log('del input::: ', this.numeroDocumentoControl.value);
-      if(persona && persona.id){
-        if(this.persona.numero_de_documento != this.numeroDocumentoControl.value){
-
-          this.numeroDocumentoControl.setErrors({'dniRepetido':true})
-        }
+        this.numeroDocumentoControl.setErrors({'dniRepetido':true})
       }
+      /* if(persona && persona.id){
 
+          const edadMenor = this.verificarMayoriaEdad(persona.fecha_de_nacimiento)
 
+          if(edadMenor < 21){
+            console.log('Menor::: ', edadMenor);
+            this.numeroDocumentoControl.setErrors({'dniRepetido':true})
+
+            this.menorForm.controls['fechaNacimientoControl'].setErrors({'repetido':true})
+            this.bsqMenorEncontrado = persona
+            this.openDialogConfirm()
+
+          }else{
+            this.numeroDocumentoControl.setErrors({'dniRepetido':true})
+            this.menorForm.controls['numeroDocumento'].setErrors({'repetido':true})
+            this.bsqMenorEncontrado = persona
+            this.openDialogConfirm()
+
+          }
+      } */
 
     })
   }
 
-/*   verificarMayoriaEdad(fechaNacimiento:string | Date){
+  verificarMayoriaEdad(fechaNacimiento:string | Date){
 
     if(!fechaNacimiento && typeof(fechaNacimiento)!= 'string') return 0
 
@@ -295,6 +332,62 @@ export class MenorComponent implements OnInit, OnDestroy {
     const fechaActual = new Date();
 
     return fechaActual.getFullYear() - fechaNacimientoMenor.getFullYear();
+
+  }
+
+
+ /*  openDialogConfirm(): void {
+
+    if(!this.bsqMenorEncontrado) return
+
+      this.bsqMenorEdad =  this.verificarMayoriaEdad(this.bsqMenorEncontrado.fecha_de_nacimiento as string)
+
+    const dialogRef: MatDialogRef<ConfirmComponent> = this.matDialog.open(ConfirmComponent, {
+      width: '500px',
+      data: {
+        titulo: 'Menor Repetido o Invalido',
+        mensaje: (this.bsqMenorEdad>21)? 'Los datos ingresados no corresponden a un menor' : 'El menor ya se encuentra registrado',
+        bsqMenorEdad: this.bsqMenorEdad
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      if (result) {
+        console.log('result::: ', result);
+
+
+      }
+
+    });
+
+
+
+  } */
+  /* openDialogMayorORMenor(edad:number): void {
+
+
+    const dialogRef: MatDialogRef<ConfirmComponent> = this.matDialog.open(ConfirmComponent, {
+      width: '500px',
+      data: {
+        titulo: 'Menor Repetido o Invalido',
+        mensaje: (edad>21)? 'La fecha ingresada corresponde a un mayor de edad' : 'La fecha ingresada corresponde a un menor de edad',
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      if (result) {
+        console.log('result::: ', result);
+
+
+
+
+      }
+
+    });
+
+
 
   } */
 

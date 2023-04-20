@@ -7,6 +7,7 @@ import { ListaComponent } from './lista/lista.component';
 import { AngularMaterialModule } from '../components/shared/angular-material/angular-material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ConfirmComponent } from './confirm/confirm.component';
+import { PipesModule } from '../pipes/pipes.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { ConfirmComponent } from './confirm/confirm.component';
     CommonModule,
     MenorRoutingModule,
     AngularMaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PipesModule
   ]
 })
 export class MenorModule { }

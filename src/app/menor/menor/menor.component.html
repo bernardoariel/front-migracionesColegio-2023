@@ -1,6 +1,9 @@
-<form [formGroup]="menorForm" autocomplete="off">
+<h1 class="mt-2">{{titulo}}</h1>
+<hr>
+
+<form [formGroup]="personaForm" autocomplete="off">
   <!-- fila 1  Nombre y Apellido-->
-  <div class="row mt-3">
+  <div class="row mt-3 mb-3">
     <!-- nombre -->
     <div class="col-md-3">
 
@@ -12,7 +15,12 @@
           [formControl]="apellidoControl"
           placeholder="Ingrese el Apellido"
         >
+        <mat-error *ngFor="let error of apellidoControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
       </mat-form-field>
+
+
 
     </div>
 
@@ -26,6 +34,9 @@
           matInput
           placeholder="Ingrese el Segundo Apellido"
         >
+        <mat-error *ngFor="let error of segundoApellidoControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
       </mat-form-field>
 
     </div>
@@ -41,6 +52,9 @@
           required
           placeholder="Ingrese el Nombre"
         >
+        <mat-error *ngFor="let error of nombreControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
       </mat-form-field>
 
     </div>
@@ -56,13 +70,16 @@
           matInput
           placeholder="Ingrese Otros Nombres"
         >
+        <mat-error *ngFor="let error of otrosNombresControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
       </mat-form-field>
 
     </div>
 
   </div>
   <!-- fila 2  email y matricula-->
-  <div class="row">
+  <div class="row mt-3 mb-3 ">
     <!-- email -->
     <div class="col-md-3">
 
@@ -75,6 +92,9 @@
           {{ nacionalidad.nombre}}
           </mat-option>
         </mat-select>
+        <mat-error *ngFor="let error of nacionalidadControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
       </mat-form-field>
     </div>
     <!-- tipo_documento -->
@@ -89,7 +109,9 @@
           {{ tipoDocumento.descripcion}}
           </mat-option>
         </mat-select>
-
+        <mat-error *ngFor="let error of documentosControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
       </mat-form-field>
 
     </div>
@@ -105,7 +127,9 @@
           {{ emisorDocumento.descripcion }}
           </mat-option>
         </mat-select>
-
+        <mat-error *ngFor="let error of emisorControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
       </mat-form-field>
 
     </div>
@@ -121,25 +145,41 @@
         (keydown)="validarNumero($event)"
         [formControl]="numeroDocumentoControl"
         >
+        <mat-error *ngFor="let error of numeroDocumentoControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
       </mat-form-field>
 
     </div>
 
   </div>
 
-  <div class="row">
+  <div class="row mt-3 mb-3">
     <!-- email -->
     <div class="col-md-4">
 
-      <mat-form-field appearance="fill" class="w-100">
+      <!-- <mat-form-field appearance="fill" class="w-100">
         <mat-label>Fecha de Nacimiento</mat-label>
         <input matInput [matDatepicker]="dp" [formControl]="fechaNacimientoControl"  (dateInput)="addEvent('input', $event)" (dateChange)="addEvent('change', $event)" readonly>
         <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-        
+
         <mat-datepicker #dp></mat-datepicker>
         <mat-hint>dd/mm/yyyy</mat-hint>
-      </mat-form-field>
+      </mat-form-field> -->
+      <mat-form-field appearance="fill" class="w-100" [ngClass]="{'mat-form-field-invalid': fechaNacimientoControl.invalid}">
+        <mat-label>Fecha de Nacimiento</mat-label>
+        <input matInput [matDatepicker]="dp" [formControl]="fechaNacimientoControl"
+        readonly>
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
 
+        <mat-datepicker #dp></mat-datepicker>
+        <mat-hint>dd/mm/yyyy</mat-hint>
+
+        <mat-error *ngFor="let error of fechaNacimientoControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
+        <mat-error *ngIf="fechaNacimientoControl.hasError('edadMinima')"></mat-error>
+      </mat-form-field>
 
     </div>
     <!-- tipo_documento -->
@@ -156,6 +196,9 @@
           </mat-option>
         </mat-select>
 
+        <mat-error *ngFor="let error of sexoControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
       </mat-form-field>
 
     </div>
@@ -171,7 +214,9 @@
                   [formControl]="domicilioControl"
                   required>
         </textarea>
-
+        <mat-error *ngFor="let error of domicilioControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
       </mat-form-field>
 
     </div>
@@ -185,9 +230,9 @@
     <div class="col">
       <button
         class="float-start"
-        mat-raised-button
+        mat-flat-button
         color="secondary"
-        (click)="cancelar()"
+        [routerLink]="['/menores','listado']"
       >
         Cancelar
       </button>
@@ -196,7 +241,7 @@
       <button
         class="float-end"
         mat-flat-button
-        [disabled]="menorForm.invalid"
+        [disabled]="personaForm.invalid"
         color="primary"
         (click)="guardar()">
         Guardar

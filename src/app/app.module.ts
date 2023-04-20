@@ -13,7 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 
-import { FechaBDPipe } from './pipes/fecha-bd.pipe';
+// import { FechaBDPipe } from './pipes/fecha-bd.pipe';
 
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 
@@ -21,6 +21,7 @@ import { LoginModule } from './login/login.module';
 import { EscribanosModule } from './escribanos/escribanos.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { VideosComponent } from './components/shared/videos/videos.component';
+// import { ControlErrorPipe } from './pipes/control-error.pipe';
 
 
 
@@ -35,6 +36,7 @@ import { VideosComponent } from './components/shared/videos/videos.component';
   declarations: [
     AppComponent,
     VideosComponent,
+    // ControlErrorPipe,
 
 
   ],
