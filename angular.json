@@ -31,7 +31,17 @@
               "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
               "./src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "core-js",
+              "raf",
+              "xlsx",
+              "rgbcolor",
+              "sweetalert2",
+              "qrcode",
+              "@babel/runtime"
+           ]
           },
           "configurations": {
             "production": {

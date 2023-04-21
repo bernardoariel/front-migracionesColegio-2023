@@ -21,7 +21,7 @@ export class PersonasService {
     return this.http.post<IPersona>(`${this.baseUrl}/persona/new`,persona);
   }
 
-  updatePersona(persona:IPersona):Observable<IMenor>{
+  updatePersona(persona:IPersona):Observable<IPersona>{
     return this.http.put<IPersona>(`${ this.baseUrl }/persona/update/${persona.id}`,persona,{headers: this.httpHeaders})
   }
 
@@ -31,9 +31,14 @@ export class PersonasService {
 
   }
 
-  getPersonaById(id:number):Observable<IMenor>{
+  getPersonaById(id:number):Observable<IPersona>{
     console.log(`${ this.baseUrl }/persona/${id}`)
-    return this.http.get<IMenor>(`${ this.baseUrl }/personaById/${id}`)
+    return this.http.get<IPersona>(`${ this.baseUrl }/personaById/${id}`)
+  }
+
+  getPersonasJoin(): Observable<IPersona[]>{
+
+    return this.http.get<IPersona[]>(`${ this.baseUrl }/personasJoin`);
   }
 
  /*  getMenorPersonasByNumeroDocumento(dni:number):Observable<any>{
@@ -47,9 +52,9 @@ export class PersonasService {
     // console.log(`${ this.baseUrl }/personas/menores`)
     return this.http.get<IMenor[]>(`${ this.baseUrl }/menores`);
   }
-  getMenoresJoinPersonas(): Observable<IMenor[]>{
+  getMenoresJoin(): Observable<IMenor[]>{
 
-    return this.http.get<IMenor[]>(`${ this.baseUrl }/menoresJoinPersonas`);
+    return this.http.get<IMenor[]>(`${ this.baseUrl }/menoresJoin`);
   }
 
 

@@ -19,7 +19,8 @@ export class ControlErrorMessagesPipe implements PipeTransform {
       max: '',
       noHomero: 'El valor introducido no puede ser la palabra Homero',
       edadMinima: 'Debe ser un menor de 21 años',
-      dniRepetido: 'El DNI ya existe en la base de datos'
+      dniRepetido: 'El DNI ya existe en la base de datos',
+      mayorEdad:'Debe ser mayor o igual a 21 años'
     }
 
     if (opciones[error.key]) {

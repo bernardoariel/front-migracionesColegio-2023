@@ -1,31 +1,26 @@
-import { PersonasService } from './../../services/personas.service';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { IEmisorDocumentos } from 'src/app/interfaces/IEmisor-documentos';
 import { INacionalidad } from 'src/app/interfaces/INacionalidad';
+import { IPersona } from 'src/app/interfaces/IPersona';
 import { ITipoDocument } from 'src/app/interfaces/ITipo-document';
 import { ISexo } from 'src/app/interfaces/isexo';
 import { EmisorDocumentosService } from 'src/app/services/emisor-documentos.service';
 import { NacionalidadesService } from 'src/app/services/nacionalidades.service';
+import { PersonasService } from 'src/app/services/personas.service';
 import { SexoService } from 'src/app/services/sexo.service';
 import { TipoDocumentoService } from 'src/app/services/tipo-documento.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
 
-import { Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import { IPersona } from 'src/app/interfaces/IPersona';
-
-
-
-
-
 @Component({
-  selector: 'app-menor',
-  templateUrl: './menor.component.html',
-  styleUrls: ['./menor.component.scss']
+  selector: 'app-acompaneante',
+  templateUrl: './acompaneante.component.html',
+  styleUrls: ['./acompaneante.component.scss']
 })
-export class MenorComponent implements OnInit, OnDestroy {
+export class AcompaneanteComponent implements OnInit {
   @ViewChild('apellidoInput') apellidoInput!: ElementRef<HTMLInputElement>;
   private subscriptions = new Subscription(); /// para hacer el Ondestroy
 
@@ -131,7 +126,6 @@ export class MenorComponent implements OnInit, OnDestroy {
               private routes:Router,
               private activatedRoute: ActivatedRoute,
              ) { }
-
   ngAfterViewInit(): void {
 
   setTimeout(() => {
@@ -281,10 +275,7 @@ export class MenorComponent implements OnInit, OnDestroy {
 
     this.personasService.getPersonaByDocumento(this.personaForm.controls['numeroDocumento'].value as number)
     .subscribe((persona:IPersona)=>{
-   /*    console.log('persona::: ', persona);
-      console.log('formCOntrol::: ', this.personaForm.controls['numeroDocumento'].value);
-      console.log('del persona::: ', this.persona.numero_de_documento);
-      console.log('del input::: ', this.numeroDocumentoControl.value); */
+
       if(persona && persona.id){
         if(this.persona.numero_de_documento != this.numeroDocumentoControl.value){
 
@@ -296,7 +287,6 @@ export class MenorComponent implements OnInit, OnDestroy {
 
     })
   }
-
 
 
 }

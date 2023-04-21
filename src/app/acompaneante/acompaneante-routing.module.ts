@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ListaComponent } from './lista/lista.component';
-import { AutorizanteComponent } from './autorizante/autorizante.component';
+import { AcompaneanteComponent } from './acompaneante/acompaneante.component';
+import { AcompaneanteModule } from './acompaneante.module';
 
 const routes: Routes = [{
   path: '',
@@ -13,12 +14,12 @@ const routes: Routes = [{
     },
     {
       path: 'agregar',
-      component: AutorizanteComponent,
+      component: AcompaneanteComponent,
       pathMatch: 'full'
     },
     {
       path:'editar/:id',
-      component: AutorizanteComponent,
+      component: AcompaneanteModule,
       pathMatch:'full'
     },
   ]
@@ -29,4 +30,4 @@ const routes: Routes = [{
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AutorizanteRoutingModule { }
+export class AcompaneanteRoutingModule { }

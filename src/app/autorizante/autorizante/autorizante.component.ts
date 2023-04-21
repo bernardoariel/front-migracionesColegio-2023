@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { IEmisorDocumentos } from 'src/app/interfaces/IEmisor-documentos';
-import { IMenor } from 'src/app/interfaces/IMenor';
 import { INacionalidad } from 'src/app/interfaces/INacionalidad';
 import { IPersona } from 'src/app/interfaces/IPersona';
 import { ITipoDocument } from 'src/app/interfaces/ITipo-document';
@@ -16,21 +15,26 @@ import { SexoService } from 'src/app/services/sexo.service';
 import { TipoDocumentoService } from 'src/app/services/tipo-documento.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
 
+
 @Component({
   selector: 'app-autorizante',
   templateUrl: './autorizante.component.html',
   styleUrls: ['./autorizante.component.scss']
 })
 export class AutorizanteComponent implements OnInit {
+  @ViewChild('apellidoInput') apellidoInput!: ElementRef<HTMLInputElement>;
+  private subscriptions = new Subscription(); /// para hacer el Ondestroy
 
-  private subscriptions = new Subscription();
 
-  nacionalidades: INacionalidad[] = [];
-  tipoDocumentos: ITipoDocument[] = [];
-  emisorDocumentos: IEmisorDocumentos[] = [];
-  sexo: ISexo[] = [];
+  /* para el template */
+  titulo = 'Agregando un Autorizante';
 
-  menor: IPersona = {
+  /* para obtener una sola persona */
+  rutaActual: string ='';
+  idPersona: number | null = null;
+
+  /* Persona Por defecto */
+  persona: IPersona = {
     apellido:'',
     segundo_apellido: null,
     nombre:'',
@@ -43,59 +47,65 @@ export class AutorizanteComponent implements OnInit {
     sex_id: null,
     domicilio:'',
   }
-  bsqMenorEncontrado?: IPersona
-  bsqMenorEdad?: number
+  /* para los select de los controles */
+  nacionalidades: INacionalidad[] = [];
+  tipoDocumentos: ITipoDocument[] = [];
+  emisorDocumentos: IEmisorDocumentos[] = [];
+  sexo: ISexo[] = [];
 
+  /*  Controles */
 
-  apellidoControl = new FormControl('',[
+  apellidoControl = new FormControl('', [
     Validators.required,
     Validators.minLength(3),
     Validators.maxLength(40),
-    Validators.pattern(/^[^0-9]+$/)
+    Validators.pattern(/^[^0-9]+$/),
   ]);
-
-  segundoApellidoControl = new FormControl('',[
-    Validators.pattern(/^[^0-9]+$/)
+  segundoApellidoControl = new FormControl('', [
+    Validators.pattern(/^[^0-9]+$/),
   ]);
-
-  nombreControl = new FormControl('',[
+  nombreControl = new FormControl('', [
     Validators.required,
     Validators.minLength(3),
     Validators.maxLength(40),
-    Validators.pattern(/^[^0-9]+$/)
+    Validators.pattern(/^[^0-9]+$/),
   ]);
-
-  otrosNombresControl = new FormControl('',[
-    Validators.pattern(/^[^0-9]+$/)
+  otrosNombresControl = new FormControl('', [
+    Validators.pattern(/^[^0-9]+$/),
   ]);
-
   nacionalidadControl = new FormControl<number>(11, [Validators.required]);
   documentosControl = new FormControl<number>(4, [Validators.required]);
   emisorControl = new FormControl<number>(13, [Validators.required]);
-
-  // crear formcontro para un numero de documento y validar que sea un numero
-  numeroDocumentoControl = new FormControl<number | null>(null,[
+  numeroDocumentoControl = new FormControl<number | null>(null, [
     Validators.required,
     Validators.minLength(3),
     Validators.maxLength(40),
-
   ]);
-
-  fechaNacimientoControl = new FormControl('',[
-    Validators.required
-  ]);
-
-  sexoControl = new FormControl<number | null>(null,
-    [Validators.required]
-  );
-
-  domicilioControl = new FormControl('',[
+  fechaNacimientoControl = new FormControl('', [this.fechaNacimientoValidator()]);
+  sexoControl = new FormControl<number | null>(null, [Validators.required]);
+  domicilioControl = new FormControl('', [
     Validators.required,
     Validators.minLength(3),
     Validators.maxLength(200),
   ]);
+  /* validador especifico */
+  fechaNacimientoValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const fechaSeleccionada = control.value;
+      const fechaActual = new Date();
+      const edadMinima = 21;
+      const fechaMinima = new Date(fechaActual.getFullYear() - edadMinima, fechaActual.getMonth(), fechaActual.getDate());
 
-  autorizanteForm = new FormGroup({
+      if (fechaSeleccionada > fechaMinima) {
+        return { mayorEdad: true };
+      }
+
+      return null;
+    };
+  }
+
+  /* persona Form */
+  personaForm = new FormGroup({
     apellido: this.apellidoControl,
     segundoApellido: this.segundoApellidoControl ,
     nombre: this.nombreControl,
@@ -108,16 +118,30 @@ export class AutorizanteComponent implements OnInit {
     sexo: this.sexoControl,
     domicilio: this.domicilioControl
   });
+
   constructor( private nacionalidadesService: NacionalidadesService,
               private tipoDocumentoService:TipoDocumentoService,
               private emisorDocumentosService:EmisorDocumentosService,
               private sexoService:SexoService,
               private personasService:PersonasService,
               private matDialog:MatDialog,
-              private routes:Router
-              ) { }
+              private routes:Router,
+              private activatedRoute: ActivatedRoute,
+             ) { }
+
+  ngAfterViewInit(): void {
+
+    setTimeout(() => {
+      if (this.apellidoInput?.nativeElement) {
+        this.apellidoInput.nativeElement.focus();
+        this.apellidoInput.nativeElement.select();
+      }
+    });
+
+  }
 
   ngOnInit(): void {
+
     this.subscriptions.add(
       this.nacionalidadesService.getNacionalidades().subscribe((nacionalidad)=>{
         this.nacionalidades = nacionalidad
@@ -131,147 +155,144 @@ export class AutorizanteComponent implements OnInit {
       })
     )
     this.subscriptions.add(
-    this.emisorDocumentosService.getTipoDocumentos().subscribe((emisorDocumento)=>{
-      this.emisorDocumentos = emisorDocumento
-      // console.log("->",this.emisorDocumentos)
-    })
+      this.emisorDocumentosService.getTipoDocumentos().subscribe((emisorDocumento)=>{
+        this.emisorDocumentos = emisorDocumento
+        // console.log("->",this.emisorDocumentos)
+      })
     )
 
     this.subscriptions.add(
-    this.sexoService.getSexo().subscribe((sexo)=>{
-      this.sexo = sexo
-      // console.log(this.sexo)
-    })
+      this.sexoService.getSexo().subscribe((sexo)=>{
+        this.sexo = sexo
+        // console.log(this.sexo)
+      })
     )
+    this.activatedRoute.params.subscribe((params) => {
+
+      if (params.hasOwnProperty('id')) {
+        // El objeto params tiene un parámetro 'id'
+        this.idPersona = params['id']
+        this.subscriptions.add(
+
+          this.personasService.getPersonaById(params['id']).subscribe((persona) => {
+            this.persona = persona
+            this.personaForm.setValue({
+              apellido: this.persona.apellido,
+              segundoApellido: this.persona.segundo_apellido ?? '',
+              nombre: this.persona.nombre ?? '',
+              otrosNombres: this.persona.otros_nombres ?? '',
+              nacionalidad: this.persona.nationality_id ?? null,
+              tipoDocumento: this.persona.type_document_id ?? null,
+              emisorDocumento: this.persona.issuer_document_id ?? null,
+              numeroDocumento:  Number(this.persona.numero_de_documento) ?? null,
+              fechaNacimiento: this.persona.fecha_de_nacimiento ?? '',
+              sexo: Number(this.persona.sex_id ?? null),
+              domicilio: this.persona.domicilio ?? '',
+            })
+          })
+        )
+
+      } else {
+        // El objeto params no tiene un parámetro 'id'
+        console.log('El parámetro id no está presente');
+      }
+
+    });
 
   }
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+
   }
 
   guardar(){
 
-    if (!this.autorizanteForm.valid) return
+    if (!this.personaForm.valid) return
 
-    const autorizanteNuevo: IPersona = {
-      apellido: this.autorizanteForm.value.apellido ?? '',
-      segundo_apellido: this.autorizanteForm.value.segundoApellido,
-      nombre: this.autorizanteForm.value.nombre ?? '',
-      otros_nombres: this.autorizanteForm.value.otrosNombres,
-      nationality_id: this.autorizanteForm.value.nacionalidad,
-      type_document_id: this.autorizanteForm.value.tipoDocumento,
-      issuer_document_id: this.autorizanteForm.value.emisorDocumento,
-      numero_de_documento: this.autorizanteForm.value.numeroDocumento ?? '',
-      fecha_de_nacimiento: this.autorizanteForm.value.fechaNacimiento ?? '',
-      sex_id: this.autorizanteForm.value.sexo ?? '',
-      domicilio: this.autorizanteForm.value.domicilio ?? ''
+    let personaNuevo: IPersona = {
+      apellido: this.personaForm.value.apellido ?? '',
+      segundo_apellido: this.personaForm.value.segundoApellido,
+      nombre: this.personaForm.value.nombre ?? '',
+      otros_nombres: this.personaForm.value.otrosNombres,
+      nationality_id: this.personaForm.value.nacionalidad,
+      type_document_id: this.personaForm.value.tipoDocumento,
+      issuer_document_id: this.personaForm.value.emisorDocumento,
+      numero_de_documento: this.personaForm.value.numeroDocumento ?? '',
+      fecha_de_nacimiento: this.personaForm.value.fechaNacimiento ?? '',
+      sex_id: this.personaForm.value.sexo ?? '',
+      domicilio: this.personaForm.value.domicilio ?? ''
     };
-    this.subscriptions.add(
-      this.personasService.agregarPersonaMenor(autorizanteNuevo).subscribe((autorizante)=>{
-        this.matDialog.open(ConfirmComponent, {
-            data: {
-              titulo: 'Autorizante registrado',
-              message: 'Autorizante registrado correctamente'
-            }
-        });
-        this.autorizanteForm.reset();
-        this.routes.navigate(['autorizantes','listado']);
-      })
-    )
-  }
+    if(!this.idPersona){
 
-  cancelar(){
-    console.log('cancelar');
-  }
+      this.subscriptions.add(
+        this.personasService.agregarPersona(personaNuevo).subscribe((persona)=>{
+          this.matDialog.open(ConfirmComponent, {
+              data: {
+                titulo: 'Autorizante registrado',
+                message: 'Autorizante registrado correctamente'
+              }
+          });
+          this.personaForm.reset();
+          this.routes.navigate(['autorizantes','listado']);
+        })
+      )
 
-  validarNumero(evento: KeyboardEvent){
+    }else{
+      personaNuevo = {
+        ...personaNuevo,
+        id: this.idPersona
+      };
 
-    const esNumero = /^[0-9]$/.test(evento.key);
-    const esBorrado = evento.key === 'Backspace' || evento.key === 'Delete';
-    const esTab = evento.key === 'Tab';
+      this.subscriptions.add(
 
-    if (!esNumero && !esBorrado && !esTab) {
-
-      evento.preventDefault();
-
+        this.personasService.updatePersona(personaNuevo).subscribe((persona)=>{
+          this.matDialog.open(ConfirmComponent, {
+              data: {
+                titulo: 'Menor registrado',
+                message: 'Menor registrado correctamente'
+              }
+          });
+          this.personaForm.reset();
+          this.routes.navigate(['autorizantes','listado']);
+        })
+      )
     }
 
   }
 
+  validarNumero(evento: KeyboardEvent) {
+    const esNumero = /^[0-9]$/.test(evento.key);
+    const esBorrado = evento.key === 'Backspace' || evento.key === 'Delete';
+    const esTab = evento.key === 'Tab';
+    const esFlecha = /^Arrow/.test(evento.key);
+    const esCopia = (evento.ctrlKey || evento.metaKey) && evento.key === 'c';
+    const esPega = (evento.ctrlKey || evento.metaKey) && evento.key === 'v';
+    const esInicio = evento.key === 'Home';
+    const esFin = evento.key === 'End';
+
+    if (!esNumero && !esBorrado && !esTab && !esFlecha && !esCopia && !esPega && !esInicio && !esFin) {
+      evento.preventDefault();
+    }
+  }
+
   buscarPersonaExistente(){
-    console.log('blur::: ');
-    this.personasService.getPersonaByDocumento(this.autorizanteForm.controls['numeroDocumento'].value as number)
-    .subscribe((persona)=>{
-      console.log('Persona::: ', persona);
 
-      if(persona){
+    this.personasService.getPersonaByDocumento(this.personaForm.controls['numeroDocumento'].value as number)
+    .subscribe((persona:IPersona)=>{
+   /*    console.log('persona::: ', persona);
+      console.log('formCOntrol::: ', this.personaForm.controls['numeroDocumento'].value);
+      console.log('del persona::: ', this.persona.numero_de_documento);
+      console.log('del input::: ', this.numeroDocumentoControl.value); */
+      if(persona && persona.id){
+        if(this.persona.numero_de_documento != this.numeroDocumentoControl.value){
 
-          const edadMenor = this.verificarMayoriaEdad(persona.fecha_de_nacimiento)
-
-          if(edadMenor < 21){
-            console.log('Menor::: ', edadMenor);
-
-            this.autorizanteForm.controls['numeroDocumento'].setErrors({'repetido':true})
-            this.bsqMenorEncontrado = persona
-            this.openDialogConfirm()
-
-          }else{
-
-            this.autorizanteForm.controls['numeroDocumento'].setErrors({'repetido':true})
-            this.bsqMenorEncontrado = persona
-            this.openDialogConfirm()
-
-          }
+          this.numeroDocumentoControl.setErrors({'dniRepetido':true})
         }
+      }
+
+
 
     })
-  }
-
-  verificarMayoriaEdad(fechaNacimiento:string){
-
-    if(!fechaNacimiento && typeof(fechaNacimiento)!= 'string') return 0
-
-    const fechaNacimientoMenor = new Date(fechaNacimiento);
-    const fechaActual = new Date();
-
-    return fechaActual.getFullYear() - fechaNacimientoMenor.getFullYear();
-
-  }
-
-  openDialogConfirm(): void {
-
-    if(!this.bsqMenorEncontrado) return
-
-      this.bsqMenorEdad =  this.verificarMayoriaEdad(this.bsqMenorEncontrado.fecha_de_nacimiento as string)
-
-    const dialogRef: MatDialogRef<ConfirmComponent> = this.matDialog.open(ConfirmComponent, {
-      width: '500px',
-      data: {
-        titulo: 'Menor Repetido o Invalido',
-        mensaje: (this.bsqMenorEdad>21)? 'Los datos ingresados no corresponden a un menor' : 'El menor ya se encuentra registrado',
-        bsqMenorEdad: this.bsqMenorEdad
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-
-      if (result) {
-        console.log('result::: ', result);
-        // El usuario seleccionó "Sí"
-         /* this.eliminarEstudiante.emit(matricula)
-         this.snackBar.open('Estudiante eliminado con exito', '', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-
-        }) */
-
-      }
-
-    });
-
-
-
   }
 
 }

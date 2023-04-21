@@ -1,32 +1,32 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AutorizanteRoutingModule } from './autorizante-routing.module';
-import { AutorizanteComponent } from './autorizante/autorizante.component';
+import { AcompaneanteRoutingModule } from './acompaneante-routing.module';
+import { AcompaneanteComponent } from './acompaneante/acompaneante.component';
 import { ConfirmComponent } from './confirm/confirm.component';
 import { ListaComponent } from './lista/lista.component';
+import { PipesModule } from '../pipes/pipes.module';
 import { AngularMaterialModule } from '../components/shared/angular-material/angular-material.module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { PipesModule } from '../pipes/pipes.module';
 
 
 @NgModule({
   declarations: [
-    AutorizanteComponent,
+    AcompaneanteComponent,
     ConfirmComponent,
     ListaComponent
   ],
   imports: [
     CommonModule,
-    AutorizanteRoutingModule,
+    AcompaneanteRoutingModule,
     AngularMaterialModule,
     ReactiveFormsModule,
     PipesModule
   ],
   exports: [
-    AutorizanteComponent,
+    AcompaneanteComponent,
     ConfirmComponent,
     ListaComponent,
   ]
 })
-export class AutorizanteModule { }
+export class AcompaneanteModule { }

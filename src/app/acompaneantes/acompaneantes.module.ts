@@ -19,7 +19,7 @@ import { MensajeConfirmacionComponent } from '../components/shared/mensaje-confi
   imports: [
     CommonModule,
     AcompaneantesRoutingModule,
-     AngularMaterialModule,
+    AngularMaterialModule,
     DashboardModule,
     FormsModule
   ],

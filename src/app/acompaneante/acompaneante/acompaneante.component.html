@@ -14,7 +14,8 @@
           matInput
           [formControl]="apellidoControl"
           placeholder="Ingrese el Apellido"
-          #inputApellido
+          id="apellido"
+          #apellidoInput
         >
         <mat-error *ngFor="let error of apellidoControl.errors | keyvalue">
           {{ error | controlErrorMessages:'texto' }}
@@ -159,6 +160,14 @@
     <!-- email -->
     <div class="col-md-4">
 
+      <!-- <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Fecha de Nacimiento</mat-label>
+        <input matInput [matDatepicker]="dp" [formControl]="fechaNacimientoControl"  (dateInput)="addEvent('input', $event)" (dateChange)="addEvent('change', $event)" readonly>
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+
+        <mat-datepicker #dp></mat-datepicker>
+        <mat-hint>dd/mm/yyyy</mat-hint>
+      </mat-form-field> -->
       <mat-form-field appearance="fill" class="w-100" [ngClass]="{'mat-form-field-invalid': fechaNacimientoControl.invalid}">
         <mat-label>Fecha de Nacimiento</mat-label>
         <input matInput [matDatepicker]="dp" [formControl]="fechaNacimientoControl"
@@ -224,7 +233,7 @@
         class="float-start"
         mat-flat-button
         color="secondary"
-        [routerLink]="['/autorizantes','listado']"
+        [routerLink]="['/menores','listado']"
       >
         Cancelar
       </button>

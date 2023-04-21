@@ -61,7 +61,7 @@ const routes: Routes = [
   },
   {
     path: 'acompaneante',
-    loadChildren: ()=> import('./acompaneantes/acompaneantes.module').then( m => m.AcompaneantesModule),
+    loadChildren: ()=> import('./acompaneante/acompaneante.module').then( m => m.AcompaneanteModule),
     canActivate:[AuthGuard]
   },
   {
