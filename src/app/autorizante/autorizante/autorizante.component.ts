@@ -129,17 +129,16 @@ export class AutorizanteComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
              ) { }
 
-  ngAfterViewInit(): void {
+ngAfterViewInit(): void {
 
-    setTimeout(() => {
-      if (this.apellidoInput?.nativeElement) {
-        this.apellidoInput.nativeElement.focus();
-        this.apellidoInput.nativeElement.select();
-      }
-    });
+  setTimeout(() => {
+    if (this.apellidoInput?.nativeElement) {
+      this.apellidoInput.nativeElement.focus();
+      this.apellidoInput.nativeElement.select();
+    }
+  });
 
-  }
-
+}
   ngOnInit(): void {
 
     this.subscriptions.add(

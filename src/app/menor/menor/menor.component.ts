@@ -132,7 +132,7 @@ export class MenorComponent implements OnInit, OnDestroy {
               private activatedRoute: ActivatedRoute,
              ) { }
 
-  ngAfterViewInit(): void {
+ngAfterViewInit(): void {
 
   setTimeout(() => {
     if (this.apellidoInput?.nativeElement) {

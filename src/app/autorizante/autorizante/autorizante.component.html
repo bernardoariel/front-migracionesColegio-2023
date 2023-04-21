@@ -14,7 +14,7 @@
           matInput
           [formControl]="apellidoControl"
           placeholder="Ingrese el Apellido"
-          #inputApellido
+          #apellidoInput
         >
         <mat-error *ngFor="let error of apellidoControl.errors | keyvalue">
           {{ error | controlErrorMessages:'texto' }}
@@ -175,7 +175,7 @@
 
     </div>
     <!-- tipo_documento -->
-    <div class="col-md-3 mt-2">
+    <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
         <mat-label>Sexo</mat-label>

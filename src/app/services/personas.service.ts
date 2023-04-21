@@ -41,6 +41,11 @@ export class PersonasService {
     return this.http.get<IPersona[]>(`${ this.baseUrl }/personasJoin`);
   }
 
+  getPersonasAcompaneantesJoin(): Observable<IPersona[]>{
+
+    return this.http.get<IPersona[]>(`${ this.baseUrl }/personasAcompaneantesJoin`);
+  }
+
  /*  getMenorPersonasByNumeroDocumento(dni:number):Observable<any>{
 
     return this.http.get<number>(`${this.baseUrl}/buscarMenorPorDocumento/${dni}`);

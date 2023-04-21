@@ -71,36 +71,16 @@ export class AcompaneanteComponent implements OnInit {
   otrosNombresControl = new FormControl('', [
     Validators.pattern(/^[^0-9]+$/),
   ]);
-  nacionalidadControl = new FormControl<number>(11, [Validators.required]);
+
   documentosControl = new FormControl<number>(4, [Validators.required]);
-  emisorControl = new FormControl<number>(13, [Validators.required]);
+
   numeroDocumentoControl = new FormControl<number | null>(null, [
     Validators.required,
     Validators.minLength(3),
     Validators.maxLength(40),
   ]);
-  fechaNacimientoControl = new FormControl('', [this.fechaNacimientoValidator()]);
-  sexoControl = new FormControl<number | null>(null, [Validators.required]);
-  domicilioControl = new FormControl('', [
-    Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(200),
-  ]);
-  /* validador especifico */
-  fechaNacimientoValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const fechaSeleccionada = control.value;
-      const fechaActual = new Date();
-      const edadMinima = 21;
-      const fechaMinima = new Date(fechaActual.getFullYear() - edadMinima, fechaActual.getMonth(), fechaActual.getDate());
 
-      if (fechaSeleccionada < fechaMinima) {
-        return { edadMinima: true };
-      }
 
-      return null;
-    };
-  }
 
   /* persona Form */
   personaForm = new FormGroup({
@@ -108,13 +88,9 @@ export class AcompaneanteComponent implements OnInit {
     segundoApellido: this.segundoApellidoControl ,
     nombre: this.nombreControl,
     otrosNombres: this.otrosNombresControl,
-    nacionalidad: this.nacionalidadControl,
     tipoDocumento: this.documentosControl,
-    emisorDocumento: this.emisorControl,
     numeroDocumento: this.numeroDocumentoControl,
-    fechaNacimiento: this.fechaNacimientoControl,
-    sexo: this.sexoControl,
-    domicilio: this.domicilioControl
+
   });
 
   constructor( private nacionalidadesService: NacionalidadesService,
@@ -177,13 +153,8 @@ export class AcompaneanteComponent implements OnInit {
               segundoApellido: this.persona.segundo_apellido ?? '',
               nombre: this.persona.nombre ?? '',
               otrosNombres: this.persona.otros_nombres ?? '',
-              nacionalidad: this.persona.nationality_id ?? null,
               tipoDocumento: this.persona.type_document_id ?? null,
-              emisorDocumento: this.persona.issuer_document_id ?? null,
               numeroDocumento:  Number(this.persona.numero_de_documento) ?? null,
-              fechaNacimiento: this.persona.fecha_de_nacimiento ?? '',
-              sexo: Number(this.persona.sex_id ?? null),
-              domicilio: this.persona.domicilio ?? '',
             })
           })
         )
@@ -210,13 +181,8 @@ export class AcompaneanteComponent implements OnInit {
       segundo_apellido: this.personaForm.value.segundoApellido,
       nombre: this.personaForm.value.nombre ?? '',
       otros_nombres: this.personaForm.value.otrosNombres,
-      nationality_id: this.personaForm.value.nacionalidad,
       type_document_id: this.personaForm.value.tipoDocumento,
-      issuer_document_id: this.personaForm.value.emisorDocumento,
-      numero_de_documento: this.personaForm.value.numeroDocumento ?? '',
-      fecha_de_nacimiento: this.personaForm.value.fechaNacimiento ?? '',
-      sex_id: this.personaForm.value.sexo ?? '',
-      domicilio: this.personaForm.value.domicilio ?? ''
+      numero_de_documento: this.personaForm.value.numeroDocumento ?? ''
     };
     if(!this.idPersona){
 
@@ -224,12 +190,12 @@ export class AcompaneanteComponent implements OnInit {
         this.personasService.agregarPersona(personaNuevo).subscribe((persona)=>{
           this.matDialog.open(ConfirmComponent, {
               data: {
-                titulo: 'Menor registrado',
-                message: 'Menor registrado correctamente'
+                titulo: 'Acompañante registrado',
+                message: 'Acompañante registrado correctamente'
               }
           });
           this.personaForm.reset();
-          this.routes.navigate(['menores','listado']);
+          this.routes.navigate(['acompaneante','listado']);
         })
       )
 
@@ -244,12 +210,12 @@ export class AcompaneanteComponent implements OnInit {
         this.personasService.updatePersona(personaNuevo).subscribe((persona)=>{
           this.matDialog.open(ConfirmComponent, {
               data: {
-                titulo: 'Menor registrado',
-                message: 'Menor registrado correctamente'
+                titulo: 'Acompañante registrado',
+                message: 'Acompañante registrado correctamente'
               }
           });
           this.personaForm.reset();
-          this.routes.navigate(['menores','listado']);
+          this.routes.navigate(['acompaneante','listado']);
         })
       )
     }

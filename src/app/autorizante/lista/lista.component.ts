@@ -30,40 +30,38 @@ export class ListaComponent implements OnInit {
    @ViewChild(MatPaginator,{static:true}) paginator!: MatPaginator ;
    @ViewChild(MatSort,{static:true}) sort!: MatSort;
 
-   constructor(
+  constructor(
      private router: Router,
      private personasService: PersonasService,
      private matPaginatorIntl: MatPaginatorIntl
-     ) {
+     ){
       this.matPaginatorIntl.itemsPerPageLabel = this.paginatorItems;
-     }
+  }
 
-   ngOnInit(): void {
+  ngOnInit(): void {
 
-     this.cargarMenores();
-    // colocar el foco en el input del apellido con un metodo de angularmaterial
+    this.cargarMenores();
 
+  }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
-   }
+  cargarMenores(){
+    this.personasService.getPersonasJoin().subscribe(
+    // this.personasService.getPersonasAcompaneantesJoin().subscribe(
+      (personas)=>{
 
-   applyFilter(event: Event) {
-     const filterValue = (event.target as HTMLInputElement).value;
-     this.dataSource.filter = filterValue.trim().toLowerCase();
-   }
+        this.personas = personas.filter(persona => persona.id !== 1);
+        this.dataSource = new MatTableDataSource<IPersona>( this.personas );
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
 
-   cargarMenores(){
-      this.personasService.getPersonasJoin().subscribe(
-       (personas)=>{
+    })
 
-         this.personas = personas.filter(persona => persona.id !== 1);
-         this.dataSource = new MatTableDataSource<IPersona>( this.personas );
-         this.dataSource.paginator = this.paginator;
-         this.dataSource.sort = this.sort;
-
-     })
-
-   }
+  }
    formPersona(id:number){
 
      if(!this.precarga){
