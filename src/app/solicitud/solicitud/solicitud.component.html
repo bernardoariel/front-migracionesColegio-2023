@@ -22,10 +22,10 @@
   <div class="col-md-9">
 
     <!-- MENOR -->
-    <mat-stepper orientation="vertical">
+    <mat-stepper orientation="vertical" #stepper>
 
       <!-- fila menor -->
-      <mat-step>
+      <mat-step >
 
         <ng-template matStepLabel >Agregar un Menor</ng-template>
 
@@ -33,7 +33,9 @@
 
           <button mat-button class="float-end amarillo" (click)="abrilModal()">Crear Nuevo Menor</button>
 
-          <app-lista-menor (onSeleccionarMenor)="seleccionarMenor($event)"></app-lista-menor>
+          <app-lista-menor
+
+            (onSeleccionarMenor)="seleccionarMenor($event)"></app-lista-menor>
 
           <button mat-button matStepperNext>Siguiente Paso</button>
 
@@ -50,7 +52,6 @@
 
           <button mat-button class="float-end amarillo">aaaa</button>
 
-
           <button mat-button matStepperNext>Siguiente Paso</button>
 
         </ng-template>
@@ -65,11 +66,17 @@
 
     <mat-list>
 
-      <p class="mt-p pt-0 mb-0 mt-0">Menor</p>
-      <mat-divider></mat-divider>
-      <mat-list-item ><small class="text-warning ms-3"> Misael Baez </small>
-        <button mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
+      <mat-list-item *ngIf="solicitud.menor.id">
+        <p class="mt-p pt-0 mb-0 mt-0">Menor</p>
+        <mat-divider></mat-divider>
+        <small class="text-warning ms-3">
+          {{solicitud.menor.apellido | uppercase}} {{solicitud.menor.nombre |titlecase}}
+        </small>
+        <button mat-icon-button color="warn" (click)="eliminarMenorSolicitud()">
+          <mat-icon>delete</mat-icon>
+        </button>
       </mat-list-item>
+
 
 
     </mat-list>

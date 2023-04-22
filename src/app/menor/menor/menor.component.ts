@@ -15,6 +15,7 @@ import { ConfirmComponent } from '../confirm/confirm.component';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IPersona } from 'src/app/interfaces/IPersona';
+import { SolicitudService } from 'src/app/services/solicitud.service';
 
 
 //crear interface IModal
@@ -138,7 +139,7 @@ export class MenorComponent implements OnInit, OnDestroy {
     private personasService:PersonasService,
     private matDialog:MatDialog,
     private routes:Router,
-    private activatedRoute: ActivatedRoute,
+    private solicitudService: SolicitudService,
     public dialogRef?:MatDialogRef<MenorComponent>,
     @Inject(MAT_DIALOG_DATA) public data?: { menor?: IPersona, modal?:IModal }
   ) {
@@ -241,7 +242,7 @@ ngAfterViewInit(): void {
               }
           });
 
-          this.personaForm.reset();
+          // this.personaForm.reset();
 
 
         })
@@ -282,6 +283,7 @@ ngAfterViewInit(): void {
         this.personasService.agregarPersona(personaNuevo).subscribe((persona)=>{
 
           this.dialogRef?.close() // cierra el modal de la carga del menor
+          this.solicitudService.agregarMenor(persona) // agrega el menor a la solicitud
 
           this.matDialog.open(ConfirmComponent, {
               data: {
@@ -290,7 +292,6 @@ ngAfterViewInit(): void {
               }
           });
 
-          // this.personaForm.reset();
 
         })
       )
@@ -305,7 +306,9 @@ ngAfterViewInit(): void {
         id: this.data?.menor?.id
       };
 
-      this.subscriptions.add(
+      this.dialogRef?.close()
+      this.solicitudService.agregarMenor(personaNuevo)
+      /* this.subscriptions.add(
 
         this.personasService.updatePersona(personaNuevo).subscribe((persona)=>{
           this.dialogRef?.close()
@@ -318,7 +321,7 @@ ngAfterViewInit(): void {
 
 
         })
-      )
+      ) */
 
     }
 
