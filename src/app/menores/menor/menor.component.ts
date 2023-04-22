@@ -1,8 +1,8 @@
 
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { switchMap } from 'rxjs';
 import { NacionalidadesService } from 'src/app/services/nacionalidades.service';
 import { TipoDocumentoService } from 'src/app/services/tipo-documento.service';
@@ -15,6 +15,7 @@ import { IMenor } from 'src/app/interfaces/IMenor';
 import { MenoresService } from 'src/app/services/menores.service';
 import { EmisorDocumentosService } from 'src/app/services/emisor-documentos.service';
 import { ITipoDocument } from 'src/app/interfaces/ITipo-document';
+import { IPersona } from 'src/app/interfaces/IPersona';
 
 @Component({
   selector: 'app-menor',
@@ -55,9 +56,12 @@ export class MenorComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router:Router,
     private _snackBar: MatSnackBar,
-    public dialog: MatDialog,
+    public dialog: MatDialog
 
-  ) { }
+  ) {
+
+
+   }
 
   ngOnInit(): void {
     /* reviso si en la ruta existe la palabra nueva */
@@ -67,7 +71,6 @@ export class MenorComponent implements OnInit {
       if(this.rutaActual=='nueva') this.precarga = true
 
     });
-    console.log(this.rutaActual); // Imprime la ruta actual como una cadena de texto
 
     this.activatedRoute.params.subscribe((params) => {
 

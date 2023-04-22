@@ -22,8 +22,7 @@ import { LoginModule } from './login/login.module';
 import { EscribanosModule } from './escribanos/escribanos.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { VideosComponent } from './components/shared/videos/videos.component';
-import { AcompaneanteModule } from './acompaneante/acompaneante.module';
-import { AutorizanteModule } from './autorizante/autorizante.module';
+
 
 
 
@@ -43,13 +42,9 @@ import { AutorizanteModule } from './autorizante/autorizante.module';
     LoginModule,
     EscribanosModule,
     DashboardModule,
-    MenorModule,
-    // AcompaneanteModule,
-    // AutorizanteModule
+    MenorModule
   ],
-  providers: [
-    {provide: MAT_DATE_LOCALE, useValue: 'es-AR'}
-  ],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }

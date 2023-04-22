@@ -10,6 +10,8 @@ import { ConfirmComponent } from './confirm/confirm.component';
 import { PipesModule } from '../pipes/pipes.module';
 
 
+
+
 @NgModule({
   declarations: [
     MenorComponent,
@@ -27,6 +29,9 @@ import { PipesModule } from '../pipes/pipes.module';
     MenorComponent,
     ListaComponent,
     ConfirmComponent
+  ],
+  providers: [
+
   ]
 })
 export class MenorModule { }

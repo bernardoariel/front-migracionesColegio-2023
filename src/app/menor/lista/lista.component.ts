@@ -5,16 +5,18 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IPersona } from 'src/app/interfaces/IPersona';
+import { MenorComponent } from '../menor/menor.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
-  selector: 'app-lista',
+  selector: 'app-lista-menor',
   templateUrl: './lista.component.html',
   styleUrls: ['./lista.component.scss']
 })
 export class ListaComponent implements OnInit {
 
-
+  @ViewChild('menor') menor!: MenorComponent;
   titulo:string = 'Listado de Menores';
   paginatorItems:string = 'Menores por página';
    // esto es para tomar la ruta actual y crear una variable del tipo boolean
@@ -26,19 +28,33 @@ export class ListaComponent implements OnInit {
    personas:IPersona[] = []
    botones:boolean = false;
    botonSeleccionar:boolean = false;
-   @Output() onSeleccionarMenor: EventEmitter<number> = new EventEmitter<number>();
+   @Output() onSeleccionarMenor: EventEmitter<IPersona> = new EventEmitter<IPersona>();
    @ViewChild(MatPaginator,{static:true}) paginator!: MatPaginator ;
    @ViewChild(MatSort,{static:true}) sort!: MatSort;
 
    constructor(
      private router: Router,
      private personasService: PersonasService,
-     private matPaginatorIntl: MatPaginatorIntl
+     private matPaginatorIntl: MatPaginatorIntl,
+     private activatedRoute: ActivatedRoute,
+     private dialog: MatDialog
      ) {
       this.matPaginatorIntl.itemsPerPageLabel = this.paginatorItems;
      }
 
    ngOnInit(): void {
+
+
+     /* reviso si en la ruta existe la palabra nueva */
+    this.activatedRoute.url.subscribe(url => {
+
+      this.rutaActual = url.map(segment => segment.path).join('/');
+      console.log(this.rutaActual); // Imprime la ruta actual como una cadena de texto cada vez que cambia
+      if(this.rutaActual=='nueva' || this.rutaActual.includes('solicitudes')){
+        this.precarga = true
+      }
+
+    });
 
      this.cargarMenores();
 
@@ -50,7 +66,7 @@ export class ListaComponent implements OnInit {
    }
 
    cargarMenores(){
-      this.personasService.getMenoresJoin().subscribe(
+     this.personasService.getMenoresJoin().subscribe(
        (menores)=>{
 
          this.personas = menores.filter(menor => menor.id !== 1);
@@ -61,17 +77,50 @@ export class ListaComponent implements OnInit {
      })
 
    }
-   formMenor(id:number){
+   /* formMenor(id:number){
 
      if(!this.precarga){
        this.router.navigate(['menores/editar/'+id])
      }
 
-   }
+   } */
 
-   asignarMenor(id:number){
+   asignarMenor(menor:IPersona){
 
-     this.onSeleccionarMenor.emit(id)
+     this.onSeleccionarMenor.emit(menor)
    }
+   nuevaPersona(){
+
+    const modalMenor = this.dialog.open(MenorComponent,{
+      disableClose: true ,
+      data: {
+        modal:{
+          tipoDialogo:'menor',
+          accionModal:'agregar'
+        }
+      }
+    })
+
+    modalMenor.afterClosed().subscribe(()=>{
+        this.cargarMenores()
+    })
+
+  }
+  seleccionarMenor(menor:IPersona){
+    console.log('select menor',menor);
+    const modalMenor = this.dialog.open(MenorComponent,{
+      disableClose: true ,
+      data:{
+        menor:menor,
+        modal:{
+          tipoDialogo:'menor',
+          accionModal:'editar'
+        }
+      }
+    })
+    modalMenor.afterClosed().subscribe((menor:IPersona)=>{
+      this.cargarMenores()
+    })
+  }
 
 }

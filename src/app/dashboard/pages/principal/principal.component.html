@@ -46,13 +46,13 @@
 
       </a>
 
-      <a routerLink='/progenitores/listado'
+      <a routerLink='/solicitudes/listado'
          (click)="sidenav.toggle()"
          mat-list-item>
         <mat-icon>family_restroom</mat-icon>
 
         <span class="spacer"></span>
-        <span> Progenitores</span>
+        <span> Solicitudes</span>
 
       </a>
       <a routerLink='/acompaneante/listado'
@@ -80,6 +80,15 @@
 
         <span class="spacer"></span>
         <span> Nueva Orden</span>
+
+      </a>
+      <a *ngIf="usuario!= 1" routerLink='/solicitudes/nueva'
+         (click)="sidenav.toggle()"
+         mat-list-item>
+        <mat-icon>post_add</mat-icon>
+
+        <span class="spacer"></span>
+        <span> Nueva Solicitud</span>
 
       </a>
 

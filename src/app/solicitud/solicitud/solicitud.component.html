@@ -1,0 +1,81 @@
+<!-- titulo y boton cancelar -->
+<div class="row mt-4">
+
+  <div class="col-md-8">
+
+    <h1>{{ titulo }}</h1>
+
+  </div>
+
+  <div class="col float-end">
+
+    <button mat-button color="warn" mat-flat-button >Cancelar</button>
+
+  </div>
+
+</div>
+
+<hr class="pt-0">
+
+<div class="row">
+
+  <div class="col-md-9">
+
+    <!-- MENOR -->
+    <mat-stepper orientation="vertical">
+
+      <!-- fila menor -->
+      <mat-step>
+
+        <ng-template matStepLabel >Agregar un Menor</ng-template>
+
+        <ng-template matStepContent>
+
+          <button mat-button class="float-end amarillo" (click)="abrilModal()">Crear Nuevo Menor</button>
+
+          <app-lista-menor (onSeleccionarMenor)="seleccionarMenor($event)"></app-lista-menor>
+
+          <button mat-button matStepperNext>Siguiente Paso</button>
+
+        </ng-template>
+
+      </mat-step>
+
+      <!-- fila Autorizante 1-->
+      <mat-step>
+
+        <ng-template matStepLabel>Autorizante 1</ng-template>
+
+        <ng-template matStepContent>
+
+          <button mat-button class="float-end amarillo">aaaa</button>
+
+
+          <button mat-button matStepperNext>Siguiente Paso</button>
+
+        </ng-template>
+
+      </mat-step>
+
+    </mat-stepper>
+
+  </div>
+
+  <div class="col-md-3">
+
+    <mat-list>
+
+      <p class="mt-p pt-0 mb-0 mt-0">Menor</p>
+      <mat-divider></mat-divider>
+      <mat-list-item ><small class="text-warning ms-3"> Misael Baez </small>
+        <button mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
+      </mat-list-item>
+
+
+    </mat-list>
+
+
+  </div>
+</div>
+
+

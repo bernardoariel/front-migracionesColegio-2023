@@ -45,8 +45,8 @@ const routes: Routes = [
     canActivate:[AuthGuard]
   },
   {
-    path: 'progenitores',
-    loadChildren: ()=> import('./progenitores/progenitores.module').then( m => m.ProgenitoresModule),
+    path: 'solicitudes',
+    loadChildren: ()=> import('./solicitud/solicitud.module').then( m => m.SolicitudModule),
     canActivate:[AuthGuard]
   },
   {
