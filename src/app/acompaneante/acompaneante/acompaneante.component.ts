@@ -249,8 +249,6 @@ export class AcompaneanteComponent implements OnInit {
         }
       }
 
-
-
     })
   }
 

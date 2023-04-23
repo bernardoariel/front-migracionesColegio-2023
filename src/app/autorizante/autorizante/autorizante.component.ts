@@ -1,6 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { IEmisorDocumentos } from 'src/app/interfaces/IEmisor-documentos';
@@ -14,6 +14,8 @@ import { PersonasService } from 'src/app/services/personas.service';
 import { SexoService } from 'src/app/services/sexo.service';
 import { TipoDocumentoService } from 'src/app/services/tipo-documento.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
+import { IModal } from 'src/app/menor/menor/menor.component';
+import { SolicitudService } from 'src/app/services/solicitud.service';
 
 
 @Component({
@@ -25,14 +27,13 @@ export class AutorizanteComponent implements OnInit {
   @ViewChild('apellidoInput') apellidoInput!: ElementRef<HTMLInputElement>;
   private subscriptions = new Subscription(); /// para hacer el Ondestroy
 
-
   /* para el template */
   titulo = 'Agregando un Autorizante';
 
   /* para obtener una sola persona */
   rutaActual: string ='';
   idPersona: number | null = null;
-
+  modal:IModal = {} as IModal;
   /* Persona Por defecto */
   persona: IPersona = {
     apellido:'',
@@ -119,15 +120,39 @@ export class AutorizanteComponent implements OnInit {
     domicilio: this.domicilioControl
   });
 
-  constructor( private nacionalidadesService: NacionalidadesService,
-              private tipoDocumentoService:TipoDocumentoService,
-              private emisorDocumentosService:EmisorDocumentosService,
-              private sexoService:SexoService,
-              private personasService:PersonasService,
-              private matDialog:MatDialog,
-              private routes:Router,
-              private activatedRoute: ActivatedRoute,
-             ) { }
+  constructor(
+    private nacionalidadesService: NacionalidadesService,
+    private tipoDocumentoService:TipoDocumentoService,
+    private emisorDocumentosService:EmisorDocumentosService,
+    private sexoService:SexoService,
+    private personasService:PersonasService,
+    private matDialog:MatDialog,
+    private routes:Router,
+    private activatedRoute: ActivatedRoute,
+    private solicitudService: SolicitudService,
+    public dialogRef?:MatDialogRef<AutorizanteComponent>,
+    @Inject(MAT_DIALOG_DATA) public data?: { persona?: IPersona, modal?:IModal }
+    ) {
+      if(data?.persona){
+        this.persona = data.persona!
+        this.personaForm.setValue({
+          apellido: this.persona.apellido,
+          segundoApellido: this.persona.segundo_apellido ?? '',
+          nombre: this.persona.nombre ?? '',
+          otrosNombres: this.persona.otros_nombres ?? '',
+          nacionalidad: this.persona.nationality_id ?? null,
+          tipoDocumento: this.persona.type_document_id ?? null,
+          emisorDocumento: this.persona.issuer_document_id ?? null,
+          numeroDocumento:  Number(this.persona.numero_de_documento) ?? null,
+          fechaNacimiento: this.persona.fecha_de_nacimiento ?? '',
+          sexo: Number(this.persona.sex_id ?? null),
+          domicilio: this.persona.domicilio ?? '',
+        })
+      }
+      if(data?.modal){
+        this.modal = data.modal
+      }
+    }
 
 ngAfterViewInit(): void {
 
@@ -221,40 +246,110 @@ ngAfterViewInit(): void {
       sex_id: this.personaForm.value.sexo ?? '',
       domicilio: this.personaForm.value.domicilio ?? ''
     };
-    if(!this.idPersona){
+
+    // AGREGAR DESDE EL MODULO DEL AUTORIZANTE
+    if(this.modal.tipoDialogo == 'autorizante' && this.modal.accionModal == 'agregar'){
 
       this.subscriptions.add(
         this.personasService.agregarPersona(personaNuevo).subscribe((persona)=>{
+
+          this.dialogRef?.close() // cierra el modal de la carga del menor
+
           this.matDialog.open(ConfirmComponent, {
               data: {
                 titulo: 'Autorizante registrado',
                 message: 'Autorizante registrado correctamente'
               }
           });
-          this.personaForm.reset();
-          this.routes.navigate(['autorizantes','listado']);
+
         })
       )
 
-    }else{
+    }
+
+    // EDITAR DESDE EL MODULO DEL AUTORIZANTE
+    if(this.modal.tipoDialogo == 'autorizante' && this.modal.accionModal == 'editar'){
+
       personaNuevo = {
         ...personaNuevo,
-        id: this.idPersona
+        id: this.data?.persona?.id
       };
 
       this.subscriptions.add(
 
         this.personasService.updatePersona(personaNuevo).subscribe((persona)=>{
+          this.dialogRef?.close()
+          this.matDialog.open(ConfirmComponent, {
+              data: {
+                titulo: 'Autorizante registrado',
+                message: 'Autorizante registrado correctamente'
+              }
+          });
+
+
+        })
+      )
+
+    }
+
+    // AGREGAR DESDE EL MODULO DE LA SOLICITUD
+    if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'agregar'){
+
+      this.subscriptions.add(
+
+        this.personasService.agregarPersona(personaNuevo).subscribe((persona)=>{
+
+          this.dialogRef?.close() // cierra el modal de la carga del menor
+
+
+          if(this.modal.persona == 1){
+
+            this.solicitudService.agregarAutorizante1(persona) // agrega el menor a la solicitud
+          }else{
+
+            this.solicitudService.agregarAutorizante2(persona) // agrega el menor a la solicitud
+          }
+
           this.matDialog.open(ConfirmComponent, {
               data: {
                 titulo: 'Menor registrado',
                 message: 'Menor registrado correctamente'
               }
           });
-          this.personaForm.reset();
-          this.routes.navigate(['autorizantes','listado']);
+
+
         })
       )
+
+    }
+
+    // EDITAR DESDE EL MODULO DE LA SOLICITUD
+    if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'editar'){
+      console.log('entramos por aca');
+      personaNuevo = {
+        ...personaNuevo,
+        id: this.data?.persona?.id
+      };
+      console.log('personaNuevo::: ', personaNuevo);
+
+      console.log('this.modal.persona::: ', this.modal.persona);
+
+      if(this.modal.persona == 1){
+
+        this.solicitudService.agregarAutorizante1(personaNuevo)
+        // agrega el menor a la solicitud
+      }else{
+
+        this.solicitudService.agregarAutorizante2(personaNuevo) // agrega el menor a la solicitud
+      }
+      this.subscriptions.add(
+
+        this.personasService.updatePersona(personaNuevo).subscribe((persona)=>{
+          this.dialogRef?.close()
+
+        })
+      )
+
     }
 
   }
@@ -278,11 +373,9 @@ ngAfterViewInit(): void {
 
     this.personasService.getPersonaByDocumento(this.personaForm.controls['numeroDocumento'].value as number)
     .subscribe((persona:IPersona)=>{
-   /*    console.log('persona::: ', persona);
-      console.log('formCOntrol::: ', this.personaForm.controls['numeroDocumento'].value);
-      console.log('del persona::: ', this.persona.numero_de_documento);
-      console.log('del input::: ', this.numeroDocumentoControl.value); */
+
       if(persona && persona.id){
+
         if(this.persona.numero_de_documento != this.numeroDocumentoControl.value){
 
           this.numeroDocumentoControl.setErrors({'dniRepetido':true})
@@ -293,5 +386,16 @@ ngAfterViewInit(): void {
 
     })
   }
+  cancelar(){
+    if(this.dialogRef){
 
+      this.dialogRef.close()
+
+    }else{
+
+      this.routes.navigate(['menores','listado']);
+
+    }
+
+  }
 }

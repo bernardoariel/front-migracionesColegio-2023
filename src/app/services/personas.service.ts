@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { IMenor } from '../interfaces/IMenor';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { IPersona } from '../interfaces/IPersona';
 
 
@@ -12,6 +12,7 @@ import { IPersona } from '../interfaces/IPersona';
 })
 
 export class PersonasService {
+  private menores$ = new Subject<IPersona[]>();
   private baseUrl: string = environment.baseUrl + '/v2';
   private httpHeaders = new HttpHeaders({'Content-Type':'application/json'})
   constructor( private http:HttpClient) { }
@@ -32,7 +33,7 @@ export class PersonasService {
   }
 
   getPersonaById(id:number):Observable<IPersona>{
-    console.log(`${ this.baseUrl }/persona/${id}`)
+
     return this.http.get<IPersona>(`${ this.baseUrl }/personaById/${id}`)
   }
 
@@ -43,7 +44,9 @@ export class PersonasService {
 
   getPersonasAcompaneantesJoin(): Observable<IPersona[]>{
 
-    return this.http.get<IPersona[]>(`${ this.baseUrl }/personasAcompaneantesJoin`);
+   /*  this.menores$ = this.http.get<IPersona[]>(`${ this.baseUrl }/personasAcompaneantesJoin`) as Subject<IPersona[]>;
+    return this.menores$.asObservable(); */
+    return this.http.get<IPersona[]>(`${ this.baseUrl }/personasAcompaneantesJoin`)
   }
 
  /*  getMenorPersonasByNumeroDocumento(dni:number):Observable<any>{

@@ -1,20 +1,23 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { IPersona } from 'src/app/interfaces/IPersona';
 import { PersonasService } from 'src/app/services/personas.service';
-
+import { MatDialog } from '@angular/material/dialog';
+import { AutorizanteComponent } from '../autorizante/autorizante.component';
+import { SolicitudService } from 'src/app/services/solicitud.service';
 
 @Component({
-  selector: 'app-lista',
+  selector: 'app-lista-autorizante',
   templateUrl: './lista.component.html',
   styleUrls: ['./lista.component.scss']
 })
 export class ListaComponent implements OnInit {
-
-
+  @ViewChild('autorizante') autorizante!: AutorizanteComponent;
+  @Input() autorizanteNro: number = 1;
   titulo:string = 'Listado de Autorizantes';
   paginatorItems:string = 'Autorizantes por página';
    // esto es para tomar la ruta actual y crear una variable del tipo boolean
@@ -26,21 +29,33 @@ export class ListaComponent implements OnInit {
    personas:IPersona[] = []
    botones:boolean = false;
    botonSeleccionar:boolean = false;
-   @Output() onSeleccionarMenor: EventEmitter<number> = new EventEmitter<number>();
+   @Output() onSeleccionarAutorizante: EventEmitter<IPersona> = new EventEmitter<IPersona>();
    @ViewChild(MatPaginator,{static:true}) paginator!: MatPaginator ;
    @ViewChild(MatSort,{static:true}) sort!: MatSort;
 
   constructor(
-     private router: Router,
      private personasService: PersonasService,
-     private matPaginatorIntl: MatPaginatorIntl
+     private matPaginatorIntl: MatPaginatorIntl,
+     private activatedRoute: ActivatedRoute,
+     private dialog: MatDialog,
      ){
       this.matPaginatorIntl.itemsPerPageLabel = this.paginatorItems;
   }
 
   ngOnInit(): void {
 
-    this.cargarMenores();
+    /* reviso si en la ruta existe la palabra nueva */
+    this.activatedRoute.url.subscribe(url => {
+
+      this.rutaActual = url.map(segment => segment.path).join('/');
+      console.log(this.rutaActual); // Imprime la ruta actual como una cadena de texto cada vez que cambia
+      if(this.rutaActual=='nueva' || this.rutaActual.includes('solicitudes')){
+        this.precarga = true
+      }
+
+    });
+
+     this.cargarMenores();
 
   }
 
@@ -62,17 +77,49 @@ export class ListaComponent implements OnInit {
     })
 
   }
-   formPersona(id:number){
 
-     if(!this.precarga){
-       this.router.navigate(['/autorizantes/editar/'+id])
-     }
+  asignarAutorizante(autorizante:IPersona){
 
-   }
+    this.onSeleccionarAutorizante.emit(autorizante)
+  }
+   nuevaPersona(){
 
-   asignarMenor(id:number){
+    const modalMenor = this.dialog.open(AutorizanteComponent,{
+      width: '70vw', // Ancho personalizado
+      disableClose: true ,
+      data: {
+        modal:{
+          tipoDialogo:'autorizante',
+          accionModal:'agregar'
+        }
+      }
+    })
 
-     this.onSeleccionarMenor.emit(id)
-   }
+    modalMenor.afterClosed().subscribe(()=>{
+        this.cargarMenores()
+    })
+
+  }
+  seleccionarMenor(autorizante:IPersona){
+
+    const modalMenor = this.dialog.open(AutorizanteComponent,{
+      width: '70vw',
+      disableClose: true ,
+      data:{
+        persona:autorizante,
+        modal:{
+          tipoDialogo:'autorizante',
+          accionModal:'editar'
+        }
+      }
+    })
+    modalMenor.afterClosed().subscribe((menor:IPersona)=>{
+      this.cargarMenores()
+    })
+  }
+
+  reload(){
+    this.cargarMenores()
+  }
 
 }

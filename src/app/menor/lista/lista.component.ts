@@ -33,7 +33,6 @@ export class ListaComponent implements OnInit {
    @ViewChild(MatSort,{static:true}) sort!: MatSort;
 
    constructor(
-     private router: Router,
      private personasService: PersonasService,
      private matPaginatorIntl: MatPaginatorIntl,
      private activatedRoute: ActivatedRoute,
@@ -44,8 +43,7 @@ export class ListaComponent implements OnInit {
 
    ngOnInit(): void {
 
-
-     /* reviso si en la ruta existe la palabra nueva */
+    /* reviso si en la ruta existe la palabra nueva */
     this.activatedRoute.url.subscribe(url => {
 
       this.rutaActual = url.map(segment => segment.path).join('/');
@@ -77,13 +75,7 @@ export class ListaComponent implements OnInit {
      })
 
    }
-   /* formMenor(id:number){
 
-     if(!this.precarga){
-       this.router.navigate(['menores/editar/'+id])
-     }
-
-   } */
 
    asignarMenor(menor:IPersona){
 
@@ -92,6 +84,7 @@ export class ListaComponent implements OnInit {
    nuevaPersona(){
 
     const modalMenor = this.dialog.open(MenorComponent,{
+      width: '70vw', // Ancho personalizado
       disableClose: true ,
       data: {
         modal:{
@@ -109,6 +102,7 @@ export class ListaComponent implements OnInit {
   seleccionarMenor(menor:IPersona){
     console.log('select menor',menor);
     const modalMenor = this.dialog.open(MenorComponent,{
+      width: '70vw',
       disableClose: true ,
       data:{
         menor:menor,
@@ -121,6 +115,10 @@ export class ListaComponent implements OnInit {
     modalMenor.afterClosed().subscribe((menor:IPersona)=>{
       this.cargarMenores()
     })
+  }
+
+  reload(){
+    this.cargarMenores()
   }
 
 }

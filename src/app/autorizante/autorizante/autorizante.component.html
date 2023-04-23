@@ -2,9 +2,9 @@
 <hr>
 
 <form [formGroup]="personaForm" autocomplete="off">
-  <!-- fila 1  Nombre y Apellido-->
+  <!-- fila  Apellido Segundo Apellido Nombre Otros Nombres-->
   <div class="row mt-3 mb-3">
-    <!-- nombre -->
+    <!-- Apellido -->
     <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
@@ -15,6 +15,7 @@
           [formControl]="apellidoControl"
           placeholder="Ingrese el Apellido"
           #apellidoInput
+
         >
         <mat-error *ngFor="let error of apellidoControl.errors | keyvalue">
           {{ error | controlErrorMessages:'texto' }}
@@ -24,7 +25,7 @@
 
 
     </div>
-
+    <!-- Segundo Apellido -->
     <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
@@ -41,7 +42,7 @@
       </mat-form-field>
 
     </div>
-
+    <!-- Nombre -->
     <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
@@ -59,7 +60,7 @@
       </mat-form-field>
 
     </div>
-
+    <!-- Otros Nombres -->
     <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
@@ -79,9 +80,10 @@
     </div>
 
   </div>
-  <!-- fila 2  email y matricula-->
+
+  <!-- fila 2  Nacionalidad Tipo de Documento Emisor de Documento Numero de Documento -->
   <div class="row mt-3 mb-3 ">
-    <!-- email -->
+    <!-- nacionalidad -->
     <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
@@ -134,7 +136,7 @@
       </mat-form-field>
 
     </div>
-    <!-- emisor_documento -->
+    <!-- Numero de Documento -->
     <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
@@ -155,9 +157,10 @@
 
   </div>
 
+  <!-- Fecha de Nacimiento Sexo Domicilio -->
   <div class="row mt-3 mb-3">
-    <!-- email -->
-    <div class="col-md-4">
+    <!-- Fecha de Nacimiento -->
+    <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100" [ngClass]="{'mat-form-field-invalid': fechaNacimientoControl.invalid}">
         <mat-label>Fecha de Nacimiento</mat-label>
@@ -174,7 +177,7 @@
       </mat-form-field>
 
     </div>
-    <!-- tipo_documento -->
+    <!-- Sexo -->
     <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
@@ -194,7 +197,7 @@
       </mat-form-field>
 
     </div>
-    <!-- emisor_documento -->
+    <!-- Domicilio -->
     <div class="col-md-6">
 
       <mat-form-field class="text-area-width" appearance="fill" class="w-100">
@@ -213,8 +216,9 @@
 
     </div>
 
-
   </div>
+
+
 
   <!-- boton enviar -->
   <div  class="row mt-5 ">
@@ -224,19 +228,27 @@
         class="float-start"
         mat-flat-button
         color="secondary"
-        [routerLink]="['/autorizantes','listado']"
+       (click)="cancelar()"
       >
         Cancelar
       </button>
     </div>
     <div class="col">
-      <button
+      <button *ngIf="modal.tipoDialogo!='solicitud'"
         class="float-end"
         mat-flat-button
         [disabled]="personaForm.invalid"
-        color="primary"
+        color="warn"
         (click)="guardar()">
         Guardar
+      </button>
+      <button *ngIf="modal.tipoDialogo=='solicitud'"
+        class="float-end"
+        mat-flat-button
+        [disabled]="personaForm.invalid"
+        color="accent"
+        (click)="guardar()">
+        Seleccionar
       </button>
     </div>
 

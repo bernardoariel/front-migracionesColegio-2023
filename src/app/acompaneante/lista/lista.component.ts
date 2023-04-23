@@ -7,7 +7,7 @@ import { IPersona } from 'src/app/interfaces/IPersona';
 import { PersonasService } from 'src/app/services/personas.service';
 
 @Component({
-  selector: 'app-lista',
+  selector: 'app-lista-acompaneante',
   templateUrl: './lista.component.html',
   styleUrls: ['./lista.component.scss']
 })

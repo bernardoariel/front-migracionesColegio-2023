@@ -27,6 +27,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [],
@@ -57,7 +58,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatRadioModule,
     MatTabsModule,
     MatProgressSpinnerModule,
-    MatCardModule
+    MatCardModule,
+    MatTooltipModule
   ],
   exports:[
     MatButtonModule,
@@ -85,7 +87,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatRadioModule,
     MatTabsModule,
     MatProgressSpinnerModule,
-    
+
   ],
   providers: [{provide: CdkStepper}],
 })

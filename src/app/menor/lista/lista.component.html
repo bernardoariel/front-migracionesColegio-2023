@@ -23,6 +23,13 @@
         Crear Nuevo Menor
 
       </button>
+      <button *ngIf="precarga"  mat-flat-button
+              class="float-end amarillo"
+              (click)="reload()"
+             >
+        <mat-icon> refresh </mat-icon>
+
+      </button>
 
     </div>
 

@@ -19,15 +19,12 @@ import { SolicitudService } from 'src/app/services/solicitud.service';
 
 
 //crear interface IModal
-
 export interface IModal {
 
   tipoDialogo: string,
   accionModal: string,
-
+  persona?: number
 }
-
-
 
 @Component({
   selector: 'app-menor',
@@ -179,8 +176,6 @@ ngAfterViewInit(): void {
 }
   ngOnInit(): void {
 
-
-
     this.subscriptions.add(
       this.nacionalidadesService.getNacionalidades().subscribe((nacionalidad)=>{
         this.nacionalidades = nacionalidad
@@ -259,7 +254,6 @@ ngAfterViewInit(): void {
 
       this.subscriptions.add(
 
-
         this.personasService.updatePersona(personaNuevo).subscribe((persona)=>{
           this.dialogRef?.close()
           this.matDialog.open(ConfirmComponent, {
@@ -306,22 +300,22 @@ ngAfterViewInit(): void {
         id: this.data?.menor?.id
       };
 
-      this.dialogRef?.close()
+
       this.solicitudService.agregarMenor(personaNuevo)
-      /* this.subscriptions.add(
+      this.subscriptions.add(
 
         this.personasService.updatePersona(personaNuevo).subscribe((persona)=>{
           this.dialogRef?.close()
-          this.matDialog.open(ConfirmComponent, {
-              data: {
-                titulo: 'Menor registrado',
-                message: 'Menor registrado correctamente'
-              }
-          });
+          // this.matDialog.open(ConfirmComponent, {
+          //     data: {
+          //       titulo: 'Menor registrado',
+          //       message: 'Menor registrado correctamente'
+          //     }
+          // });
 
 
         })
-      ) */
+      )
 
     }
 

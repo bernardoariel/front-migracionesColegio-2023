@@ -2,9 +2,9 @@
 <hr>
 
 <form [formGroup]="personaForm" autocomplete="off" #menorForm>
-  <!-- fila 1  Nombre y Apellido-->
+  <!-- fila  Apellido Segundo Apellido Nombre Otros Nombres-->
   <div class="row mt-3 mb-3">
-    <!-- nombre -->
+    <!-- Apellido -->
     <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
@@ -25,7 +25,7 @@
 
 
     </div>
-
+    <!-- Segundo Apellido -->
     <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
@@ -42,7 +42,7 @@
       </mat-form-field>
 
     </div>
-
+    <!-- Nombre -->
     <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
@@ -60,7 +60,7 @@
       </mat-form-field>
 
     </div>
-
+    <!-- Otros Nombres -->
     <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
@@ -80,9 +80,10 @@
     </div>
 
   </div>
-  <!-- fila 2  email y matricula-->
+
+  <!-- fila 2  Nacionalidad Tipo de Documento Emisor de Documento Numero de Documento -->
   <div class="row mt-3 mb-3 ">
-    <!-- email -->
+    <!-- nacionalidad -->
     <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
@@ -135,7 +136,7 @@
       </mat-form-field>
 
     </div>
-    <!-- emisor_documento -->
+    <!-- Numero de Documento -->
     <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
@@ -156,18 +157,11 @@
 
   </div>
 
+  <!-- Fecha de Nacimiento Sexo Domicilio -->
   <div class="row mt-3 mb-3">
-    <!-- email -->
-    <div class="col-md-4">
+    <!-- Fecha de Nacimiento -->
+    <div class="col-md-3">
 
-      <!-- <mat-form-field appearance="fill" class="w-100">
-        <mat-label>Fecha de Nacimiento</mat-label>
-        <input matInput [matDatepicker]="dp" [formControl]="fechaNacimientoControl"  (dateInput)="addEvent('input', $event)" (dateChange)="addEvent('change', $event)" readonly>
-        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-
-        <mat-datepicker #dp></mat-datepicker>
-        <mat-hint>dd/mm/yyyy</mat-hint>
-      </mat-form-field> -->
       <mat-form-field appearance="fill" class="w-100" [ngClass]="{'mat-form-field-invalid': fechaNacimientoControl.invalid}">
         <mat-label>Fecha de Nacimiento</mat-label>
         <input matInput [matDatepicker]="dp" [formControl]="fechaNacimientoControl"
@@ -183,7 +177,7 @@
       </mat-form-field>
 
     </div>
-    <!-- tipo_documento -->
+    <!-- Sexo -->
     <div class="col-md-3">
 
       <mat-form-field appearance="fill" class="w-100">
@@ -203,7 +197,7 @@
       </mat-form-field>
 
     </div>
-    <!-- emisor_documento -->
+    <!-- Domicilio -->
     <div class="col-md-6">
 
       <mat-form-field class="text-area-width" appearance="fill" class="w-100">
@@ -221,7 +215,6 @@
       </mat-form-field>
 
     </div>
-
 
   </div>
 
@@ -261,9 +254,4 @@
   </div>
 </form>
 
-<!-- <ng-container *ngFor="let control of menorForm.controls | keyvalue">
 
-  <pre class="text-white">{{ control.key }} : {{ menorForm.get(control.key)?.errors | json }}</pre>
-</ng-container>
-
- -->
