@@ -1,19 +1,23 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, ElementRef, OnInit, ViewChild, Inject } from '@angular/core';
+import {  FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+
 import { IEmisorDocumentos } from 'src/app/interfaces/IEmisor-documentos';
 import { INacionalidad } from 'src/app/interfaces/INacionalidad';
 import { IPersona } from 'src/app/interfaces/IPersona';
 import { ITipoDocument } from 'src/app/interfaces/ITipo-document';
 import { ISexo } from 'src/app/interfaces/isexo';
+import { IModal } from 'src/app/menor/menor/menor.component';
+
 import { EmisorDocumentosService } from 'src/app/services/emisor-documentos.service';
 import { NacionalidadesService } from 'src/app/services/nacionalidades.service';
 import { PersonasService } from 'src/app/services/personas.service';
 import { SexoService } from 'src/app/services/sexo.service';
 import { TipoDocumentoService } from 'src/app/services/tipo-documento.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
+import { SolicitudService } from 'src/app/services/solicitud.service';
 
 @Component({
   selector: 'app-acompaneante',
@@ -30,7 +34,7 @@ export class AcompaneanteComponent implements OnInit {
   /* para obtener una sola persona */
   rutaActual: string ='';
   idPersona: number | null = null;
-
+  modal:IModal = {} as IModal;
   /* Persona Por defecto */
   persona: IPersona = {
     apellido:'',
@@ -93,15 +97,39 @@ export class AcompaneanteComponent implements OnInit {
 
   });
 
-  constructor( private nacionalidadesService: NacionalidadesService,
-              private tipoDocumentoService:TipoDocumentoService,
-              private emisorDocumentosService:EmisorDocumentosService,
-              private sexoService:SexoService,
-              private personasService:PersonasService,
-              private matDialog:MatDialog,
-              private routes:Router,
-              private activatedRoute: ActivatedRoute,
-             ) { }
+  constructor(
+    private nacionalidadesService: NacionalidadesService,
+    private tipoDocumentoService:TipoDocumentoService,
+    private emisorDocumentosService:EmisorDocumentosService,
+    private sexoService:SexoService,
+    private personasService:PersonasService,
+    private matDialog:MatDialog,
+    private routes:Router,
+    private activatedRoute: ActivatedRoute,
+    private solicitudService: SolicitudService,
+    public dialogRef?:MatDialogRef<AcompaneanteComponent>,
+    @Inject(MAT_DIALOG_DATA) public data?: { persona?: IPersona, modal?:IModal }
+    ){
+      if(data?.persona){
+        this.persona = data.persona!
+        console.log('Persona Completa ', this.persona);
+
+        this.personaForm.setValue({
+          apellido: this.persona.apellido,
+          segundoApellido: this.persona.segundo_apellido ?? '',
+          nombre: this.persona.nombre ?? '',
+          otrosNombres: this.persona.otros_nombres ?? '',
+          tipoDocumento: this.persona.type_document_id ?? null,
+          numeroDocumento:  Number(this.persona.numero_de_documento) ?? null
+        })
+        console.log( this.personaForm['controls']['numeroDocumento'])
+        console.log( this.personaForm['controls']['nombre'])
+      }
+      if(data?.modal){
+        this.modal = data.modal
+      }
+
+    }
   ngAfterViewInit(): void {
 
   setTimeout(() => {
@@ -123,7 +151,7 @@ export class AcompaneanteComponent implements OnInit {
     this.subscriptions.add(
       this.tipoDocumentoService.getTipoDocumentos().subscribe((tipoDocumento)=>{
         this.tipoDocumentos = tipoDocumento
-        // console.log(this.tipoDocumentos)
+         console.log(this.tipoDocumentos)
       })
     )
     this.subscriptions.add(
@@ -184,41 +212,99 @@ export class AcompaneanteComponent implements OnInit {
       type_document_id: this.personaForm.value.tipoDocumento,
       numero_de_documento: this.personaForm.value.numeroDocumento ?? ''
     };
-    if(!this.idPersona){
+
+    // AGREGAR DESDE EL MODULO DEL Acompaneante
+    if(this.modal.tipoDialogo == 'acompaneante' && this.modal.accionModal == 'agregar'){
 
       this.subscriptions.add(
         this.personasService.agregarPersona(personaNuevo).subscribe((persona)=>{
+
+          this.dialogRef?.close() // cierra el modal de la carga del menor
+
           this.matDialog.open(ConfirmComponent, {
               data: {
-                titulo: 'Acompañante registrado',
-                message: 'Acompañante registrado correctamente'
+                titulo: 'Acompaneante registrado',
+                message: 'Acompaneante registrado correctamente'
               }
           });
-          this.personaForm.reset();
-          this.routes.navigate(['acompaneante','listado']);
+
         })
       )
 
-    }else{
+    }
+    // EDITAR DESDE EL MODULO DEL AUTORIZANTE
+    if(this.modal.tipoDialogo == 'acompaneante' && this.modal.accionModal == 'editar'){
+      console.log('hola')
       personaNuevo = {
         ...personaNuevo,
-        id: this.idPersona
+        id: this.data?.persona?.id
       };
 
       this.subscriptions.add(
 
         this.personasService.updatePersona(personaNuevo).subscribe((persona)=>{
+          this.dialogRef?.close()
           this.matDialog.open(ConfirmComponent, {
               data: {
-                titulo: 'Acompañante registrado',
-                message: 'Acompañante registrado correctamente'
+                titulo: 'Acompaneante registrado',
+                message: 'Acompaneante registrado correctamente'
               }
           });
-          this.personaForm.reset();
-          this.routes.navigate(['acompaneante','listado']);
+
         })
       )
+
     }
+
+    // AGREGAR DESDE EL MODULO DE LA SOLICITUD
+    if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'agregar'){
+
+      this.subscriptions.add(
+
+        this.personasService.agregarPersona(personaNuevo).subscribe((persona)=>{
+
+          this.dialogRef?.close() // cierra el modal de la carga del menor
+
+          this.solicitudService.agregarAcompaneante(persona) // agrega el menor a la solicitud
+
+         /*  this.matDialog.open(ConfirmComponent, {
+              data: {
+                titulo: 'Acompaneante registrado',
+                message: 'Acompaneante registrado correctamente'
+              }
+          }); */
+
+
+        })
+      )
+
+    }
+
+    // EDITAR DESDE EL MODULO DE LA SOLICITUD
+    if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'editar'){
+      console.log('entramos por aca');
+      personaNuevo = {
+        ...personaNuevo,
+        id: this.data?.persona?.id
+      };
+      console.log('personaNuevo::: ', personaNuevo);
+
+      console.log('this.modal.persona::: ', this.modal.persona);
+
+
+
+      this.solicitudService.agregarAcompaneante(personaNuevo)
+
+      this.subscriptions.add(
+
+        this.personasService.updatePersona(personaNuevo).subscribe((persona)=>{
+          this.dialogRef?.close()
+
+        })
+      )
+
+    }
+
 
   }
 
@@ -250,6 +336,19 @@ export class AcompaneanteComponent implements OnInit {
       }
 
     })
+  }
+
+  cancelar(){
+    if(this.dialogRef){
+
+      this.dialogRef.close()
+
+    }else{
+
+      this.routes.navigate(['acompaneantes','listado']);
+
+    }
+
   }
 
 

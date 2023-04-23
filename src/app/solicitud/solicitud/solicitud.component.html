@@ -21,7 +21,6 @@
 
   <div class="col-md-9">
 
-
     <mat-stepper orientation="vertical" #stepper>
 
       <!-- MENOR -->
@@ -114,10 +113,29 @@
 
           <button mat-button class="float-end amarillo" (click)="crearPersona('acompaneante')">Crear nuevo Acompañante</button>
 
-          <app-lista-acompaneante></app-lista-acompaneante>
+          <app-lista-acompaneante
+            (onSeleccionarAcompaneante)="seleccionarAcompaneante($event)">
+          </app-lista-acompaneante>
 
-
+          <button mat-button matStepperNext>Siguiente Paso</button>
         </ng-template>
+
+      </mat-step>
+
+      <mat-step>
+
+        <ng-template matStepLabel>Finalizar</ng-template>
+<app-orden></app-orden>
+<!-- (onCargarSolicitud)="actualizarSolicitud($event)"
+[fechaMayorEdad]="fechaMayorEdad" -->
+        <br><br><hr>
+
+        <div class="col-12">
+
+          <!-- <button mat-button class="w-100 naranja" (click)="crearOrden()" [disabled]="btnSolicitud">{{ ( estado=='edit' )? 'Guardar edicion' : 'Crear Nueva solicitud'}}</button>
+          <small class="text-danger mt-0 pt-0 mx-auto" *ngIf="btnSolicitud">Para habilitar el botón deberá completar todos los campos</small>
+   -->
+        </div>
 
       </mat-step>
 
@@ -198,6 +216,25 @@
 
       </mat-list-item>
 
+      <mat-list-item *ngFor="let acompanante of solicitud.acompaneantes; let i = index">
+        <p class="mt-p pt-0 mb-0 mt-0"><small>Acomp. {{i+1}}</small></p>
+        <mat-divider></mat-divider>
+        <small class="text-warning ms-3">
+          {{acompanante.apellido | uppercase}} {{acompanante.nombre |titlecase}}
+        </small>
+        <button
+          matTooltip="Editar acompañante de la solicitud"
+          mat-icon-button color="basic"
+          (click)="seleccionarAcompaneante(acompanante)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          matTooltip="Eliminar acompañante de la solicitud"
+          mat-icon-button color="warn"
+          (click)="eliminarAcompanante(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-list-item>
 
 
     </mat-list>

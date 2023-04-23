@@ -8,6 +8,7 @@ import { ListaComponent as ListaAcompaneantes } from 'src/app/acompaneante/lista
 import { IPersona } from 'src/app/interfaces/IPersona';
 import { MenorComponent } from 'src/app/menor/menor/menor.component';
 import { ISolicitud, SolicitudService } from 'src/app/services/solicitud.service';
+import { AcompaneanteComponent } from 'src/app/acompaneante/acompaneante/acompaneante.component';
 
 
 @Component({
@@ -41,7 +42,7 @@ export class SolicitudComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   
+
   }
 
   /* creando un menor */
@@ -65,7 +66,6 @@ export class SolicitudComponent implements OnInit {
     });
 
   }
-
   /* seleccionando un menor para actualizar */
   seleccionarMenor(menor:IPersona){
     console.log(menor);
@@ -89,21 +89,40 @@ export class SolicitudComponent implements OnInit {
   /* Crear Persona  */
   crearPersona(tipo:string){
 
-    const modalPersona = this.dialog.open(AutorizanteComponent,{
-      width: '70vw',
-      data: {
-        modal:{
-          tipoDialogo:'solicitud',
-          accionModal:'agregar'
+    if(tipo === 'autorizante'){
+      const modalPersona = this.dialog.open(AutorizanteComponent,{
+        width: '70vw',
+        data: {
+          modal:{
+            tipoDialogo:'solicitud',
+            accionModal:'agregar'
+          }
         }
-      }
-    });
+      });
 
-    modalPersona.afterClosed().subscribe(result => {
+      modalPersona.afterClosed().subscribe(result => {
 
-      (result === undefined) ? this.stepper.previous() : this.stepper.next();
-      this.ListaAutorizantes.cargarMenores();
-    });
+        (result === undefined) ? this.stepper.previous() : this.stepper.next();
+        this.ListaAutorizantes.cargarMenores();
+      });
+
+    }else{
+      const modalPersona = this.dialog.open(AcompaneanteComponent,{
+        width: '70vw',
+        data: {
+          modal:{
+            tipoDialogo:'solicitud',
+            accionModal:'agregar'
+          }
+        }
+      });
+
+      modalPersona.afterClosed().subscribe(result => {
+
+        (result === undefined) ? this.stepper.previous() : this.stepper.next();
+        this.ListaAcompaneantes.cargarMenores();
+      });
+    }
   }
 
   seleccionarAutorizante1(autorizante:IPersona){
@@ -148,6 +167,24 @@ export class SolicitudComponent implements OnInit {
     })
   }
 
+  seleccionarAcompaneante(acompaneante:IPersona){
+    console.log(acompaneante);
+    const modalAcompaneante = this.dialog.open(AcompaneanteComponent,{
+      width: '70vw',
+      disableClose: true ,
+      data: {
+        persona:acompaneante,
+        modal:{
+          tipoDialogo:'solicitud',
+          accionModal:'editar'
+        }
+      }
+    })
+    modalAcompaneante.afterClosed().subscribe
+    ((acompanenante:IPersona)=>{
+      this.ListaAcompaneantes.cargarMenores()
+    })
+  }
   eliminarMenor(): void {
     this.solicitudService.eliminarCampo(this.solicitud, 'menor');
   }
@@ -156,6 +193,9 @@ export class SolicitudComponent implements OnInit {
     ? this.solicitudService.eliminarCampo(this.solicitud, 'autorizante1')
     : this.solicitudService.eliminarCampo(this.solicitud, 'autorizante2')
 
+  }
+  eliminarAcompanante(index:number){
+    this.solicitudService.eliminarCampo(this.solicitud, 'acompaneantes', index)
   }
 
 }

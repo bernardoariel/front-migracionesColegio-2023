@@ -131,19 +131,27 @@
         class="float-start"
         mat-flat-button
         color="secondary"
-        [routerLink]="['/acompaneante','listado']"
+       (click)="cancelar()"
       >
         Cancelar
       </button>
     </div>
     <div class="col">
-      <button
+      <button *ngIf="modal.tipoDialogo!='solicitud'"
         class="float-end"
         mat-flat-button
         [disabled]="personaForm.invalid"
-        color="primary"
+        color="warn"
         (click)="guardar()">
         Guardar
+      </button>
+      <button *ngIf="modal.tipoDialogo=='solicitud'"
+        class="float-end"
+        mat-flat-button
+        [disabled]="personaForm.invalid"
+        color="accent"
+        (click)="guardar()">
+        Seleccionar
       </button>
     </div>
 

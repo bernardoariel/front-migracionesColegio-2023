@@ -10,6 +10,7 @@ import { AngularMaterialModule } from '../components/shared/angular-material/ang
 import { MenorModule } from '../menor/menor.module';
 import { AutorizanteModule } from '../autorizante/autorizante.module';
 import { AcompaneanteModule } from '../acompaneante/acompaneante.module';
+import { OrdenesModule } from '../ordenes/ordenes.module';
 
 
 
@@ -32,7 +33,8 @@ import { AcompaneanteModule } from '../acompaneante/acompaneante.module';
     MenorModule,
     AutorizanteModule,
     FormsModule,
-    AcompaneanteModule
+    AcompaneanteModule,
+    OrdenesModule
   ]
 })
 export class SolicitudModule { }

@@ -44,16 +44,8 @@ export class PersonasService {
 
   getPersonasAcompaneantesJoin(): Observable<IPersona[]>{
 
-   /*  this.menores$ = this.http.get<IPersona[]>(`${ this.baseUrl }/personasAcompaneantesJoin`) as Subject<IPersona[]>;
-    return this.menores$.asObservable(); */
     return this.http.get<IPersona[]>(`${ this.baseUrl }/personasAcompaneantesJoin`)
   }
-
- /*  getMenorPersonasByNumeroDocumento(dni:number):Observable<any>{
-
-    return this.http.get<number>(`${this.baseUrl}/buscarMenorPorDocumento/${dni}`);
-
-  } */
 
   /* tendria que ir en menores */
   getMenores(): Observable<IMenor[]>{
@@ -64,14 +56,6 @@ export class PersonasService {
 
     return this.http.get<IMenor[]>(`${ this.baseUrl }/menoresJoin`);
   }
-
-
-
-
-
-
-
-
 
   /* para compatibilidad */
   agregarPersonaMenor( persona: IPersona ): Observable<IPersona>{

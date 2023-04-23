@@ -17,7 +17,7 @@ import { SolicitudService } from 'src/app/services/solicitud.service';
 })
 export class ListaComponent implements OnInit {
   @ViewChild('autorizante') autorizante!: AutorizanteComponent;
-  @Input() autorizanteNro: number = 1;
+  // @Input() autorizanteNro: number = 1;
   titulo:string = 'Listado de Autorizantes';
   paginatorItems:string = 'Autorizantes por página';
    // esto es para tomar la ruta actual y crear una variable del tipo boolean
@@ -82,7 +82,7 @@ export class ListaComponent implements OnInit {
 
     this.onSeleccionarAutorizante.emit(autorizante)
   }
-   nuevaPersona(){
+  nuevaPersona(){
 
     const modalMenor = this.dialog.open(AutorizanteComponent,{
       width: '70vw', // Ancho personalizado
@@ -100,7 +100,7 @@ export class ListaComponent implements OnInit {
     })
 
   }
-  seleccionarMenor(autorizante:IPersona){
+  seleccionarAutorizante(autorizante:IPersona){
 
     const modalMenor = this.dialog.open(AutorizanteComponent,{
       width: '70vw',

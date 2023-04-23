@@ -9,7 +9,8 @@ export interface ISolicitud {
   menor: IPersona
   autorizante1: IPersona,
   autorizante2: IPersona,
-  /*acompaneante: IPersona[] */
+  // acompaneante: IPersona
+  acompaneantes: IPersona[]
 }
 
 @Injectable({
@@ -20,8 +21,6 @@ export class SolicitudService {
   private solicitud$ = new BehaviorSubject<ISolicitud | null>(
     null
   );
-
-
 
   // crear un metodo para agregar un menor a la solicitud
   agregarMenor(menor: IPersona): Observable<ISolicitud | null>{
@@ -55,6 +54,7 @@ export class SolicitudService {
    })
    return this.solicitud$.asObservable();
   }
+
   agregarAutorizante2(autorizante2: IPersona): Observable<ISolicitud | null>{
    this.solicitud$
    .pipe(
@@ -72,14 +72,24 @@ export class SolicitudService {
    return this.solicitud$.asObservable();
   }
 
-  // crear un metodo para remover un menor de la solicitud
-  removerMenor(){
-    // this.solicitud.menor = {} as IPersona;
+  agregarAcompaneante(acompaneante: IPersona): Observable<ISolicitud | null>{
+
+    this.solicitud$
+    .pipe(
+     take(1)
+    ).subscribe({
+       next: (solicitud)=>{
+         if (solicitud !== null) {
+          solicitud.acompaneantes.push(acompaneante);
+          console.log('solicitud::: ', solicitud);
+           this.solicitud$.next(solicitud);
+         }
+       }
+    })
+
+    return this.solicitud$.asObservable();
   }
-  // get para obtener lo que hay cargado en la solicitud
- /*  get getMenor(){
-    return this.solicitud.menor;
-  } */
+
   //get para obtener la solicitud
   obtenerSolicitud():Observable<ISolicitud | null>{
     this.solicitud$.next({
@@ -87,12 +97,18 @@ export class SolicitudService {
       menor: {} as IPersona,
       autorizante1: {} as IPersona,
       autorizante2: {} as IPersona,
-       /*
-      acompaneante: [] */
+      // acompaneante: {} as IPersona,
+      acompaneantes: [] as IPersona[],
+
     })
     return this.solicitud$.asObservable();
   }
-  eliminarCampo(solicitud: ISolicitud, campoAEliminar: keyof ISolicitud): void {
-    solicitud[campoAEliminar] = {} as any; // o null, dependiendo del tipo del campo
+
+  eliminarCampo(solicitud: ISolicitud, campoAEliminar: keyof ISolicitud,indiceAEliminar?: number): void {
+    if (campoAEliminar === 'acompaneantes') {
+      solicitud.acompaneantes.splice(indiceAEliminar!, 1);
+    } else {
+      solicitud[campoAEliminar] = {} as any; // o null, dependiendo del tipo del campo
+    }
   }
 }

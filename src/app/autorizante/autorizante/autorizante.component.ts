@@ -135,6 +135,7 @@ export class AutorizanteComponent implements OnInit {
     ) {
       if(data?.persona){
         this.persona = data.persona!
+        console.log('this.persona::: ', this.persona);
         this.personaForm.setValue({
           apellido: this.persona.apellido,
           segundoApellido: this.persona.segundo_apellido ?? '',
@@ -286,42 +287,41 @@ ngAfterViewInit(): void {
               }
           });
 
-
         })
       )
 
     }
 
-    // AGREGAR DESDE EL MODULO DE LA SOLICITUD
-    if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'agregar'){
+  // AGREGAR DESDE EL MODULO DE LA SOLICITUD
+  if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'agregar'){
 
-      this.subscriptions.add(
+    this.subscriptions.add(
 
-        this.personasService.agregarPersona(personaNuevo).subscribe((persona)=>{
+      this.personasService.agregarPersona(personaNuevo).subscribe((persona)=>{
 
-          this.dialogRef?.close() // cierra el modal de la carga del menor
-
-
-          if(this.modal.persona == 1){
-
-            this.solicitudService.agregarAutorizante1(persona) // agrega el menor a la solicitud
-          }else{
-
-            this.solicitudService.agregarAutorizante2(persona) // agrega el menor a la solicitud
-          }
-
-          this.matDialog.open(ConfirmComponent, {
-              data: {
-                titulo: 'Menor registrado',
-                message: 'Menor registrado correctamente'
-              }
-          });
+        this.dialogRef?.close() // cierra el modal de la carga del menor
 
 
-        })
-      )
+        if(this.modal.persona == 1){
 
-    }
+          this.solicitudService.agregarAutorizante1(persona) // agrega el menor a la solicitud
+        }else{
+
+          this.solicitudService.agregarAutorizante2(persona) // agrega el menor a la solicitud
+        }
+
+        /* this.matDialog.open(ConfirmComponent, {
+            data: {
+              titulo: 'Menor registrado',
+              message: 'Menor registrado correctamente'
+            }
+        }); */
+
+
+      })
+    )
+
+  }
 
     // EDITAR DESDE EL MODULO DE LA SOLICITUD
     if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'editar'){
@@ -393,7 +393,7 @@ ngAfterViewInit(): void {
 
     }else{
 
-      this.routes.navigate(['menores','listado']);
+      this.routes.navigate(['autorizantes','listado']);
 
     }
 
