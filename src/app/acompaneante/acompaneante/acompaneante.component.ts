@@ -263,6 +263,7 @@ export class AcompaneanteComponent implements OnInit {
 
         this.personasService.agregarPersona(personaNuevo).subscribe((persona)=>{
 
+          this.dialogRef?.close({persona: persona})
           this.dialogRef?.close() // cierra el modal de la carga del menor
 
           this.solicitudService.agregarAcompaneante(persona) // agrega el menor a la solicitud
@@ -298,6 +299,7 @@ export class AcompaneanteComponent implements OnInit {
       this.subscriptions.add(
 
         this.personasService.updatePersona(personaNuevo).subscribe((persona)=>{
+          this.dialogRef?.close({persona: persona})
           this.dialogRef?.close()
 
         })

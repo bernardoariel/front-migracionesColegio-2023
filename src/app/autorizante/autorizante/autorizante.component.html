@@ -1,7 +1,7 @@
-<h1 class="mt-2">{{titulo}}</h1>
+<h1 class="mt-2">Agregando {{titulo}}</h1>
 <hr>
 
-<form [formGroup]="personaForm" autocomplete="off">
+<form [formGroup]="personaForm" autocomplete="off" #menorForm>
   <!-- fila  Apellido Segundo Apellido Nombre Otros Nombres-->
   <div class="row mt-3 mb-3">
     <!-- Apellido -->
@@ -156,7 +156,49 @@
     </div>
 
   </div>
+  <!-- fila 7  Autorizante Vinculo -->
+  <div class="row">
+    <!-- Caracter Autorizante -->
+    <div class="col-md-6">
 
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Caracter Autorizante</mat-label>
+        <mat-select [formControl]="caracterAutorizanteControl">
+          <mat-option *ngFor="let caracterAutorizante of caracterAutorizantes"
+            [value]="caracterAutorizante.id"
+          >
+          {{ caracterAutorizante.descripcion}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngFor="let error of caracterAutorizanteControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
+      </mat-form-field>
+
+
+    </div>
+
+    <!-- Acreditar Vinculo -->
+    <div class="col-md-6">
+
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Acreditar Vinculo </mat-label>
+        <mat-select [formControl]="acreditacionVinculoControl">
+          <mat-option *ngFor="let acreditacionVinculo of acreditacionVinculos"
+            [value]="acreditacionVinculo.id"
+          >
+          {{ acreditacionVinculo.descripcion}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngFor="let error of acreditacionVinculoControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
+      </mat-form-field>
+
+
+    </div>
+
+   </div>
   <!-- Fecha de Nacimiento Sexo Domicilio -->
   <div class="row mt-3 mb-3">
     <!-- Fecha de Nacimiento -->
@@ -218,8 +260,6 @@
 
   </div>
 
-
-
   <!-- boton enviar -->
   <div  class="row mt-5 ">
 
@@ -256,9 +296,4 @@
   </div>
 </form>
 
-<!-- <ng-container *ngFor="let control of menorForm.controls | keyvalue">
 
-  <pre class="text-white">{{ control.key }} : {{ menorForm.get(control.key)?.errors | json }}</pre>
-</ng-container>
-
- -->

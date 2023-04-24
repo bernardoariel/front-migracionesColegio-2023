@@ -33,7 +33,7 @@ export class PersonasService {
   }
 
   getPersonaById(id:number):Observable<IPersona>{
-
+    console.log('aaaa',`${ this.baseUrl }/personaById/${id}`)
     return this.http.get<IPersona>(`${ this.baseUrl }/personaById/${id}`)
   }
 

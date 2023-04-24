@@ -11,6 +11,7 @@ import { MenorModule } from '../menor/menor.module';
 import { AutorizanteModule } from '../autorizante/autorizante.module';
 import { AcompaneanteModule } from '../acompaneante/acompaneante.module';
 import { OrdenesModule } from '../ordenes/ordenes.module';
+import { OrdenModule } from '../orden/orden.module';
 
 
 
@@ -34,7 +35,8 @@ import { OrdenesModule } from '../ordenes/ordenes.module';
     AutorizanteModule,
     FormsModule,
     AcompaneanteModule,
-    OrdenesModule
+    OrdenesModule,
+    OrdenModule
   ]
 })
 export class SolicitudModule { }

@@ -96,16 +96,13 @@
             </mat-select>
           </mat-form-field>
 
-          <h3 *ngIf="viajaSolo=='si'">Eligio si</h3>
-          <h3 *ngIf="viajaSolo=='no'">Eligio no</h3>
-
 
         </ng-template>
 
       </mat-step>
 
       <!-- fila Acompaneante-->
-      <mat-step>
+      <mat-step *ngIf="viajaSolo=='no'">
 
         <ng-template matStepLabel >Agregar un Acompaneante</ng-template>
 
@@ -122,24 +119,16 @@
 
       </mat-step>
 
-      <mat-step>
+      <mat-step *ngIf="existeMenor">
 
         <ng-template matStepLabel>Finalizar</ng-template>
-<app-orden></app-orden>
-<!-- (onCargarSolicitud)="actualizarSolicitud($event)"
-[fechaMayorEdad]="fechaMayorEdad" -->
-        <br><br><hr>
 
-        <div class="col-12">
-
-          <!-- <button mat-button class="w-100 naranja" (click)="crearOrden()" [disabled]="btnSolicitud">{{ ( estado=='edit' )? 'Guardar edicion' : 'Crear Nueva solicitud'}}</button>
-          <small class="text-danger mt-0 pt-0 mx-auto" *ngIf="btnSolicitud">Para habilitar el botón deberá completar todos los campos</small>
-   -->
-        </div>
+          <app-orden-form></app-orden-form>
 
       </mat-step>
 
     </mat-stepper>
+
 
   </div>
 

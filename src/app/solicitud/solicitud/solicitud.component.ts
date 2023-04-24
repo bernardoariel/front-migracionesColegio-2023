@@ -23,7 +23,7 @@ export class SolicitudComponent implements OnInit {
   @ViewChild(ListaMenores) ListaMenores!: ListaMenores;
   @ViewChild(ListaAcompaneantes) ListaAcompaneantes!: ListaAcompaneantes;
 
-
+  existeMenor: boolean = false;
   viajaSolo = 'no'
   solicitud!:ISolicitud
   // @ViewChild(ListaComponent) ListaComponent!: ListaComponent;
@@ -32,9 +32,11 @@ export class SolicitudComponent implements OnInit {
 
     this.solicitudService.obtenerSolicitud().subscribe({
       next: (solicitud)=>{
-
         if (solicitud !== null) {
           this.solicitud = solicitud;
+          if(this.solicitud.menor !== null){
+            this.existeMenor = true;
+          }
         }
 
       }
@@ -60,9 +62,8 @@ export class SolicitudComponent implements OnInit {
 
     modalMenor.afterClosed().subscribe(result => {
 
-      (result === undefined) ? this.stepper.previous() : this.stepper.next();
+     (result && result.persona) ? this.stepper.next() : null;
 
-      this.ListaMenores.cargarMenores();
     });
 
   }
@@ -82,6 +83,7 @@ export class SolicitudComponent implements OnInit {
     })
     modalMenor.afterClosed().subscribe
     ((menor:IPersona)=>{
+
       this.ListaMenores.cargarMenores()
     })
   }
@@ -102,7 +104,7 @@ export class SolicitudComponent implements OnInit {
 
       modalPersona.afterClosed().subscribe(result => {
 
-        (result === undefined) ? this.stepper.previous() : this.stepper.next();
+        (result && result.persona) ? this.stepper.next() : null;
         this.ListaAutorizantes.cargarMenores();
       });
 
@@ -119,7 +121,7 @@ export class SolicitudComponent implements OnInit {
 
       modalPersona.afterClosed().subscribe(result => {
 
-        (result === undefined) ? this.stepper.previous() : this.stepper.next();
+        (result && result.persona) ? this.stepper.next() : null;
         this.ListaAcompaneantes.cargarMenores();
       });
     }
@@ -185,15 +187,19 @@ export class SolicitudComponent implements OnInit {
       this.ListaAcompaneantes.cargarMenores()
     })
   }
+
   eliminarMenor(): void {
     this.solicitudService.eliminarCampo(this.solicitud, 'menor');
+    this.existeMenor = false;
   }
+
   eliminarAutorizante(nro:number): void {
     (nro === 1)
     ? this.solicitudService.eliminarCampo(this.solicitud, 'autorizante1')
     : this.solicitudService.eliminarCampo(this.solicitud, 'autorizante2')
 
   }
+  
   eliminarAcompanante(index:number){
     this.solicitudService.eliminarCampo(this.solicitud, 'acompaneantes', index)
   }

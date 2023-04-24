@@ -1,3 +1,4 @@
+import { IOrdenDatos } from './../interfaces/IOrden-datos';
 import { Injectable } from '@angular/core';
 import { IPersona } from '../interfaces/IPersona';
 import { Escribano } from '../interfaces/escribano';
@@ -9,8 +10,8 @@ export interface ISolicitud {
   menor: IPersona
   autorizante1: IPersona,
   autorizante2: IPersona,
-  // acompaneante: IPersona
   acompaneantes: IPersona[]
+  solicitud: IOrdenDatos
 }
 
 @Injectable({
@@ -21,6 +22,22 @@ export class SolicitudService {
   private solicitud$ = new BehaviorSubject<ISolicitud | null>(
     null
   );
+
+  agregarSolicitud(solicitud: IOrdenDatos): Observable<ISolicitud | null> {
+    this.solicitud$
+      .pipe(
+        take(1)
+      )
+      .subscribe({
+        next: (solicitudActual) => {
+          if (solicitudActual !== null) {
+            solicitudActual.solicitud = solicitud;
+            this.solicitud$.next(solicitudActual);
+          }
+        }
+      });
+    return this.solicitud$.asObservable();
+  }
 
   // crear un metodo para agregar un menor a la solicitud
   agregarMenor(menor: IPersona): Observable<ISolicitud | null>{
@@ -37,6 +54,7 @@ export class SolicitudService {
    })
    return this.solicitud$.asObservable();
   }
+
   agregarAutorizante1(autorizante1: IPersona): Observable<ISolicitud | null>{
     console.log('autorizante1::: ', autorizante1);
    this.solicitud$
@@ -97,9 +115,8 @@ export class SolicitudService {
       menor: {} as IPersona,
       autorizante1: {} as IPersona,
       autorizante2: {} as IPersona,
-      // acompaneante: {} as IPersona,
       acompaneantes: [] as IPersona[],
-
+      solicitud: {} as IOrdenDatos
     })
     return this.solicitud$.asObservable();
   }
@@ -111,4 +128,5 @@ export class SolicitudService {
       solicitud[campoAEliminar] = {} as any; // o null, dependiendo del tipo del campo
     }
   }
+
 }

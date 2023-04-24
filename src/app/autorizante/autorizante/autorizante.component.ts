@@ -1,21 +1,25 @@
+import { CaracterAutorizanteService } from './../../services/caracter-autorizante.service';
 import { Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { IAcreditacionVinculo } from 'src/app/interfaces/IAcreditacion-Vinculo';
+import { ICaracterAutorizante } from 'src/app/interfaces/ICaracter-Autorizante';
 import { IEmisorDocumentos } from 'src/app/interfaces/IEmisor-documentos';
 import { INacionalidad } from 'src/app/interfaces/INacionalidad';
 import { IPersona } from 'src/app/interfaces/IPersona';
 import { ITipoDocument } from 'src/app/interfaces/ITipo-document';
 import { ISexo } from 'src/app/interfaces/isexo';
+import { IModal } from 'src/app/menor/menor/menor.component';
 import { EmisorDocumentosService } from 'src/app/services/emisor-documentos.service';
 import { NacionalidadesService } from 'src/app/services/nacionalidades.service';
 import { PersonasService } from 'src/app/services/personas.service';
 import { SexoService } from 'src/app/services/sexo.service';
+import { SolicitudService } from 'src/app/services/solicitud.service';
 import { TipoDocumentoService } from 'src/app/services/tipo-documento.service';
 import { ConfirmComponent } from '../confirm/confirm.component';
-import { IModal } from 'src/app/menor/menor/menor.component';
-import { SolicitudService } from 'src/app/services/solicitud.service';
+import { AcreditacionVinculoService } from 'src/app/services/acreditacion-vinculo.service';
 
 
 @Component({
@@ -28,12 +32,12 @@ export class AutorizanteComponent implements OnInit {
   private subscriptions = new Subscription(); /// para hacer el Ondestroy
 
   /* para el template */
-  titulo = 'Agregando un Autorizante';
-
+  titulo = ' un Autorizante';
   /* para obtener una sola persona */
   rutaActual: string ='';
   idPersona: number | null = null;
   modal:IModal = {} as IModal;
+
   /* Persona Por defecto */
   persona: IPersona = {
     apellido:'',
@@ -47,15 +51,19 @@ export class AutorizanteComponent implements OnInit {
     fecha_de_nacimiento: '',
     sex_id: null,
     domicilio:'',
+    authorizing_relatives_id: 1,
+    accreditation_links_id: 1,
   }
+
   /* para los select de los controles */
   nacionalidades: INacionalidad[] = [];
   tipoDocumentos: ITipoDocument[] = [];
   emisorDocumentos: IEmisorDocumentos[] = [];
   sexo: ISexo[] = [];
+  caracterAutorizantes:ICaracterAutorizante[] =[];
+  acreditacionVinculos: IAcreditacionVinculo[] = [];
 
   /*  Controles */
-
   apellidoControl = new FormControl('', [
     Validators.required,
     Validators.minLength(3),
@@ -89,6 +97,8 @@ export class AutorizanteComponent implements OnInit {
     Validators.minLength(3),
     Validators.maxLength(200),
   ]);
+  caracterAutorizanteControl = new FormControl<number>(13, [Validators.required]);
+  acreditacionVinculoControl = new FormControl<number>(13, [Validators.required]);
   /* validador especifico */
   fechaNacimientoValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -104,7 +114,6 @@ export class AutorizanteComponent implements OnInit {
       return null;
     };
   }
-
   /* persona Form */
   personaForm = new FormGroup({
     apellido: this.apellidoControl,
@@ -117,9 +126,10 @@ export class AutorizanteComponent implements OnInit {
     numeroDocumento: this.numeroDocumentoControl,
     fechaNacimiento: this.fechaNacimientoControl,
     sexo: this.sexoControl,
-    domicilio: this.domicilioControl
+    domicilio: this.domicilioControl,
+    caracterAutorizante:this.caracterAutorizanteControl,
+    acreditacionVinculo: this.acreditacionVinculoControl
   });
-
   constructor(
     private nacionalidadesService: NacionalidadesService,
     private tipoDocumentoService:TipoDocumentoService,
@@ -128,11 +138,13 @@ export class AutorizanteComponent implements OnInit {
     private personasService:PersonasService,
     private matDialog:MatDialog,
     private routes:Router,
-    private activatedRoute: ActivatedRoute,
+    private caracterAutorizanteService:CaracterAutorizanteService,
+    private acreditacionVinculoService: AcreditacionVinculoService,
     private solicitudService: SolicitudService,
     public dialogRef?:MatDialogRef<AutorizanteComponent>,
     @Inject(MAT_DIALOG_DATA) public data?: { persona?: IPersona, modal?:IModal }
-    ) {
+  ) {
+
       if(data?.persona){
         this.persona = data.persona!
         console.log('this.persona::: ', this.persona);
@@ -148,83 +160,64 @@ export class AutorizanteComponent implements OnInit {
           fechaNacimiento: this.persona.fecha_de_nacimiento ?? '',
           sexo: Number(this.persona.sex_id ?? null),
           domicilio: this.persona.domicilio ?? '',
+          caracterAutorizante: Number(this.persona.authorizing_relatives_id) || null,
+          acreditacionVinculo: Number(this.persona.accreditation_links_id) || null
         })
       }
       if(data?.modal){
         this.modal = data.modal
       }
-    }
 
-ngAfterViewInit(): void {
+  }
+  ngAfterViewInit(): void {
 
-  setTimeout(() => {
-    if (this.apellidoInput?.nativeElement) {
-      this.apellidoInput.nativeElement.focus();
-      this.apellidoInput.nativeElement.select();
-    }
-  });
+    setTimeout(() => {
+      if (this.apellidoInput?.nativeElement) {
+        this.apellidoInput.nativeElement.focus();
+        this.apellidoInput.nativeElement.select();
+      }
+    });
 
-}
+  }
   ngOnInit(): void {
 
     this.subscriptions.add(
       this.nacionalidadesService.getNacionalidades().subscribe((nacionalidad)=>{
         this.nacionalidades = nacionalidad
-        // console.log( this.nacionalidades)
       })
     )
     this.subscriptions.add(
       this.tipoDocumentoService.getTipoDocumentos().subscribe((tipoDocumento)=>{
         this.tipoDocumentos = tipoDocumento
-        // console.log(this.tipoDocumentos)
       })
     )
     this.subscriptions.add(
       this.emisorDocumentosService.getTipoDocumentos().subscribe((emisorDocumento)=>{
         this.emisorDocumentos = emisorDocumento
-        // console.log("->",this.emisorDocumentos)
       })
     )
 
     this.subscriptions.add(
       this.sexoService.getSexo().subscribe((sexo)=>{
         this.sexo = sexo
-        // console.log(this.sexo)
       })
     )
-    this.activatedRoute.params.subscribe((params) => {
+    this.subscriptions.add(
+      this.caracterAutorizanteService.getCaracterAutorizantes().subscribe((caracterAutorizante)=>{
+        this.caracterAutorizantes = caracterAutorizante
+        // console.log(this.caracterAutorizante)
+      })
+    )
 
-      if (params.hasOwnProperty('id')) {
-        // El objeto params tiene un parámetro 'id'
-        this.idPersona = params['id']
-        this.subscriptions.add(
-
-          this.personasService.getPersonaById(params['id']).subscribe((persona) => {
-            this.persona = persona
-            this.personaForm.setValue({
-              apellido: this.persona.apellido,
-              segundoApellido: this.persona.segundo_apellido ?? '',
-              nombre: this.persona.nombre ?? '',
-              otrosNombres: this.persona.otros_nombres ?? '',
-              nacionalidad: this.persona.nationality_id ?? null,
-              tipoDocumento: this.persona.type_document_id ?? null,
-              emisorDocumento: this.persona.issuer_document_id ?? null,
-              numeroDocumento:  Number(this.persona.numero_de_documento) ?? null,
-              fechaNacimiento: this.persona.fecha_de_nacimiento ?? '',
-              sexo: Number(this.persona.sex_id ?? null),
-              domicilio: this.persona.domicilio ?? '',
-            })
-          })
-        )
-
-      } else {
-        // El objeto params no tiene un parámetro 'id'
-        console.log('El parámetro id no está presente');
-      }
-
-    });
+    this.subscriptions.add(
+      this.acreditacionVinculoService.getAcreditarVinculos().subscribe((acreditacionVinculo)=>{
+        this.acreditacionVinculos = acreditacionVinculo
+        // console.log(this.acreditacionVinculo)
+      })
+    )
 
   }
+
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
 
@@ -232,9 +225,9 @@ ngAfterViewInit(): void {
 
   guardar(){
 
-    if (!this.personaForm.valid) return
+    if (!this.personaForm.valid) return //si es invalido el formulario  no hace nada
 
-    let personaNuevo: IPersona = {
+    let personaNuevo: IPersona = { //crea un objeto personaNuevo con los valores del formulario
       apellido: this.personaForm.value.apellido ?? '',
       segundo_apellido: this.personaForm.value.segundoApellido,
       nombre: this.personaForm.value.nombre ?? '',
@@ -248,7 +241,7 @@ ngAfterViewInit(): void {
       domicilio: this.personaForm.value.domicilio ?? ''
     };
 
-    // AGREGAR DESDE EL MODULO DEL AUTORIZANTE
+    // AGREGAR DESDE EL MODULO DEL MENOR
     if(this.modal.tipoDialogo == 'autorizante' && this.modal.accionModal == 'agregar'){
 
       this.subscriptions.add(
@@ -263,12 +256,14 @@ ngAfterViewInit(): void {
               }
           });
 
+          // this.personaForm.reset();
+
+
         })
       )
 
     }
-
-    // EDITAR DESDE EL MODULO DEL AUTORIZANTE
+    // EDITAR DESDE EL MODULO DEL MENOR
     if(this.modal.tipoDialogo == 'autorizante' && this.modal.accionModal == 'editar'){
 
       personaNuevo = {
@@ -292,47 +287,44 @@ ngAfterViewInit(): void {
 
     }
 
-  // AGREGAR DESDE EL MODULO DE LA SOLICITUD
-  if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'agregar'){
+    // AGREGAR DESDE EL MODULO DE LA SOLICITUD
+    if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'agregar'){
 
-    this.subscriptions.add(
+      this.subscriptions.add(
 
-      this.personasService.agregarPersona(personaNuevo).subscribe((persona)=>{
+        this.personasService.agregarPersona(personaNuevo).subscribe((persona)=>{
 
-        this.dialogRef?.close() // cierra el modal de la carga del menor
+          this.dialogRef?.close({persona: persona})
+          this.dialogRef?.close() // cierra el modal de la carga del menor
+          if(this.modal.persona == 1){
+
+            this.solicitudService.agregarAutorizante1(persona) // agrega el menor a la solicitud
+          }else{
+
+            this.solicitudService.agregarAutorizante2(persona) // agrega el menor a la solicitud
+          }
+
+         /*  this.matDialog.open(ConfirmComponent, {
+              data: {
+                titulo: 'Autorizante registrado',
+                message: 'Autorizante registrado correctamente'
+              }
+          }); */
 
 
-        if(this.modal.persona == 1){
+        })
+      )
 
-          this.solicitudService.agregarAutorizante1(persona) // agrega el menor a la solicitud
-        }else{
-
-          this.solicitudService.agregarAutorizante2(persona) // agrega el menor a la solicitud
-        }
-
-        /* this.matDialog.open(ConfirmComponent, {
-            data: {
-              titulo: 'Menor registrado',
-              message: 'Menor registrado correctamente'
-            }
-        }); */
-
-
-      })
-    )
-
-  }
+    }
 
     // EDITAR DESDE EL MODULO DE LA SOLICITUD
     if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'editar'){
-      console.log('entramos por aca');
+
       personaNuevo = {
         ...personaNuevo,
         id: this.data?.persona?.id
       };
-      console.log('personaNuevo::: ', personaNuevo);
 
-      console.log('this.modal.persona::: ', this.modal.persona);
 
       if(this.modal.persona == 1){
 
@@ -342,10 +334,19 @@ ngAfterViewInit(): void {
 
         this.solicitudService.agregarAutorizante2(personaNuevo) // agrega el menor a la solicitud
       }
+
       this.subscriptions.add(
 
         this.personasService.updatePersona(personaNuevo).subscribe((persona)=>{
-          this.dialogRef?.close()
+          this.dialogRef?.close({persona: persona})
+
+          // this.matDialog.open(ConfirmComponent, {
+          //     data: {
+          //       titulo: 'Menor registrado',
+          //       message: 'Menor registrado correctamente'
+          //     }
+          // });
+
 
         })
       )
@@ -353,8 +354,8 @@ ngAfterViewInit(): void {
     }
 
   }
-
   validarNumero(evento: KeyboardEvent) {
+
     const esNumero = /^[0-9]$/.test(evento.key);
     const esBorrado = evento.key === 'Backspace' || evento.key === 'Delete';
     const esTab = evento.key === 'Tab';
@@ -367,6 +368,7 @@ ngAfterViewInit(): void {
     if (!esNumero && !esBorrado && !esTab && !esFlecha && !esCopia && !esPega && !esInicio && !esFin) {
       evento.preventDefault();
     }
+
   }
 
   buscarPersonaExistente(){
@@ -375,17 +377,15 @@ ngAfterViewInit(): void {
     .subscribe((persona:IPersona)=>{
 
       if(persona && persona.id){
-
         if(this.persona.numero_de_documento != this.numeroDocumentoControl.value){
 
           this.numeroDocumentoControl.setErrors({'dniRepetido':true})
         }
       }
 
-
-
     })
   }
+
   cancelar(){
     if(this.dialogRef){
 

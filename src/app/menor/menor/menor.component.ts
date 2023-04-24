@@ -20,7 +20,6 @@ import { SolicitudService } from 'src/app/services/solicitud.service';
 
 //crear interface IModal
 export interface IModal {
-
   tipoDialogo: string,
   accionModal: string,
   persona?: number
@@ -63,7 +62,6 @@ export class MenorComponent implements OnInit, OnDestroy {
   sexo: ISexo[] = [];
 
   /*  Controles */
-
   apellidoControl = new FormControl('', [
     Validators.required,
     Validators.minLength(3),
@@ -143,6 +141,7 @@ export class MenorComponent implements OnInit, OnDestroy {
 
       if(data?.menor){
         this.persona = data.menor!
+        console.log('this.persona::: ', this.persona);
         this.personaForm.setValue({
           apellido: this.persona.apellido,
           segundoApellido: this.persona.segundo_apellido ?? '',
@@ -276,16 +275,8 @@ ngAfterViewInit(): void {
 
         this.personasService.agregarPersona(personaNuevo).subscribe((persona)=>{
 
-          this.dialogRef?.close() // cierra el modal de la carga del menor
+          this.dialogRef?.close({persona: persona}) // cierra el modal de la carga del menor
           this.solicitudService.agregarMenor(persona) // agrega el menor a la solicitud
-
-          this.matDialog.open(ConfirmComponent, {
-              data: {
-                titulo: 'Menor registrado',
-                message: 'Menor registrado correctamente'
-              }
-          });
-
 
         })
       )
@@ -322,9 +313,6 @@ ngAfterViewInit(): void {
 
 
   }
-
-
-
 
   validarNumero(evento: KeyboardEvent) {
 
