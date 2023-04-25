@@ -9,7 +9,7 @@ import { IOrden } from '../interfaces/IOrden';
 })
 export class SoapService {
 
-  private baseUrl: string = environment.baseUrl;
+  private baseUrl: string = environment.baseUrl + '/v2';
   private httpHeaders = new HttpHeaders({'Content-Type':'application/json'})
   constructor( private http:HttpClient) { }
 

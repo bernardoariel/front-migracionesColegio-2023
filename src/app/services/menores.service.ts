@@ -25,7 +25,9 @@ export class MenoresService {
     console.log(`${ this.baseUrl }/menor/${id}`)
     return this.http.get<IMenor>(`${ this.baseUrl }/menor/${id}`)
   }
+
   actualizarMenor(menor:IMenor):Observable<IMenor>{
+
     return this.http.put<IMenor>(`${ this.baseUrl }/actualizarmenor/${menor.id}`,menor,{headers: this.httpHeaders})
   }
 

@@ -1,0 +1,167 @@
+<h1 class="mt-2">{{titulo}}</h1>
+<hr>
+
+<form [formGroup]="personaForm" autocomplete="off">
+  <!-- fila 1  Nombre y Apellido-->
+  <div class="row mt-3 mb-3">
+    <!-- nombre -->
+    <div class="col-md-6">
+
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Apellido</mat-label>
+        <input
+          type="text"
+          matInput
+          [formControl]="apellidoControl"
+          placeholder="Ingrese el Apellido"
+          id="apellido"
+          #apellidoInput
+        >
+        <mat-error *ngFor="let error of apellidoControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
+      </mat-form-field>
+
+
+
+    </div>
+
+    <div class="col-md-6">
+
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Segundo Apellido</mat-label>
+        <input
+          type="text"
+          [formControl]="segundoApellidoControl"
+          matInput
+          placeholder="Ingrese el Segundo Apellido"
+        >
+        <mat-error *ngFor="let error of segundoApellidoControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+
+  </div>
+  <!-- fila 2  email y matricula-->
+  <div class="row mt-3 mb-3">
+    <div class="col-md-6">
+
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Nombre</mat-label>
+        <input
+          type="text"
+          [formControl]="nombreControl"
+          matInput
+          required
+          placeholder="Ingrese el Nombre"
+        >
+        <mat-error *ngFor="let error of nombreControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+
+    <div class="col-md-6">
+
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Otros Nombres</mat-label>
+        <input
+          type="text"
+          id="otros_nombres"
+          [formControl]="otrosNombresControl"
+          matInput
+          placeholder="Ingrese Otros Nombres"
+        >
+        <mat-error *ngFor="let error of otrosNombresControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+
+
+  </div>
+
+  <div class="row mt-3 mb-3">
+    <div class="col-md-6">
+
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Tipo de Documento</mat-label>
+        <mat-select [formControl]="documentosControl">
+          <mat-option *ngFor="let tipoDocumento of tipoDocumentos"
+            [value]="tipoDocumento.id"
+          >
+          {{ tipoDocumento.descripcion}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngFor="let error of documentosControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+
+    <div class="col-md-6">
+
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Numero de Documento</mat-label>
+        <input
+        matNumberInput
+        matInput
+        (blur)="buscarPersonaExistente()"
+        (keydown)="validarNumero($event)"
+        [formControl]="numeroDocumentoControl"
+        >
+        <mat-error *ngFor="let error of numeroDocumentoControl.errors | keyvalue">
+          {{ error | controlErrorMessages:'texto' }}
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+  </div>
+
+  <!-- boton enviar -->
+  <div  class="row mt-5 ">
+
+    <div class="col">
+      <button
+        class="float-start"
+        mat-flat-button
+        color="secondary"
+       (click)="cancelar()"
+      >
+        Cancelar
+      </button>
+    </div>
+    <div class="col">
+      <button *ngIf="modal.tipoDialogo!='solicitud'"
+        class="float-end"
+        mat-flat-button
+        [disabled]="personaForm.invalid"
+        color="warn"
+        (click)="guardar()">
+        Guardar
+      </button>
+      <button *ngIf="modal.tipoDialogo=='solicitud'"
+        class="float-end"
+        mat-flat-button
+        [disabled]="personaForm.invalid"
+        color="accent"
+        (click)="guardar()">
+        Seleccionar
+      </button>
+    </div>
+
+
+  </div>
+</form>
+
+<!-- <ng-container *ngFor="let control of menorForm.controls | keyvalue">
+
+  <pre class="text-white">{{ control.key }} : {{ menorForm.get(control.key)?.errors | json }}</pre>
+</ng-container>
+
+ -->

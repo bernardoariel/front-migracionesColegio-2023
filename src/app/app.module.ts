@@ -1,3 +1,4 @@
+import { MenorModule } from './menor/menor.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -9,24 +10,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AngularMaterialModule } from './components/shared/angular-material/angular-material.module';
 
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 
-import { FechaBDPipe } from './pipes/fecha-bd.pipe';
-
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 import { LoginModule } from './login/login.module';
 import { EscribanosModule } from './escribanos/escribanos.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { VideosComponent } from './components/shared/videos/videos.component';
-
-
-
-
-
-
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 
 
@@ -36,22 +29,21 @@ import { VideosComponent } from './components/shared/videos/videos.component';
     AppComponent,
     VideosComponent,
 
-
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    // FormsModule,
     ReactiveFormsModule,
     AngularMaterialModule,
     LoginModule,
     EscribanosModule,
-    DashboardModule
+    DashboardModule,
+    MenorModule
   ],
   providers: [
-    {provide: MAT_DATE_LOCALE, useValue: 'es-AR'}
+    { provide: MAT_DATE_LOCALE, useValue: 'es-AR' } // Usa 'es-AR' para el formato de fecha dd-mm-yyyy
   ],
   bootstrap: [AppComponent]
 })

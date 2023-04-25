@@ -1,14 +1,15 @@
 <div style="margin: 10px;">
+
   <h1>Lista de Acompañantes</h1>
   <hr>
   <div class="row">
 
     <div class="col">
 
-      <mat-form-field appearance="standard">
+      <mat-form-field appearance="standard" class="w-100">
 
-        <mat-label>Filtro</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Filtro" #input>
+        <mat-label>Buscar Acompaniante y/o Progenitor</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ingrese el dato a buscar" #input>
 
       </mat-form-field>
 

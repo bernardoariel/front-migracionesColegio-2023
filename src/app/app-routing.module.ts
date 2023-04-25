@@ -36,17 +36,17 @@ const routes: Routes = [
   },
   {
     path: 'menores',
-    loadChildren: ()=> import('./menores/menores.module').then( m => m.MenoresModule),
+    loadChildren: ()=> import('./menor/menor.module').then( m => m.MenorModule),
     canActivate:[AuthGuard]
   },
   {
     path: 'autorizantes',
-    loadChildren: ()=> import('./autorizantes/autorizantes.module').then( m => m.AutorizantesModule),
+    loadChildren: ()=> import('./autorizante/autorizante.module').then( m => m.AutorizanteModule),
     canActivate:[AuthGuard]
   },
   {
-    path: 'progenitores',
-    loadChildren: ()=> import('./progenitores/progenitores.module').then( m => m.ProgenitoresModule),
+    path: 'solicitudes',
+    loadChildren: ()=> import('./solicitud/solicitud.module').then( m => m.SolicitudModule),
     canActivate:[AuthGuard]
   },
   {
@@ -60,8 +60,8 @@ const routes: Routes = [
     canActivate:[AuthGuard]
   },
   {
-    path: 'acompaneantes',
-    loadChildren: ()=> import('./acompaneantes/acompaneantes.module').then( m => m.AcompaneantesModule),
+    path: 'acompaneante',
+    loadChildren: ()=> import('./acompaneante/acompaneante.module').then( m => m.AcompaneanteModule),
     canActivate:[AuthGuard]
   },
   {
@@ -70,13 +70,13 @@ const routes: Routes = [
     pathMatch: 'full'
   },
 
-
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+
 export class AppRoutingModule {
 
 }

@@ -15,6 +15,7 @@ import { OrdenesItemsService } from '../../services/ordenes-items.service';
 import { AcompaneantesService } from '../../services/acompaneantes.service';
 import { shareReplay, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { AcompanianteTipoService } from 'src/app/services/acompaniante-tipo.service';
 
 @Component({
   selector: 'app-crear',
@@ -22,8 +23,10 @@ import { catchError, map, tap } from 'rxjs/operators';
   styleUrls: ['./crear.component.scss']
 })
 export class CrearComponent implements OnInit {
+
   private nombresProgenitores: {[key: number]: string} = {};
   private nombresAcompaneantes: {[key: number]: string} = {};
+
   templateMenor:boolean = false;
   templateAutorizante1:boolean = false;
   templateAutorizante2:boolean = false;
@@ -57,6 +60,7 @@ export class CrearComponent implements OnInit {
     nro_foja:'',
     paises_desc:'',
   }
+
   estado!:string;
   orden!:IOrden
   nombreMenor:string =''
@@ -69,6 +73,13 @@ export class CrearComponent implements OnInit {
   btnSolicitud: boolean = true;
   fechaMayorEdad!: Date | undefined | String;
   selectedIndex: any;
+  tipoViajeSeleccionado: number | undefined;
+  tipoAcompaneante: any;
+
+  opcionesTipoViaje = [
+    {valor: 1, descripcion: 'viaja solo'},
+    {valor: 2, descripcion: 'viaja acompañado'},
+  ];
 
   tabActive(event: { index: any; }) {
     // obtenemos el index del tab
@@ -80,6 +91,7 @@ export class CrearComponent implements OnInit {
   cargarArrayARecorrer(){
     this.arrayRecorrer = this.miOrdenPersonas.progenitores.slice().concat(this.miOrdenPersonas.acompaneantes.slice());
   }
+
   constructor(
     private ordenesService:OrdenesService,
     private router:Router,
@@ -88,7 +100,8 @@ export class CrearComponent implements OnInit {
     private progenitorService:ProgenitorService,
     private activatedRoute:ActivatedRoute,
     private ordenesItemsService:OrdenesItemsService,
-    private acompaneantesService: AcompaneantesService
+    private acompaneantesService: AcompaneantesService,
+    private acompanianteTipoService:AcompanianteTipoService
     ) {
 
 
@@ -96,7 +109,13 @@ export class CrearComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("prognitor _>"+this.progenitorSeleccionado)
+    this.acompanianteTipoService.getTipoCompania().subscribe(
+      (respuesta)=>{
+        this.tipoAcompaneante = respuesta
+        console.log('this.tipoAcompaneante::: ', this.tipoAcompaneante);
+      }
 
+    )
     this.activatedRoute.params.subscribe((params) => {
 
       if (params.hasOwnProperty('id')) {
@@ -191,7 +210,6 @@ export class CrearComponent implements OnInit {
 
   agregarNuevoMenor( menor: number){
 
-
     this.miOrdenPersonas.minor_id = menor;
     console.log(this.miOrdenPersonas)
 
@@ -203,7 +221,7 @@ export class CrearComponent implements OnInit {
                             ${(respuesta.segundo_apellido!=null)? respuesta.segundo_apellido: ''}
                             ${respuesta.nombre} ${(respuesta.otros_nombres!=null)? respuesta.otros_nombres : ''}`
                             console.log(respuesta.fecha_de_nacimiento)
-        const fechaNacimiento = new Date(respuesta.fecha_de_nacimiento);
+        const fechaNacimiento = new Date(respuesta.fecha_de_nacimiento as string);
         this.fechaMayorEdad = new Date(fechaNacimiento.getFullYear() + this.mayoriaEdad, fechaNacimiento.getMonth(), fechaNacimiento.getDate());
         this.fechaMayorEdad  = this.fechaMayorEdad.toISOString().substring(0, 10);
 
@@ -296,10 +314,6 @@ export class CrearComponent implements OnInit {
 
     }
 
-
-
-
-
     agregarAcompaneante(acompaneante:number,i: number){
 
       this.miOrdenPersonas.acompaneantes.push(acompaneante);
@@ -322,8 +336,12 @@ export class CrearComponent implements OnInit {
     crearOrden(){
 
       console.log(this.miOrdenDatos)
-
-      this.orden = { ...this.miOrdenPersonas , ...this.miOrdenDatos} ;
+      let datosFinales = {
+        "tipo_acompaniante":"2",
+        "descripcion_acompaniante":"Gabriel Gonzales Dni 11272829; Rosita Perez Dni 13561819"
+      }
+      this.orden = { ...this.miOrdenPersonas , ...this.miOrdenDatos , ...datosFinales} ;
+      console.log('this.orden::: ', this.orden);
 
       this.activatedRoute.params.subscribe((params) => {
 

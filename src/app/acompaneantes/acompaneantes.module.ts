@@ -7,18 +7,19 @@ import { AcompaneanteComponent } from './acompaneante/acompaneante.component';
 import { AngularMaterialModule } from '../components/shared/angular-material/angular-material.module';
 import { DashboardModule } from '../dashboard/dashboard.module';
 import { FormsModule } from '@angular/forms';
+import { MensajeConfirmacionComponent } from '../components/shared/mensaje-confirmacion/mensaje-confirmacion.component';
 
 
 @NgModule({
   declarations: [
     ListadoComponent,
     AcompaneanteComponent,
-
+    MensajeConfirmacionComponent
   ],
   imports: [
     CommonModule,
     AcompaneantesRoutingModule,
-     AngularMaterialModule,
+    AngularMaterialModule,
     DashboardModule,
     FormsModule
   ],

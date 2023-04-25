@@ -1,4 +1,3 @@
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -11,7 +10,7 @@ import { OrdenFormateada } from '../interfaces/orden-formateada';
 })
 export class OrdenesService {
 
-  private baseUrl: string = environment.baseUrl;
+  private baseUrl: string = environment.baseUrl + '/v2';
   private httpHeaders = new HttpHeaders({'Content-Type':'application/json'})
   private token: null | string = null;
   constructor( private http:HttpClient) {
@@ -32,10 +31,12 @@ export class OrdenesService {
   }
 
   actualizarOrden(orden:IOrden):Observable<IOrden>{
-    return this.http.put<IOrden>(`${ this.baseUrl }/actualizarorden/${orden.id}`,orden,{headers: this.httpHeaders})
+
+    return this.http.put<IOrden>(`${ this.baseUrl }actualizarorden/${orden.id}`,orden,{headers: this.httpHeaders})
   }
 
   agregarOrden( orden: IOrden ): Observable<IOrden>{
+
     return this.http.post<IOrden>(`${this.baseUrl}/agregarorden`,orden);
   }
 
@@ -44,11 +45,13 @@ export class OrdenesService {
   }
 
   getOrdenesFormateado(): Observable<OrdenFormateada[]>{
-    console.log(`${ this.baseUrl }/ordenestodos`)
+
+
     const httpHeaders = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `${this.token}`
     });
+
     return this.http.get<OrdenFormateada[]>(`${ this.baseUrl }/ordenestodos`,{ headers: httpHeaders });
   }
 

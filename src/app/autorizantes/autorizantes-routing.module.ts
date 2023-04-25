@@ -7,16 +7,16 @@ const rutas: Routes = [
   {
     path:'',
     children:[
-      {
+     /*  {
         path:'listado',
         component: ListadoComponent,
         pathMatch:'full'
-      },
-      {
+      }, */
+      /* {
         path:'agregar',
         component: AutorizanteComponent,
         pathMatch:'full'
-      },
+      }, */
       {
         path:'editar/:id',
         component: AutorizanteComponent,

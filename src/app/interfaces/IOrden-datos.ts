@@ -6,7 +6,7 @@ export interface IOrdenDatos {
     serie_foja:string;
     tipo_foja:number | null;
     vigencia_hasta_mayoria_edad:string;
-    fecha_vigencia_desde:string;
+    fecha_vigencia_desde:string ;
     fecha_vigencia_hasta:string;
     fecha_del_instrumento:string;
     instrumento:string;

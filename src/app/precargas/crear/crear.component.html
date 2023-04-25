@@ -21,6 +21,7 @@
 
   <div class="col-md-9">
 
+    <!-- MENOR -->
     <mat-stepper orientation="vertical">
 
       <!-- fila menor -->
@@ -92,21 +93,19 @@
 
       </mat-step>
 
-      <mat-step>
 
-        <ng-template matStepLabel>El Menor viaja Solo?</ng-template>
+      <!-- <mat-step>
 
-       <!-- <mat-slide-toggle (click)="cambiarValorViajaSolo()">SI</mat-slide-toggle> -->
+       <ng-template matStepLabel>El Menor viaja Solo?</ng-template>
        <div class="slide-toggle-container">
         <span class="slide-toggle-label">NO</span>
         <mat-slide-toggle color="warn" (click)="cambiarValorViajaSolo()">SI</mat-slide-toggle>
-      </div>
+       </div>
 
-
-      </mat-step>
+      </mat-step> -->
 
       <!-- fila Progenitores -->
-      <div *ngIf="viajaSolo">
+      <div>
 
         <mat-step *ngFor="let progenitor of arrayRecorrer; let i = index;">
 
@@ -115,21 +114,6 @@
             <ng-template matStepContent>
 
               <mat-tab-group dynamicHeight  (selectedTabChange)="tabActive($event)">
-
-                <mat-tab label="Progenitores">
-
-                  <!-- progenitores -->
-                  <button class="float-end amarillo mt-2" mat-button (click)="mostrarTemplateProgenitor()">{{ (!templateProgenitor)? 'Crear nuevo Progenitor': 'Cancelar'}}</button>
-
-                  <app-listado-progenitores *ngIf="!templateProgenitor;else elseTemplateProgenitor" (onSeleccionarProgenitor)="agregarProgenitor($event,i)"></app-listado-progenitores>
-
-                  <ng-template #elseTemplateProgenitor>
-
-                    <app-progenitor (cambiarTemplateProgenitorEvent)="mostrarTemplateProgenitor()"></app-progenitor>
-
-                  </ng-template>
-
-                </mat-tab>
 
                 <mat-tab label="Acompañanates">
 
@@ -141,7 +125,6 @@
                   <!-- <app-listado-progenitores *ngIf="!templateProgenitor;else elseTemplateProgenitor" (onSeleccionarProgenitor)="agregarProgenitor($event,i)"></app-listado-progenitores> -->
                   <ng-template #elseTemplateAcompaneante>
 
-
                     <app-acompaneante (cambiarTemplateAcompaneanteEvent)="mostrarTemplateAcompaneante()"></app-acompaneante>
                   </ng-template>
 
@@ -151,20 +134,47 @@
 
             </ng-template>
 
-
         </mat-step>
 
       </div>
 
-      <mat-step *ngIf="viajaSolo">
+      <mat-step>
 
-        <ng-template matStepLabel>Elija: Agregar Otro Progenitor o Acompañante || FInalizar</ng-template>
+        <ng-template matStepLabel>Elija: Agregar Otro Progenitor o Acompañante </ng-template>
+
+        <div style="display: flex; justify-content: space-between;">
+
+          <mat-form-field class="select-tipo-viaje">
+            <mat-label>¿Como Viaja el Menor?</mat-label>
+            <!-- <mat-select [(ngModel)]="tipoAcompaneanteSeleccionado">
+              <mat-option *ngFor="let acompaneante of tipoAcompaneante" [value]="acompaneante.id">
+                {{ acompaneante.descripcion}}
+              </mat-option>
+            </mat-select> -->
+            <mat-select [(ngModel)]="tipoViajeSeleccionado">
+              <mat-option *ngFor="let opcion of opcionesTipoViaje" [value]="opcion.valor">
+                {{ opcion.descripcion | titlecase}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div  *ngIf="tipoViajeSeleccionado == 1">
+            <button mat-button matStepperNext style="width: 100%;">Siguiente Paso</button>
+          </div>
+
+        </div>
+
+        <div *ngIf="tipoViajeSeleccionado == 2" style="width: 100%;">
+          <app-acompaneante></app-acompaneante>
+        </div>
+       <!--  <div *ngIf="tipoAcompaneanteSeleccionado !== 1 && tipoAcompaneanteSeleccionado !== undefined">
+          <br><br><hr>
+          <button mat-button (click)="crearOtroAcompaneante()">+ Acompañante o Progenitor</button>
+          <button mat-button matStepperNext>Siguiente Paso</button>
+        </div> -->
 
 
-        <br><br><hr>
 
-        <button mat-button (click)="crearOtroAcompaneante()">+ Acompañante o Progenitor</button>
-        <button mat-button matStepperNext>Siguiente Paso</button>
       </mat-step>
 
     <mat-step>
