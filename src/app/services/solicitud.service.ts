@@ -3,10 +3,11 @@ import { Injectable } from '@angular/core';
 import { IPersona } from '../interfaces/IPersona';
 import { Escribano } from '../interfaces/escribano';
 import { BehaviorSubject, Observable, take } from 'rxjs';
+import { EscribanosService } from './escribanos.service';
 
 // crear interface para la solicitud
 export interface ISolicitud {
-  // escribano: Escribano
+  escribano: Escribano
   menor: IPersona
   autorizante1: IPersona,
   autorizante2: IPersona,
@@ -18,7 +19,10 @@ export interface ISolicitud {
   providedIn: 'root'
 })
 export class SolicitudService {
+  escribanoLogueado!: Escribano  ;
+  constructor(private escribanosService: EscribanosService){
 
+  }
   private solicitud$ = new BehaviorSubject<ISolicitud | null>(
     null
   );
@@ -40,7 +44,41 @@ export class SolicitudService {
   }
 
   // crear un metodo para agregar un menor a la solicitud
+  agregarEscribano(escribano: Escribano): Observable<ISolicitud | null>{
+    console.log('agregar escri::: ', escribano);
+   this.solicitud$
+   .pipe(
+    take(1)
+   ).subscribe({
+      next: (solicitud)=>{
+        if (solicitud !== null) {
+          solicitud.escribano = escribano;
+          this.solicitud$.next(solicitud);
+        }
+      }
+   })
+   return this.solicitud$.asObservable();
+  }
+  // crear un metodo para agregar un menor a la solicitud
   agregarMenor(menor: IPersona): Observable<ISolicitud | null>{
+    // obtene el userID del escribano logueado localstorage
+    let escriLocalStorage: number = Number(localStorage.getItem('userId'))?? '0';
+    if(localStorage.getItem('token')){
+
+      if(localStorage.getItem('userId')){
+        escriLocalStorage =  Number(localStorage.getItem('userId')) ?? '0';
+
+      }
+    }
+    this.escribanosService.getEscribanoId(escriLocalStorage).subscribe(
+      (escribano)=>{
+
+      this.escribanoLogueado = escribano;
+
+      this.agregarEscribano(this.escribanoLogueado).subscribe();
+      }
+    )
+
    this.solicitud$
    .pipe(
     take(1)
@@ -111,7 +149,7 @@ export class SolicitudService {
   //get para obtener la solicitud
   obtenerSolicitud():Observable<ISolicitud | null>{
     this.solicitud$.next({
-      // escribano: {} as Escribano,
+      escribano: {} as Escribano,
       menor: {} as IPersona,
       autorizante1: {} as IPersona,
       autorizante2: {} as IPersona,

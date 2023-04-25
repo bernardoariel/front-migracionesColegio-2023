@@ -24,7 +24,7 @@ export class SolicitudComponent implements OnInit {
   @ViewChild(ListaAcompaneantes) ListaAcompaneantes!: ListaAcompaneantes;
 
   existeMenor: boolean = false;
-  viajaSolo = 'no'
+  viajaSolo = 'si'
   solicitud!:ISolicitud
   // @ViewChild(ListaComponent) ListaComponent!: ListaComponent;
   titulo: string = 'Solicitud de Servicio';
@@ -199,7 +199,7 @@ export class SolicitudComponent implements OnInit {
     : this.solicitudService.eliminarCampo(this.solicitud, 'autorizante2')
 
   }
-  
+
   eliminarAcompanante(index:number){
     this.solicitudService.eliminarCampo(this.solicitud, 'acompaneantes', index)
   }

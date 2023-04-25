@@ -166,6 +166,7 @@ export class AutorizanteComponent implements OnInit {
       }
       if(data?.modal){
         this.modal = data.modal
+
       }
 
   }
@@ -238,7 +239,9 @@ export class AutorizanteComponent implements OnInit {
       numero_de_documento: this.personaForm.value.numeroDocumento ?? '',
       fecha_de_nacimiento: this.personaForm.value.fechaNacimiento ?? '',
       sex_id: this.personaForm.value.sexo ?? '',
-      domicilio: this.personaForm.value.domicilio ?? ''
+      domicilio: this.personaForm.value.domicilio ?? '',
+      authorizing_relatives_id: Number(this.personaForm.value.caracterAutorizante),
+      accreditation_links_id: Number(this.personaForm.value.acreditacionVinculo),
     };
 
     // AGREGAR DESDE EL MODULO DEL MENOR
@@ -320,6 +323,7 @@ export class AutorizanteComponent implements OnInit {
     // EDITAR DESDE EL MODULO DE LA SOLICITUD
     if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'editar'){
 
+      console.log('personaNuevo::: ', personaNuevo);
       personaNuevo = {
         ...personaNuevo,
         id: this.data?.persona?.id

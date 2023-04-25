@@ -1,10 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription, take } from 'rxjs';
 import { IOrden } from 'src/app/interfaces/IOrden';
 import { IOrdenDatos } from 'src/app/interfaces/IOrden-datos';
 import { OrdenesService } from 'src/app/services/ordenes.service';
 import { ISolicitud, SolicitudService } from 'src/app/services/solicitud.service';
+import { ConfirmarComponent } from '../confirmar/confirmar.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-orden-form',
@@ -14,6 +17,10 @@ import { ISolicitud, SolicitudService } from 'src/app/services/solicitud.service
 export class OrdenComponent implements OnInit, OnDestroy {
   solicitud!:ISolicitud;
   ordenNueva?:IOrden;
+
+  menorSelected:boolean = false
+  autorizante1Selected:boolean = false
+
   tipoCualquierPaisSubscription?: Subscription;
   mayoriaEdadSubscription?: Subscription;
   today = new Date();
@@ -62,7 +69,9 @@ export class OrdenComponent implements OnInit, OnDestroy {
 
   constructor(
     private solicitudService: SolicitudService,
-    private ordenesService:OrdenesService
+    private ordenesService:OrdenesService,
+    public dialog: MatDialog,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -70,7 +79,6 @@ export class OrdenComponent implements OnInit, OnDestroy {
       next: (solicitud)=>{
         if (solicitud !== null) {
           this.solicitud = solicitud;
-          console.log('solicitudOrden: ', this.solicitud);
         }
       }
     })
@@ -121,6 +129,20 @@ export class OrdenComponent implements OnInit, OnDestroy {
     this.fechaHastaControl.setValue (new Date(fechaNacimientoDate.getFullYear() + this.mayoriaEdad, fechaNacimientoDate.getMonth(), fechaNacimientoDate.getDate()))
 
   }
+  consultaDeTerminado(){
+    const dialogRef = this.dialog.open(ConfirmarComponent,{
+      width: '350px',
+      data: '¿Está seguro que desea terminar la solicitud?'
+    })
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result){
+        this.agregarSolicitud();
+        this.router.navigate(['solicitudes','listado'])
+      }
+    });
+
+  }
   agregarSolicitud() {
     const valoresFormulario = this.ordenForm.value;
     let orden: IOrdenDatos = {
@@ -136,23 +158,27 @@ export class OrdenComponent implements OnInit, OnDestroy {
       nro_foja:'0',
       paises_desc:valoresFormulario.paises||'',
     }
-   this.solicitudService.agregarSolicitud(orden);
-    this.ordenNueva ={
-      ...orden,
-      autorizante1_id:this.solicitud.autorizante1.id,
-      autorizante2_id:this.solicitud.autorizante2.id,
-      minor_id:this.solicitud.menor.id!,
-      notary_id:2,
-      acompaneantes:this.solicitud.acompaneantes
+    this.solicitudService.agregarSolicitud(orden);
+    // if(Object.keys(this.solicitud.menor).length !== 0 && Object.keys(this.solicitud.autorizante1).length !== 0){
+        this.ordenNueva ={
+          ...orden,
+          autorizante1_id:this.solicitud.autorizante1.id,
+          autorizante2_id:this.solicitud.autorizante2.id,
+          minor_id:this.solicitud.menor.id!,
+          notary_id:this.solicitud.escribano.id || null,
+          acompaneantes:this.solicitud.acompaneantes
 
-   }
-   this.ordenesService.agregarOrden(this.ordenNueva)
-    .pipe(take(1))
-    .subscribe({
-      next: (orden) => {
-        console.log('orden: ', orden);
       }
-    });
+      this.ordenesService.agregarOrden(this.ordenNueva)
+        .pipe(take(1))
+        .subscribe({
+          next: (orden) => {
+            console.log('orden: ', orden);
+          }
+        });
+      // }else{
+      //   alert('faltan datos')
+      // }
 
 
   }

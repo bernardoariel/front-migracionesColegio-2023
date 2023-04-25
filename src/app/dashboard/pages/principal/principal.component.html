@@ -45,16 +45,6 @@
         <span> Autorizantes</span>
 
       </a>
-
-      <a routerLink='/solicitudes/listado'
-         (click)="sidenav.toggle()"
-         mat-list-item>
-        <mat-icon>family_restroom</mat-icon>
-
-        <span class="spacer"></span>
-        <span> Solicitudes</span>
-
-      </a>
       <a routerLink='/acompaneante/listado'
          (click)="sidenav.toggle()"
          mat-list-item>
@@ -64,7 +54,17 @@
         <span> Acompañantes</span>
 
       </a>
-      <a routerLink='/ordenes/listado'
+      <a routerLink='/solicitudes/listado'
+         (click)="sidenav.toggle()"
+         mat-list-item>
+        <mat-icon>view_timeline</mat-icon>
+
+        <span class="spacer"></span>
+        <span> Solicitudes</span>
+
+      </a>
+
+      <!-- <a routerLink='/ordenes/listado'
          (click)="sidenav.toggle()"
          mat-list-item>
         <mat-icon>summarize</mat-icon>
@@ -72,8 +72,8 @@
         <span class="spacer"></span>
         <span> Ordenes</span>
 
-      </a>
-      <a *ngIf="usuario!= 1" routerLink='/precargas/nueva'
+      </a> -->
+      <!-- <a *ngIf="usuario!= 1" routerLink='/precargas/nueva'
          (click)="sidenav.toggle()"
          mat-list-item>
         <mat-icon>post_add</mat-icon>
@@ -81,7 +81,7 @@
         <span class="spacer"></span>
         <span> Nueva Orden</span>
 
-      </a>
+      </a> -->
       <a *ngIf="usuario!= 1" routerLink='/solicitudes/nueva'
          (click)="sidenav.toggle()"
          mat-list-item>

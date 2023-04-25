@@ -5,13 +5,15 @@ import { ListaComponent } from './lista/lista.component';
 import { AngularMaterialModule } from '../components/shared/angular-material/angular-material.module';
 import { PipesModule } from '../pipes/pipes.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ConfirmarComponent } from './confirmar/confirmar.component';
 
 
 
 @NgModule({
   declarations: [
     OrdenComponent,
-    ListaComponent
+    ListaComponent,
+    ConfirmarComponent
   ],
   imports: [
     CommonModule,

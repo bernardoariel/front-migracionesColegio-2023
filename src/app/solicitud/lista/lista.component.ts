@@ -83,24 +83,24 @@ export class ListaComponent implements OnInit {
       )
     }
 
-    autorizarSoap(valor:number){
-      this.loading = true;
+    autorizarSoap(valor:any){
+      valor.loading = true;
       this.soapService.aprobarSoap(valor).subscribe(
         resp => {
           console.log("estoy respondiendo al autorizar "+ resp)
           // this.router.navigate(['/']);
           this.cargarOrdenes()
-          this.loading = false;
+          valor.loading = false;
         },
         error => {
           console.log("Se produjo un error al autorizar: ", error);
-          this.loading = false;
+          valor.loading = false;
         },
         () => {
           console.log("La petición de autorización ha finalizado.");
           this.cargarOrdenes();
           // this.router.navigate(['/ordenes/listado']);
-          this.loading = false;
+          valor.loading = false;
         }
       );
     }

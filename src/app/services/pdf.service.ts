@@ -1,3 +1,4 @@
+import { PersonasService } from './personas.service';
 import { Injectable } from '@angular/core';
 import { jsPDF } from "jspdf";
 import * as qrcode from 'qrcode';
@@ -23,6 +24,7 @@ export class PdfService {
     "fechahastacuando":"10102023",
     "autorizante":"Noelia ",
     "acompañanante":"Jose paco gabriel"
+
   }
   fechaPdf:string='';
   fojasPdf:string=''
@@ -33,13 +35,14 @@ export class PdfService {
   constructor(
     private ordenesService:OrdenesService,
     private escribanosServices:EscribanosService,
-    private menoresServices:MenoresService ) { }
+    private personasServices:PersonasService ) { }
 
   imprimirPDF(id:number){
 
     // datos de la orden
     this.ordenesService.getOrdenId(id).subscribe(
       (orden)=>{
+
         this.respuesta.nro_foja = orden.nro_foja
         this.respuesta.fechahastacuando = orden.fecha_vigencia_hasta
         this.respuesta.aprobacion = orden.aprobacion
@@ -48,6 +51,7 @@ export class PdfService {
         this.fechaPdf = `Fecha: ${orden.fecha_del_instrumento}`
         this.fojasPdf = `Nº de serie y Nº de foja/ actuación notarial: ${ orden.serie_foja} ${orden.numero_actuacion_notarial_cert_firma}`
         this.aprobacionPdf = `Nº  de autorización otorgado por el Ministerio del Interior - Migraciones: ${orden.aprobacion}`
+
          // datos escribano
         this.escribanosServices.getEscribanoId(this.idEscribano).subscribe(
           (escribano)=>{
@@ -56,7 +60,8 @@ export class PdfService {
             this.respuesta.nombreescribano = escribano.nombre
         })
         //datos menores
-        this.menoresServices.getMenorId(this.idMenor).subscribe(
+        // this.menoresServices.getMenorId(this.idMenor).subscribe(
+       this.personasServices.getPersonaById(this.idMenor).subscribe(
           (menor)=>{
             this.respuesta.apellidomenor = menor.apellido
             this.respuesta.nombremenor = menor.nombre

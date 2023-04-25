@@ -46,11 +46,12 @@ export class OrdenesService {
 
   getOrdenesFormateado(): Observable<OrdenFormateada[]>{
 
-    console.log(`${ this.baseUrl }/ordenestodos`)
+
     const httpHeaders = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `${this.token}`
     });
+
     return this.http.get<OrdenFormateada[]>(`${ this.baseUrl }/ordenestodos`,{ headers: httpHeaders });
   }
 

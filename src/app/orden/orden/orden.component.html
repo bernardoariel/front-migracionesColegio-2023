@@ -140,12 +140,10 @@
     </div>
     <button mat-flat-button
     class="amarillo"
-    [disabled]="ordenForm.invalid"
-    (click)="agregarSolicitud()">Agregar Solicitud</button>
+    [disabled]="ordenForm.invalid || menorSelected || autorizante1Selected"
+    (click)="consultaDeTerminado()">Agregar Solicitud</button>
   </div>
 
 </form>
-<!-- <pre>
-  {{ ordenNueva | json}}
-</pre> -->
+
 
