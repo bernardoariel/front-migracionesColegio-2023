@@ -23,6 +23,7 @@ export class PersonasService {
   }
 
   updatePersona(persona:IPersona):Observable<IPersona>{
+    console.log('Servicio', persona);
     return this.http.put<IPersona>(`${ this.baseUrl }/persona/update/${persona.id}`,persona,{headers: this.httpHeaders})
   }
 

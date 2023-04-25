@@ -323,37 +323,32 @@ export class AutorizanteComponent implements OnInit {
     // EDITAR DESDE EL MODULO DE LA SOLICITUD
     if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'editar'){
 
-      console.log('personaNuevo::: ', personaNuevo);
+      console.log('anttes  ', personaNuevo);
       personaNuevo = {
         ...personaNuevo,
         id: this.data?.persona?.id
       };
 
-
-      if(this.modal.persona == 1){
-
-        this.solicitudService.agregarAutorizante1(personaNuevo)
-        // agrega el menor a la solicitud
-      }else{
-
-        this.solicitudService.agregarAutorizante2(personaNuevo) // agrega el menor a la solicitud
-      }
-
+      console.log('despues::: ', personaNuevo);
       this.subscriptions.add(
 
         this.personasService.updatePersona(personaNuevo).subscribe((persona)=>{
-          this.dialogRef?.close({persona: persona})
 
-          // this.matDialog.open(ConfirmComponent, {
-          //     data: {
-          //       titulo: 'Menor registrado',
-          //       message: 'Menor registrado correctamente'
-          //     }
-          // });
+          if(this.modal.persona == 1){
 
+            this.solicitudService.agregarAutorizante1(personaNuevo)
+            // agrega el menor a la solicitud
 
+          }else{
+
+            this.solicitudService.agregarAutorizante2(personaNuevo) // agrega el menor a la solicitud
+          }
+          this.dialogRef?.close({persona: personaNuevo})
         })
       )
+
+
+
 
     }
 
