@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { IMenor } from '../interfaces/IMenor';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, catchError, tap } from 'rxjs';
 import { IPersona } from '../interfaces/IPersona';
 
 
@@ -23,8 +23,22 @@ export class PersonasService {
   }
 
   updatePersona(persona:IPersona):Observable<IPersona>{
-    console.log('Servicio', persona);
-    return this.http.put<IPersona>(`${ this.baseUrl }/persona/update/${persona.id}`,persona,{headers: this.httpHeaders})
+    
+    
+    return this.http.put<IPersona>(`${this.baseUrl}/persona/update/${persona.id}`, persona, { headers: this.httpHeaders })
+    .pipe(
+      tap(res => {
+        // Manejar la respuesta exitosa aquí
+        console.log('Enviado de datos: ',persona)
+        console.log('Respuesta exitosa:', res);
+      }),
+      catchError(error => {
+        // Manejar el error aquí
+        console.error('Error:', error);
+        // Puedes lanzar un error personalizado si lo deseas
+        throw new Error('Hubo un error al actualizar la persona');
+      })
+    );
   }
 
   getPersonaByDocumento(dni:number):Observable<any>{
