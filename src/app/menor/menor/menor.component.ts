@@ -207,6 +207,17 @@ ngAfterViewInit(): void {
 
     if (!this.personaForm.valid) return //si es invalido el formulario  no hace nada
 
+    let fechaNacimiento = this.personaForm.value.fechaNacimiento;
+    console.log('fechaNacimiento::: ', fechaNacimiento);
+    let fechaNacimientoDate: Date | null = null;
+    console.log('fechaNacimientoDate::: ', fechaNacimientoDate);
+
+    if (fechaNacimiento) {
+      fechaNacimientoDate = new Date(fechaNacimiento);
+      fechaNacimiento = fechaNacimientoDate.toISOString().substring(0, 10);
+    }
+    console.log('fechaNacimiento::: ', fechaNacimiento);
+
     let personaNuevo: IPersona = { //crea un objeto personaNuevo con los valores del formulario
       apellido: this.personaForm.value.apellido ?? '',
       segundo_apellido: this.personaForm.value.segundoApellido,
@@ -216,11 +227,11 @@ ngAfterViewInit(): void {
       type_document_id: this.personaForm.value.tipoDocumento,
       issuer_document_id: this.personaForm.value.emisorDocumento,
       numero_de_documento: this.personaForm.value.numeroDocumento ?? '',
-      fecha_de_nacimiento: this.personaForm.value.fechaNacimiento ?? '',
+      fecha_de_nacimiento: fechaNacimiento,
       sex_id: this.personaForm.value.sexo ?? '',
       domicilio: this.personaForm.value.domicilio ?? ''
     };
-
+    console.log(personaNuevo);
     // AGREGAR DESDE EL MODULO DEL MENOR
     if(this.modal.tipoDialogo == 'menor' && this.modal.accionModal == 'agregar'){
 

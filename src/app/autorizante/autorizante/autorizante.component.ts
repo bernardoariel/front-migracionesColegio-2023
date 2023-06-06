@@ -227,6 +227,16 @@ export class AutorizanteComponent implements OnInit {
   guardar(){
 
     if (!this.personaForm.valid) return //si es invalido el formulario  no hace nada
+    let fechaNacimiento = this.personaForm.value.fechaNacimiento;
+    console.log('fechaNacimiento::: ', fechaNacimiento);
+    let fechaNacimientoDate: Date | null = null;
+    console.log('fechaNacimientoDate::: ', fechaNacimientoDate);
+
+    if (fechaNacimiento) {
+      fechaNacimientoDate = new Date(fechaNacimiento);
+      fechaNacimiento = fechaNacimientoDate.toISOString().substring(0, 10);
+    }
+    console.log('fechaNacimiento::: ', fechaNacimiento);
 
     let personaNuevo: IPersona = { //crea un objeto personaNuevo con los valores del formulario
       apellido: this.personaForm.value.apellido ?? '',
@@ -237,7 +247,7 @@ export class AutorizanteComponent implements OnInit {
       type_document_id: this.personaForm.value.tipoDocumento,
       issuer_document_id: this.personaForm.value.emisorDocumento,
       numero_de_documento: this.personaForm.value.numeroDocumento ?? '',
-      fecha_de_nacimiento: this.personaForm.value.fechaNacimiento ?? '',
+      fecha_de_nacimiento: fechaNacimiento,
       sex_id: this.personaForm.value.sexo ?? '',
       domicilio: this.personaForm.value.domicilio ?? '',
       authorizing_relatives_id: Number(this.personaForm.value.caracterAutorizante),

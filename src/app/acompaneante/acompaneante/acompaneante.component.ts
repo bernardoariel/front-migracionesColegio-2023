@@ -203,7 +203,7 @@ export class AcompaneanteComponent implements OnInit {
   guardar(){
 
     if (!this.personaForm.valid) return
-
+  
     let personaNuevo: IPersona = {
       apellido: this.personaForm.value.apellido ?? '',
       segundo_apellido: this.personaForm.value.segundoApellido,
