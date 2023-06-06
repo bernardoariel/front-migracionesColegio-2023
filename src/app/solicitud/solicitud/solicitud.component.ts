@@ -9,6 +9,7 @@ import { IPersona } from 'src/app/interfaces/IPersona';
 import { MenorComponent } from 'src/app/menor/menor/menor.component';
 import { ISolicitud, SolicitudService } from 'src/app/services/solicitud.service';
 import { AcompaneanteComponent } from 'src/app/acompaneante/acompaneante/acompaneante.component';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -28,7 +29,7 @@ export class SolicitudComponent implements OnInit {
   solicitud!:ISolicitud
   // @ViewChild(ListaComponent) ListaComponent!: ListaComponent;
   titulo: string = 'Solicitud de Servicio';
-  constructor( private dialog: MatDialog, private solicitudService: SolicitudService) {
+  constructor( private dialog: MatDialog, private solicitudService: SolicitudService, router:Router) {
 
     this.solicitudService.obtenerSolicitud().subscribe({
       next: (solicitud)=>{
