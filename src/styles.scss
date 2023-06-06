@@ -6,3 +6,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .spacer{
   flex:1 1 auto;
 }
+.my-dialog-container {
+  max-height: 80vh;
+  /* Establece la altura máxima del diálogo */
+  overflow-y: auto;
+  /* Habilita el desplazamiento vertical si el contenido excede la altura máxima */
+  overflow-x: hidden;
+}
