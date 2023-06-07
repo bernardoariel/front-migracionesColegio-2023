@@ -13,7 +13,7 @@ export class AcompanianteTipoService {
   constructor( private http:HttpClient) { }
 
   getTipoCompania(): Observable<any[]>{
-    console.log(`${ this.baseUrl }/tipocompania`)
+
     return this.http.get<any[]>(`${ this.baseUrl }/tipocompania`);
   }
 }

@@ -70,7 +70,7 @@ export class SolicitudComponent implements OnInit {
   }
   /* seleccionando un menor para actualizar */
   seleccionarMenor(menor:IPersona){
-    console.log(menor);
+    
     const modalMenor = this.dialog.open(MenorComponent,{
       width: '70vw',
       disableClose: true ,
@@ -129,7 +129,7 @@ export class SolicitudComponent implements OnInit {
   }
 
   seleccionarAutorizante1(autorizante:IPersona){
-    console.log(autorizante);
+    
     const modalPersona = this.dialog.open(AutorizanteComponent,{
       width: '70vw',
       disableClose: true ,
@@ -149,7 +149,7 @@ export class SolicitudComponent implements OnInit {
     })
   }
   seleccionarAutorizante2(autorizante:IPersona){
-    console.log('abrimos el modal', autorizante);
+    
 
     const modalPersona = this.dialog.open(AutorizanteComponent,{
       width: '70vw',
@@ -171,7 +171,7 @@ export class SolicitudComponent implements OnInit {
   }
 
   seleccionarAcompaneante(acompaneante:IPersona){
-    console.log(acompaneante);
+    
     const modalAcompaneante = this.dialog.open(AcompaneanteComponent,{
       width: '70vw',
       disableClose: true ,

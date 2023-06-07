@@ -17,12 +17,12 @@ export class EscribanosService {
   constructor( private http: HttpClient ) { }
 
   getEscribanos(): Observable<Escribano[]>{
-    console.log(`${ this.baseUrl }/escribanos`)
+    
     return this.http.get<Escribano[]>(`${ this.baseUrl }/escribanos`);
   }
 
   getEscribanoId(id:number):Observable<Escribano>{
-    console.log(`${ this.baseUrl }/escribano/${id}`)
+    
     return this.http.get<Escribano>(`${ this.baseUrl }/escribano/${id}`)
   }
 

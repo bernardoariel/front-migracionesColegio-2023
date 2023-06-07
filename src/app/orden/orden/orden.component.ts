@@ -123,8 +123,8 @@ export class OrdenComponent implements OnInit, OnDestroy {
   }
 
   calcularMayoriaEdad(fechaNacimiento: string) {
-    console.log('fechaNacimiento::: ', fechaNacimiento);
-    console.log('fechaNacimiento::: ', typeof(fechaNacimiento));
+    
+    
     const fechaNacimientoDate = new Date(fechaNacimiento);
     this.fechaHastaControl.setValue (new Date(fechaNacimientoDate.getFullYear() + this.mayoriaEdad, fechaNacimientoDate.getMonth(), fechaNacimientoDate.getDate()))
 
@@ -135,7 +135,7 @@ export class OrdenComponent implements OnInit, OnDestroy {
       data: '¿Está seguro que desea terminar la solicitud?'
     })
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      
       if(result){
         this.agregarSolicitud();
         this.router.navigate(['solicitudes','listado'])
@@ -173,7 +173,7 @@ export class OrdenComponent implements OnInit, OnDestroy {
         .pipe(take(1))
         .subscribe({
           next: (orden) => {
-            console.log('orden: ', orden);
+            
           }
         });
       // }else{
@@ -199,8 +199,8 @@ export class OrdenComponent implements OnInit, OnDestroy {
 
   }
   /* fechaIgualesError(fechaDesde: Date | null, fechaHasta: Date | null): string | null {
-    console.log('fechaHasta::: ', fechaHasta);
-    console.log('fechaDesde::: ', fechaDesde);
+    
+    
     if (fechaDesde && fechaHasta && fechaDesde.getTime() === fechaHasta.getTime()) {
       return 'Las fechas no pueden ser iguales';
     }

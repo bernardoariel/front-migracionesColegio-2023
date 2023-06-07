@@ -34,8 +34,8 @@ export class AuthService {
       .post<any>(`${this.baseUrl}/login`, authData)
       .pipe(
         map((resp) => {
-          // console.log('estoy en auth', resp);
-          console.log('entro en el mapa de rxjs');
+          
+          
 
           this.guardarToken(resp.access_token ?? '');
           if (resp.user) {
@@ -60,7 +60,7 @@ export class AuthService {
       .post<UsuarioModel>(`${this.baseUrl}/agregarUsuario`,
       authData).pipe(
         map( resp =>{
-          console.log('entro en el mapa de rxjs')
+          
           this.guardarToken(resp.access_token??'');
           return resp;
         })

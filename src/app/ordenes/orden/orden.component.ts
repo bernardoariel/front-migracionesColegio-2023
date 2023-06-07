@@ -46,11 +46,11 @@ export class OrdenComponent implements OnInit, OnChanges   {
 
   ngOnInit(): void {
 
-    console.log("desde orden component:",this.fechaMayorEdad)
-    console.log("----->",this.orden)
+    
+    
 
-    console.log("path",this.activatedRoute.snapshot.url[0].path)
-    console.log("id",this.activatedRoute.snapshot.params['id'])
+    
+    
     if(this.activatedRoute.snapshot.url[0].path=='precarga'){
       this.ordenesService.getOrdenId(this.activatedRoute.snapshot.params['id']).subscribe(
         (orden)=>{
@@ -107,7 +107,7 @@ export class OrdenComponent implements OnInit, OnChanges   {
     this.orden.serie_foja = 'A'
     this.orden.tipo_foja = 0;
     ordenTuneada = {...this.orden}
-    console.log('ordentuneada',ordenTuneada)
+    
 
     ordenTuneada.fecha_vigencia_desde = new Date(ordenTuneada.fecha_vigencia_desde).toLocaleDateString('fr-CA')
     ordenTuneada.fecha_vigencia_hasta = new Date(ordenTuneada.fecha_vigencia_hasta).toLocaleDateString('fr-CA')

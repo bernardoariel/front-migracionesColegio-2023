@@ -67,7 +67,7 @@ export class MenorComponent implements OnInit {
     /* reviso si en la ruta existe la palabra nueva */
     this.activatedRoute.url.subscribe(url => {
       this.rutaActual = url.map(segment => segment.path).join('/');
-      console.log(this.rutaActual); // Imprime la ruta actual como una cadena de texto cada vez que cambia
+      
       if(this.rutaActual=='nueva') this.precarga = true
 
     });
@@ -78,12 +78,12 @@ export class MenorComponent implements OnInit {
         // El objeto params tiene un parámetro 'id'
         this.menoresService.getMenorId(params['id']).subscribe((menor) => {
           this.menor = menor;
-          console.log('this.menor.fecha_de_nacimiento ', this.menor.fecha_de_nacimiento);
-          console.log('Este es un menor', this.menor);
+          
+          
         });
       } else {
         // El objeto params no tiene un parámetro 'id'
-        console.log('El parámetro id no está presente');
+        
       }
 
     });
@@ -91,22 +91,22 @@ export class MenorComponent implements OnInit {
 
     this.nacionalidadesService.getNacionalidades().subscribe((nacionalidad)=>{
       this.nacionalidades = nacionalidad
-      // console.log( this.nacionalidades)
+      
     })
 
     this.tipoDocumentoService.getTipoDocumentos().subscribe((tipoDocumento)=>{
       this.tipoDocumentos = tipoDocumento
-      // console.log(this.tipoDocumentos)
+      
     })
 
     this.emisorDocumentosService.getTipoDocumentos().subscribe((emisorDocumento)=>{
       this.emisorDocumentos = emisorDocumento
-      // console.log("->",this.emisorDocumentos)
+      
     })
 
     this.sexoService.getSexo().subscribe((sexo)=>{
       this.sexo = sexo
-      // console.log(this.sexo)
+      
     })
 
 
@@ -123,8 +123,8 @@ export class MenorComponent implements OnInit {
       //Actualizar
       this.menoresService.actualizarMenor(this.menor)
         .subscribe(menor => {
-          console.log(menor)
-          console.log('precarga:', this.precarga)
+          
+          
           // this.mostrarMensaje('Registro Actualizado')
           if(!this.precarga) {
             this.router.navigate(['/menores/listado'])
@@ -141,8 +141,8 @@ export class MenorComponent implements OnInit {
       this.menor.fecha_de_nacimiento = new Date(this.menor.fecha_de_nacimiento as string).toLocaleDateString('fr-CA')
       this.menoresService.agregarMenor(this.menor)
       .subscribe(resp =>{
-        console.log('Respuesta', resp)
-        console.log('precarga:', this.precarga)
+        
+        
 
         if(!this.precarga) {
           this.router.navigate(['/menores/listado'])
@@ -158,8 +158,8 @@ export class MenorComponent implements OnInit {
   }
 
   eliminarEscribano(id:number){
-    console.log("Eliminar: ",id)
-    this.menoresService.eliminarMenor(id).subscribe(console.log)
+    
+    
   }
   cancelar(){
 

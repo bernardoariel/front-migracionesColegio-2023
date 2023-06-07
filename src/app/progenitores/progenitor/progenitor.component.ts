@@ -48,11 +48,11 @@ export class ProgenitorComponent implements OnInit {
     /* reviso si en la ruta existe la palabra nueva */
     this.activatedRoute.url.subscribe(url => {
       this.rutaActual = url.map(segment => segment.path).join('/');
-      console.log(this.rutaActual); // Imprime la ruta actual como una cadena de texto cada vez que cambia
+      
       if(this.rutaActual=='nueva') this.precarga = true
 
     });
-    console.log(this.activatedRoute.params);
+    
 
     this.activatedRoute.params.subscribe((params) => {
 
@@ -60,12 +60,12 @@ export class ProgenitorComponent implements OnInit {
         // El objeto params tiene un parámetro 'id'
         this.progenitoresService.getProgenitorId(params['id']).subscribe((progenitor) => {
           this.progenitor = progenitor
-          // console.log('this.menor.fecha_de_nacimiento ', this.progenitor.fecha_de_nacimiento);
-          // console.log('Este es un menor', this.autorizante);
+          
+          
         });
       } else {
         // El objeto params no tiene un parámetro 'id'
-        console.log('El parámetro id no está presente');
+        
       }
 
     });
@@ -78,7 +78,7 @@ export class ProgenitorComponent implements OnInit {
     ) */
     this.tipoDocumentoService.getTipoDocumentos().subscribe((tipoDocumento)=>{
       this.tipoDocumentos = tipoDocumento
-      // console.log(this.tipoDocumentos)
+      
     })
 
   }
@@ -92,8 +92,8 @@ export class ProgenitorComponent implements OnInit {
 
       this.progenitoresService.actualizarProgenitor(this.progenitor)
         .subscribe(progenitor => {
-          console.log(progenitor)
-          console.log('precarga:', this.precarga)
+          
+          
           // this.mostrarMensaje('Registro Actualizado')
           if(!this.precarga) {
 
@@ -111,7 +111,7 @@ export class ProgenitorComponent implements OnInit {
 
       this.progenitoresService.agregarProgenitor(this.progenitor)
       .subscribe(resp =>{
-        console.log('Respuesta', resp)
+        
       //  this.mostrarMensaje('Registro Creado')
 
          if(!this.precarga) {
@@ -129,8 +129,8 @@ export class ProgenitorComponent implements OnInit {
 
   }
   cancelar(){
-    console.log('cancelar')
-    console.log('this.precarga',this.precarga)
+    
+    
 
     if(!this.precarga) {
 

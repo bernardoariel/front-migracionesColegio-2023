@@ -15,12 +15,12 @@ export class AcreditacionVinculoService {
   constructor( private http:HttpClient ) { }
 
   getAcreditarVinculos(): Observable<IAcreditacionVinculo[]>{
-    console.log(`${ this.baseUrl }/acreditaciones`)
+    
     return this.http.get<IAcreditacionVinculo[]>(`${ this.baseUrl }/acreditaciones`);
   }
 
   getAcreditarVinculoId(id:number):Observable<IAcreditacionVinculo>{
-    console.log(`${ this.baseUrl }/acreditacion/${id}`)
+    
     return this.http.get<IAcreditacionVinculo>(`${ this.baseUrl }/acreditacion/${id}`)
   }
 }

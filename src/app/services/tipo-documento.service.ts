@@ -15,12 +15,12 @@ export class TipoDocumentoService {
   constructor( private http:HttpClient ) { }
 
   getTipoDocumentos(): Observable<ITipoDocument[]>{
-    console.log(`${ this.baseUrl }/tiposdocumentos`)
+    
     return this.http.get<ITipoDocument[]>(`${ this.baseUrl }/tiposdocumentos`);
   }
 
   getTipoDocumentosId(id:number):Observable<ITipoDocument>{
-    console.log(`${ this.baseUrl }/tiposdocumentos/${id}`)
+    
     return this.http.get<ITipoDocument>(`${ this.baseUrl }/tiposdocumentos/${id}`)
   }
 }

@@ -14,12 +14,12 @@ export class SexoService {
   constructor( private http:HttpClient ) { }
 
   getSexo(): Observable<ISexo[]>{
-    console.log(`${ this.baseUrl }/sexos`)
+   
     return this.http.get<ISexo[]>(`${ this.baseUrl }/sexos`);
   }
 
   getSexoId(id:number):Observable<ISexo>{
-    console.log(`${ this.baseUrl }/sexos/${id}`)
+  
     return this.http.get<ISexo>(`${ this.baseUrl }/sexos/${id}`)
   }
 }

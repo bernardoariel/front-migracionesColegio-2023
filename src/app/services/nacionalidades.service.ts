@@ -14,12 +14,12 @@ export class NacionalidadesService {
   constructor( private http:HttpClient ) { }
 
   getNacionalidades(): Observable<INacionalidad[]>{
-    console.log(`${ this.baseUrl }/nacionalidades`)
+    
     return this.http.get<INacionalidad[]>(`${ this.baseUrl }/nacionalidades`);
   }
 
   getNacionalidadId(id:number):Observable<INacionalidad>{
-    console.log(`${ this.baseUrl }/nacionalidad/${id}`)
+   
     return this.http.get<INacionalidad>(`${ this.baseUrl }/nacionalidad/${id}`)
   }
 }

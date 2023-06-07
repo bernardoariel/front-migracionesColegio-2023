@@ -26,7 +26,7 @@ export class OrdenesService {
   }
 
   getOrdenId(id:number):Observable<IOrden>{
-    console.log(`${ this.baseUrl }/orden/${id}`)
+    
     return this.http.get<IOrden>(`${ this.baseUrl }/orden/${id}`)
   }
 
@@ -56,7 +56,7 @@ export class OrdenesService {
   }
 
   duplicateOrdenId(id:number):Observable<IOrden>{
-    console.log(`${ this.baseUrl }/duplicate/${id}`)
+    
     return this.http.get<IOrden>(`${ this.baseUrl }/duplicate/${id}`)
   }
 }

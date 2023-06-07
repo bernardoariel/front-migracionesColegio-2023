@@ -47,7 +47,7 @@ export class ListaComponent implements OnInit {
     this.activatedRoute.url.subscribe(url => {
 
       this.rutaActual = url.map(segment => segment.path).join('/');
-      console.log(this.rutaActual); // Imprime la ruta actual como una cadena de texto cada vez que cambia
+      
       if(this.rutaActual=='nueva' || this.rutaActual.includes('solicitudes')){
         this.precarga = true
       }
@@ -71,7 +71,7 @@ export class ListaComponent implements OnInit {
          this.dataSource = new MatTableDataSource<IPersona>( this.personas );
          this.dataSource.paginator = this.paginator;
          this.dataSource.sort = this.sort;
-         console.log(this.personas);
+         
      })
 
    }
@@ -100,7 +100,7 @@ export class ListaComponent implements OnInit {
 
   }
   seleccionarMenor(menor:IPersona){
-    console.log('select menor',menor);
+    
     const modalMenor = this.dialog.open(MenorComponent,{
       width: '70vw',
       disableClose: true ,

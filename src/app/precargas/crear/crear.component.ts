@@ -83,7 +83,7 @@ export class CrearComponent implements OnInit {
 
   tabActive(event: { index: any; }) {
     // obtenemos el index del tab
-    console.log(event.index);
+    
     // actualizamos el index seleccionado
     this.selectedIndex = event.index;
     // this.cargarArrayARecorrer()
@@ -108,11 +108,11 @@ export class CrearComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    console.log("prognitor _>"+this.progenitorSeleccionado)
+    
     this.acompanianteTipoService.getTipoCompania().subscribe(
       (respuesta)=>{
         this.tipoAcompaneante = respuesta
-        console.log('this.tipoAcompaneante::: ', this.tipoAcompaneante);
+        
       }
 
     )
@@ -120,7 +120,7 @@ export class CrearComponent implements OnInit {
 
       if (params.hasOwnProperty('id')) {
         // El objeto params tiene un parámetro 'id'
-        console.log('estoy con los ', params)
+        
         // this.orden = {};
         // this.orden.id = params['id'];
         this.estado = 'edit';
@@ -144,20 +144,20 @@ export class CrearComponent implements OnInit {
             /* cargar los items de las ordenes */
             this.ordenesItemsService.getOrdenId(nuevaOrden.id!).subscribe(
                 (respuesta) => {
-                  // console.log("-->",respuesta)
+                  
                   for (const item of respuesta) {
-                      console.log('-item-',item)
+                      
 
                       if(item.nombre_tabla == "notaries") this.miOrdenPersonas.notary_id = item.id_detalle
 
                       if(item.nombre_tabla == "authorizations"){
 
                         if(this.miOrdenPersonas.acompaneante1_id===null){
-                          console.log('auth1')
+                          
                           this.agregarAutorizante1(item.id_detalle)
 
                         }else{
-                          console.log('auth2')
+                          
                           this.agregarAutorizante2(item.id_detalle)
 
                         }
@@ -183,7 +183,7 @@ export class CrearComponent implements OnInit {
 
       } else {
         // El objeto params no tiene un parámetro 'id'
-        console.log('El parámetro id no está presente');
+        
         this.estado = 'create';
       }
 
@@ -211,7 +211,7 @@ export class CrearComponent implements OnInit {
   agregarNuevoMenor( menor: number){
 
     this.miOrdenPersonas.minor_id = menor;
-    console.log(this.miOrdenPersonas)
+    
 
     /* slecciono el menor */
     this.menoresService.getMenorId(menor).subscribe(
@@ -220,7 +220,7 @@ export class CrearComponent implements OnInit {
         this.nombreMenor = `${respuesta.apellido}
                             ${(respuesta.segundo_apellido!=null)? respuesta.segundo_apellido: ''}
                             ${respuesta.nombre} ${(respuesta.otros_nombres!=null)? respuesta.otros_nombres : ''}`
-                            console.log(respuesta.fecha_de_nacimiento)
+                            
         const fechaNacimiento = new Date(respuesta.fecha_de_nacimiento as string);
         this.fechaMayorEdad = new Date(fechaNacimiento.getFullYear() + this.mayoriaEdad, fechaNacimiento.getMonth(), fechaNacimiento.getDate());
         this.fechaMayorEdad  = this.fechaMayorEdad.toISOString().substring(0, 10);
@@ -231,7 +231,7 @@ export class CrearComponent implements OnInit {
   }
     agregarAutorizante1(autorizante:number){
 
-      console.log("este es el autorizante1 : ",autorizante)
+      
       this.miOrdenPersonas.acompaneante1_id = autorizante;
       /* selecciono el primer acompañante */
       this.autorizantesService.getAutorizanteId(autorizante).subscribe(
@@ -246,7 +246,7 @@ export class CrearComponent implements OnInit {
 
     agregarAutorizante2(autorizante:number){
 
-      console.log("este es el autorizante2 : ",autorizante)
+      
       this.miOrdenPersonas.acompaneante2_id = autorizante;
       /* selecciono el primer acompañante */
       this.autorizantesService.getAutorizanteId(autorizante).subscribe(
@@ -323,9 +323,9 @@ export class CrearComponent implements OnInit {
     }
     actualizarSolicitud(orden:IOrdenDatos){
       this.miOrdenDatos = orden;
-      console.log('this.miOrdenDatos::: ', this.miOrdenDatos);
-      console.log('this.miOrdenPersonas::: ', this.miOrdenPersonas);
-      console.log('esouyt viendo',this.comprobarSolicitud(this.miOrdenDatos,this.miOrdenPersonas))
+      
+      
+      
       this.btnSolicitud = !this.comprobarSolicitud(this.miOrdenDatos,this.miOrdenPersonas);
     }
     crearOtroAcompaneante(){
@@ -335,28 +335,28 @@ export class CrearComponent implements OnInit {
 
     crearOrden(){
 
-      console.log(this.miOrdenDatos)
+      
       let datosFinales = {
         "tipo_acompaniante":"2",
         "descripcion_acompaniante":"Gabriel Gonzales Dni 11272829; Rosita Perez Dni 13561819"
       }
       this.orden = { ...this.miOrdenPersonas , ...this.miOrdenDatos , ...datosFinales} ;
-      console.log('this.orden::: ', this.orden);
+      
 
       this.activatedRoute.params.subscribe((params) => {
 
         if (params.hasOwnProperty('id')) {
           this.orden.id= Number(params['id'])
           this.ordenesService.actualizarOrden(this.orden).subscribe(resp=>{
-            console.log('Respuesta', resp)
+            
             this.router.navigate(['/ordenes/listado'])
           })
         }
         else{
           this.ordenesService.agregarOrden(this.orden)
           .subscribe(resp =>{
-            console.log(this.orden)
-            console.log('Respuesta', resp)
+            
+            
             //  this.mostrarMensaje('Registro Creado')
             this.router.navigate(['/ordenes/listado'])
           })
@@ -371,33 +371,33 @@ export class CrearComponent implements OnInit {
       this.router.navigate(['/ordenes/listado'])
     }
     mostrarTemplateMenor(){
-      console.log('emit')
+      
       this.templateMenor = !this.templateMenor
     }
 
     mostrarTemplateAutorizante1(){
-      console.log('emit')
+      
       this.templateAutorizante1 = !this.templateAutorizante1
     }
 
     mostrarTemplateAutorizante2(){
-      console.log('emit')
+      
       this.templateAutorizante2 = !this.templateAutorizante2
     }
 
     mostrarTemplateProgenitor(){
-      console.log('emit - progenitor')
-      console.log(this.templateProgenitor)
-      console.log('--------------------')
+      
+      
+      
       this.templateProgenitor = !this.templateProgenitor
-      console.log(this.templateProgenitor)
+      
     }
     mostrarTemplateAcompaneante(){
-      console.log('emit - acompaneante')
-      console.log(this.templateAcompaneante)
-      console.log('--------------------')
+      
+      
+      
       this.templateAcompaneante = !this.templateAcompaneante
-      console.log(this.templateAcompaneante)
+      
     }
 
     cambiarValorViajaSolo() {

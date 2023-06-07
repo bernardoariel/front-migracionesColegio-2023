@@ -45,7 +45,7 @@ export class SolicitudService {
 
   // crear un metodo para agregar un menor a la solicitud
   agregarEscribano(escribano: Escribano): Observable<ISolicitud | null>{
-    console.log('agregar escri::: ', escribano);
+    
    this.solicitud$
    .pipe(
     take(1)
@@ -94,16 +94,16 @@ export class SolicitudService {
   }
 
   agregarAutorizante1(autorizante1: IPersona): Observable<ISolicitud | null>{
-    console.log('autorizante1::: ', autorizante1);
+    
    this.solicitud$
    .pipe(
     take(1)
    ).subscribe({
       next: (solicitud)=>{
-        console.log('solicitud::: ', solicitud);
+        
         if (solicitud !== null) {
           solicitud.autorizante1 = autorizante1;
-          console.log('solicitud::: ', solicitud);
+          
           this.solicitud$.next(solicitud);
         }
       }
@@ -119,7 +119,7 @@ export class SolicitudService {
       next: (solicitud)=>{
         if (solicitud !== null) {
           solicitud.autorizante2 = autorizante2;
-          console.log('solicitud::: ', solicitud);
+          
           this.solicitud$.next(solicitud);
         }
       }
@@ -137,7 +137,7 @@ export class SolicitudService {
        next: (solicitud)=>{
          if (solicitud !== null) {
           solicitud.acompaneantes.push(acompaneante);
-          console.log('solicitud::: ', solicitud);
+          
            this.solicitud$.next(solicitud);
          }
        }

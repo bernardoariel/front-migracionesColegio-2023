@@ -13,16 +13,16 @@ export class MenoresService {
   constructor( private http:HttpClient) { }
 
   getMenores(): Observable<IMenor[]>{
-    console.log(`${ this.baseUrl }/menores`)
+    
     return this.http.get<IMenor[]>(`${ this.baseUrl }/menores`);
   }
   getMenoresFormateado(): Observable<IMenor[]>{
-    console.log(`${ this.baseUrl }/menorestodos`)
+    
     return this.http.get<IMenor[]>(`${ this.baseUrl }/menorestodos`);
   }
 
   getMenorId(id:number):Observable<IMenor>{
-    console.log(`${ this.baseUrl }/menor/${id}`)
+    
     return this.http.get<IMenor>(`${ this.baseUrl }/menor/${id}`)
   }
 

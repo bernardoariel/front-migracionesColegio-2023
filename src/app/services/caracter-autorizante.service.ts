@@ -16,12 +16,12 @@ export class CaracterAutorizanteService {
   constructor( private http:HttpClient ) { }
 
   getCaracterAutorizantes(): Observable<ICaracterAutorizante[]>{
-    console.log(`${ this.baseUrl }/autorizaciones`)
+    
     return this.http.get<ICaracterAutorizante[]>(`${ this.baseUrl }/autorizaciones`);
   }
 
   getCaracterAutorizanteId(id:number):Observable<ICaracterAutorizante>{
-    console.log(`${ this.baseUrl }/autorizacion/${id}`)
+    
     return this.http.get<ICaracterAutorizante>(`${ this.baseUrl }/autorizacion/${id}`)
   }
 }

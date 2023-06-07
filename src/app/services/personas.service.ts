@@ -29,8 +29,8 @@ export class PersonasService {
     .pipe(
       tap(res => {
         // Manejar la respuesta exitosa aquí
-        console.log('Enviado de datos: ',persona)
-        console.log('Respuesta exitosa:', res);
+        
+        
       }),
       catchError(error => {
         // Manejar el error aquí
@@ -48,7 +48,7 @@ export class PersonasService {
   }
 
   getPersonaById(id:number):Observable<IPersona>{
-    console.log('aaaa',`${ this.baseUrl }/personaById/${id}`)
+    
     return this.http.get<IPersona>(`${ this.baseUrl }/personaById/${id}`)
   }
 
@@ -64,7 +64,7 @@ export class PersonasService {
 
   /* tendria que ir en menores */
   getMenores(): Observable<IMenor[]>{
-    // console.log(`${ this.baseUrl }/personas/menores`)
+    
     return this.http.get<IMenor[]>(`${ this.baseUrl }/menores`);
   }
   getMenoresJoin(): Observable<IMenor[]>{

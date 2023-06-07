@@ -37,12 +37,12 @@ export class ListadoComponent implements OnInit {
     /* reviso si en la ruta existe la palabra nueva */
     this.activatedRoute.url.subscribe(url => {
       this.rutaActual = url.map(segment => segment.path).join('/');
-      console.log(this.rutaActual); // Imprime la ruta actual como una cadena de texto cada vez que cambia
+      
       if(this.rutaActual=='nueva' || this.rutaActual.includes('precarga')){
         this.botonSeleccionar = true
       }
 
-      console.log("precarga desde listado",this.precarga)
+      
     });
 
   }
@@ -60,7 +60,7 @@ export class ListadoComponent implements OnInit {
         this.dataSource = new MatTableDataSource<IMenor>( this.menores );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        console.log(this.menores);
+        
     })
 
   }

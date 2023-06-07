@@ -17,7 +17,7 @@ export class AutorizantesService {
   }
 
   getAutorizantesFormateado(): Observable<IAutorizante[]>{
-    console.log(`${ this.baseUrl }/autorizantestodos`)
+    
     return this.http.get<IAutorizante[]>(`${ this.baseUrl }/autorizantestodos`);
   }
   getAutorizanteId(id:number):Observable<IAutorizante>{

@@ -14,12 +14,12 @@ export class EmisorDocumentosService {
   constructor( private http:HttpClient ) { }
 
   getTipoDocumentos(): Observable<IEmisorDocumentos[]>{
-    console.log(`${ this.baseUrl }/emisordocumentos`)
+    
     return this.http.get<IEmisorDocumentos[]>(`${ this.baseUrl }/emisordocumentos`);
   }
 
   getTipoDocumentosId(id:number):Observable<IEmisorDocumentos>{
-    console.log(`${ this.baseUrl }/emisordocumentos/${id}`)
+    
     return this.http.get<IEmisorDocumentos>(`${ this.baseUrl }/emisordocumentos/${id}`)
   }
 }

@@ -12,7 +12,7 @@ export class OrdenesItemsService {
   constructor( private http:HttpClient ) { }
 
   getOrdenId(id:number):Observable<any>{
-    console.log(`${ this.baseUrl }/ordenesitems/${id}`)
+    
     return this.http.get<any>(`${ this.baseUrl }/ordenesitems/${id}`)
   }
 

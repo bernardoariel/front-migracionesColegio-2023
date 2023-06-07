@@ -32,7 +32,7 @@ export class ListaComponent implements OnInit {
     private escribanosService:EscribanosService) {
 
       this.userId = Number(localStorage.getItem('userId'));
-      console.log(this.userId )
+      
 
     }
 
@@ -50,7 +50,7 @@ export class ListaComponent implements OnInit {
 
     cargarOrdenes() {
       this.ordenesService.getOrdenesFormateado().subscribe((ordenes) => {
-        console.log('estas son las ordenes', ordenes);
+        
         if(this.userId!==1){
 
           this.ordenes = ordenes.filter((orden) => orden.notary_id === this.userId);
@@ -67,7 +67,7 @@ export class ListaComponent implements OnInit {
     }
     eliminarOrden(id:number){
       this.ordenesService.eliminarOrden(id).subscribe((respuesta)=>{
-        console.log(respuesta)
+        
         // this.router.navigate(['/'])
         this.cargarOrdenes()
       })
@@ -76,7 +76,7 @@ export class ListaComponent implements OnInit {
     duplicar(id:number){
       this.ordenesService.duplicateOrdenId(id).subscribe(
         (respuesta)=>{
-          console.log(respuesta)
+          
           // this.router.navigate(['/'])
           this.cargarOrdenes()
         }
@@ -87,17 +87,17 @@ export class ListaComponent implements OnInit {
       this.loading = true;
       this.soapService.aprobarSoap(valor).subscribe(
         resp => {
-          console.log("estoy respondiendo al autorizar "+ resp)
+          
           // this.router.navigate(['/']);
           this.cargarOrdenes()
           this.loading = false;
         },
         error => {
-          console.log("Se produjo un error al autorizar: ", error);
+          
           this.loading = false;
         },
         () => {
-          console.log("La petición de autorización ha finalizado.");
+          
           this.cargarOrdenes();
           // this.router.navigate(['/ordenes/listado']);
           this.loading = false;

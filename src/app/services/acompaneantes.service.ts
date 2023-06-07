@@ -14,12 +14,12 @@ export class AcompaneantesService {
   constructor( private http:HttpClient) { }
 
   getProgenitores(): Observable<IProgenitor[]>{
-    console.log(`${ this.baseUrl }/personas`)
+    
     return this.http.get<IProgenitor[]>(`${ this.baseUrl }/personas`);
   }
 
   getProgenitorId(id:number):Observable<IProgenitor>{
-    console.log(`${ this.baseUrl }/persona/${id}`)
+    
     return this.http.get<IProgenitor>(`${ this.baseUrl }/persona/${id}`)
   }
   actualizarProgenitor(progenitor:IProgenitor):Observable<IProgenitor>{

@@ -14,12 +14,12 @@ export class ProgenitorService {
   constructor( private http:HttpClient) { }
 
   getProgenitores(): Observable<IProgenitor[]>{
-    console.log(`${ this.baseUrl }/otrosprogenitores`)
+    
     return this.http.get<IProgenitor[]>(`${ this.baseUrl }/otrosprogenitores`);
   }
 
   getProgenitorId(id:number):Observable<IProgenitor>{
-    console.log(`${ this.baseUrl }/otroprogenitor/${id}`)
+    
     return this.http.get<IProgenitor>(`${ this.baseUrl }/otroprogenitor/${id}`)
   }
   actualizarProgenitor(progenitor:IProgenitor):Observable<IProgenitor>{

@@ -141,7 +141,7 @@ export class MenorComponent implements OnInit, OnDestroy {
 
       if(data?.menor){
         this.persona = data.menor!
-        console.log('this.persona::: ', this.persona);
+        
         this.personaForm.setValue({
           apellido: this.persona.apellido,
           segundoApellido: this.persona.segundo_apellido ?? '',
@@ -208,15 +208,15 @@ ngAfterViewInit(): void {
     if (!this.personaForm.valid) return //si es invalido el formulario  no hace nada
 
     let fechaNacimiento = this.personaForm.value.fechaNacimiento;
-    console.log('fechaNacimiento::: ', fechaNacimiento);
+    
     let fechaNacimientoDate: Date | null = null;
-    console.log('fechaNacimientoDate::: ', fechaNacimientoDate);
+    
 
     if (fechaNacimiento) {
       fechaNacimientoDate = new Date(fechaNacimiento);
       fechaNacimiento = fechaNacimientoDate.toISOString().substring(0, 10);
     }
-    console.log('fechaNacimiento::: ', fechaNacimiento);
+    
 
     let personaNuevo: IPersona = { //crea un objeto personaNuevo con los valores del formulario
       apellido: this.personaForm.value.apellido ?? '',
@@ -231,7 +231,7 @@ ngAfterViewInit(): void {
       sex_id: this.personaForm.value.sexo ?? '',
       domicilio: this.personaForm.value.domicilio ?? ''
     };
-    console.log(personaNuevo);
+    
     // AGREGAR DESDE EL MODULO DEL MENOR
     if(this.modal.tipoDialogo == 'menor' && this.modal.accionModal == 'agregar'){
 
