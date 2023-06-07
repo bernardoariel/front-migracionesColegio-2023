@@ -8,7 +8,7 @@ import { IPersona } from 'src/app/interfaces/IPersona';
 import { PersonasService } from 'src/app/services/personas.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AutorizanteComponent } from '../autorizante/autorizante.component';
-import { SolicitudService } from 'src/app/services/solicitud.service';
+
 
 @Component({
   selector: 'app-lista-autorizante',
@@ -17,7 +17,8 @@ import { SolicitudService } from 'src/app/services/solicitud.service';
 })
 export class ListaComponent implements OnInit {
   @ViewChild('autorizante') autorizante!: AutorizanteComponent;
-  // @Input() autorizanteNro: number = 1;
+
+  
   titulo:string = 'Listado de Autorizantes';
   paginatorItems:string = 'Autorizantes por página';
    // esto es para tomar la ruta actual y crear una variable del tipo boolean
@@ -48,7 +49,7 @@ export class ListaComponent implements OnInit {
     this.activatedRoute.url.subscribe(url => {
 
       this.rutaActual = url.map(segment => segment.path).join('/');
-      console.log(this.rutaActual); // Imprime la ruta actual como una cadena de texto cada vez que cambia
+  
       if(this.rutaActual=='nueva' || this.rutaActual.includes('solicitudes')){
         this.precarga = true
       }
@@ -90,7 +91,8 @@ export class ListaComponent implements OnInit {
       data: {
         modal:{
           tipoDialogo:'autorizante',
-          accionModal:'agregar'
+          accionModal:'agregar',
+        
         }
       }
     })

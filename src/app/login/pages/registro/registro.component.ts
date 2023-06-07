@@ -36,14 +36,14 @@ export class RegistroComponent implements OnInit {
     Swal.showLoading;
     this.auth.nuevoUsuario(this.usuario).subscribe(resp =>{
 
-      console.log(resp)
+      
       Swal.close();
       if(this.recordarme){
         localStorage.setItem('email',this.usuario.email?? '')
       }
       this.router.navigateByUrl('/home')
     }, (err)=>{
-      console.log(err)
+
       Swal.fire({
         icon:'error',
         title:'Error al autenticar',

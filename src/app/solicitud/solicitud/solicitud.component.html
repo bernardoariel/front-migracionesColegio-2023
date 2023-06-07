@@ -48,10 +48,10 @@
 
         <ng-template matStepContent>
 
-          <button mat-button class="float-end amarillo" (click)="crearPersona('autorizante')">Crear nuevo Autorizante</button>
+          <button mat-button class="float-end amarillo" (click)="crearPersona('autorizante',1)">Crear nuevo Autorizante</button>
 
           <app-lista-autorizante
-          (onSeleccionarAutorizante)="seleccionarAutorizante1($event)">
+          (onSeleccionarAutorizante)="seleccionarAutorizante1($event)"
          >
           </app-lista-autorizante>
 
@@ -67,7 +67,7 @@
 
         <ng-template matStepContent>
 
-          <button mat-button class="float-end amarillo" (click)="crearPersona('autorizante')">Crear nuevo Autorizante</button>
+          <button mat-button class="float-end amarillo" (click)="crearPersona('autorizante',2)">Crear nuevo Autorizante</button>
 
           <app-lista-autorizante
             (onSeleccionarAutorizante)="seleccionarAutorizante2($event)"
@@ -108,7 +108,7 @@
 
         <ng-template matStepContent>
 
-          <button mat-button class="float-end amarillo" (click)="crearPersona('acompaneante')">Crear nuevo Acompañante</button>
+          <button mat-button class="float-end amarillo" (click)="crearPersona('acompaneante',0)">Crear nuevo Acompañante</button>
 
           <app-lista-acompaneante
             (onSeleccionarAcompaneante)="seleccionarAcompaneante($event)">

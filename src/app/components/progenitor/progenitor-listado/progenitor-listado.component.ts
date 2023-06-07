@@ -42,7 +42,7 @@ export class ProgenitorListadoComponent implements OnInit {
         this.dataSource = new MatTableDataSource<IProgenitor>( this.progenitores );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        console.log("progenitores",this.progenitores);
+        
     })
 
   }

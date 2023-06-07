@@ -25,7 +25,7 @@ export class PrincipalComponent implements OnInit {
       if(localStorage.getItem('userId')){
 
         this.usuario = Number(localStorage.getItem('userId'))
-        console.log(`${this.usuario}<=${this.maximoNumberUser}`)
+      
         this.escribanosService.getEscribanoId(this.usuario).subscribe(
           (escribano)=>{
 

@@ -112,7 +112,7 @@ export class AcompaneanteComponent implements OnInit {
     ){
       if(data?.persona){
         this.persona = data.persona!
-        console.log('Persona Completa ', this.persona);
+        
 
         this.personaForm.setValue({
           apellido: this.persona.apellido,
@@ -122,8 +122,8 @@ export class AcompaneanteComponent implements OnInit {
           tipoDocumento: this.persona.type_document_id ?? null,
           numeroDocumento:  Number(this.persona.numero_de_documento) ?? null
         })
-        console.log( this.personaForm['controls']['numeroDocumento'])
-        console.log( this.personaForm['controls']['nombre'])
+        
+        
       }
       if(data?.modal){
         this.modal = data.modal
@@ -145,26 +145,26 @@ export class AcompaneanteComponent implements OnInit {
     this.subscriptions.add(
       this.nacionalidadesService.getNacionalidades().subscribe((nacionalidad)=>{
         this.nacionalidades = nacionalidad
-        // console.log( this.nacionalidades)
+        
       })
     )
     this.subscriptions.add(
       this.tipoDocumentoService.getTipoDocumentos().subscribe((tipoDocumento)=>{
         this.tipoDocumentos = tipoDocumento
-         console.log(this.tipoDocumentos)
+         
       })
     )
     this.subscriptions.add(
       this.emisorDocumentosService.getTipoDocumentos().subscribe((emisorDocumento)=>{
         this.emisorDocumentos = emisorDocumento
-        // console.log("->",this.emisorDocumentos)
+        
       })
     )
 
     this.subscriptions.add(
       this.sexoService.getSexo().subscribe((sexo)=>{
         this.sexo = sexo
-        // console.log(this.sexo)
+        
       })
     )
     this.activatedRoute.params.subscribe((params) => {
@@ -189,7 +189,7 @@ export class AcompaneanteComponent implements OnInit {
 
       } else {
         // El objeto params no tiene un parámetro 'id'
-        console.log('El parámetro id no está presente');
+        
       }
 
     });
@@ -234,7 +234,7 @@ export class AcompaneanteComponent implements OnInit {
     }
     // EDITAR DESDE EL MODULO DEL AUTORIZANTE
     if(this.modal.tipoDialogo == 'acompaneante' && this.modal.accionModal == 'editar'){
-      console.log('hola')
+      
       personaNuevo = {
         ...personaNuevo,
         id: this.data?.persona?.id
@@ -283,14 +283,14 @@ export class AcompaneanteComponent implements OnInit {
 
     // EDITAR DESDE EL MODULO DE LA SOLICITUD
     if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'editar'){
-      console.log('entramos por aca');
+      
       personaNuevo = {
         ...personaNuevo,
         id: this.data?.persona?.id
       };
-      console.log('personaNuevo::: ', personaNuevo);
+      
 
-      console.log('this.modal.persona::: ', this.modal.persona);
+      
 
 
 

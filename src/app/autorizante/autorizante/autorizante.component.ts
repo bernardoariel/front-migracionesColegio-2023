@@ -143,11 +143,13 @@ export class AutorizanteComponent implements OnInit {
     private solicitudService: SolicitudService,
     public dialogRef?:MatDialogRef<AutorizanteComponent>,
     @Inject(MAT_DIALOG_DATA) public data?: { persona?: IPersona, modal?:IModal }
-  ) {
-
+    ) {
+       
       if(data?.persona){
+        
+        
         this.persona = data.persona!
-        console.log('this.persona::: ', this.persona);
+        
         this.personaForm.setValue({
           apellido: this.persona.apellido,
           segundoApellido: this.persona.segundo_apellido ?? '',
@@ -166,7 +168,7 @@ export class AutorizanteComponent implements OnInit {
       }
       if(data?.modal){
         this.modal = data.modal
-
+        console.log('persoa::: ', data.modal);    
       }
 
   }
@@ -206,14 +208,14 @@ export class AutorizanteComponent implements OnInit {
     this.subscriptions.add(
       this.caracterAutorizanteService.getCaracterAutorizantes().subscribe((caracterAutorizante)=>{
         this.caracterAutorizantes = caracterAutorizante
-        // console.log(this.caracterAutorizante)
+        
       })
     )
 
     this.subscriptions.add(
       this.acreditacionVinculoService.getAcreditarVinculos().subscribe((acreditacionVinculo)=>{
         this.acreditacionVinculos = acreditacionVinculo
-        // console.log(this.acreditacionVinculo)
+        
       })
     )
 
@@ -228,15 +230,15 @@ export class AutorizanteComponent implements OnInit {
 
     if (!this.personaForm.valid) return //si es invalido el formulario  no hace nada
     let fechaNacimiento = this.personaForm.value.fechaNacimiento;
-    console.log('fechaNacimiento::: ', fechaNacimiento);
+    
     let fechaNacimientoDate: Date | null = null;
-    console.log('fechaNacimientoDate::: ', fechaNacimientoDate);
+    
 
     if (fechaNacimiento) {
       fechaNacimientoDate = new Date(fechaNacimiento);
       fechaNacimiento = fechaNacimientoDate.toISOString().substring(0, 10);
     }
-    console.log('fechaNacimiento::: ', fechaNacimiento);
+    
 
     let personaNuevo: IPersona = { //crea un objeto personaNuevo con los valores del formulario
       apellido: this.personaForm.value.apellido ?? '',
@@ -309,12 +311,16 @@ export class AutorizanteComponent implements OnInit {
 
           this.dialogRef?.close({persona: persona})
           this.dialogRef?.close() // cierra el modal de la carga del menor
+
+  
           if(this.modal.persona == 1){
 
             this.solicitudService.agregarAutorizante1(persona) // agrega el menor a la solicitud
+
           }else{
 
             this.solicitudService.agregarAutorizante2(persona) // agrega el menor a la solicitud
+
           }
 
          /*  this.matDialog.open(ConfirmComponent, {
@@ -333,13 +339,13 @@ export class AutorizanteComponent implements OnInit {
     // EDITAR DESDE EL MODULO DE LA SOLICITUD
     if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'editar'){
 
-      console.log('anttes  ', personaNuevo);
+      
       personaNuevo = {
         ...personaNuevo,
         id: this.data?.persona?.id
       };
 
-      console.log('despues::: ', personaNuevo);
+      
       this.subscriptions.add(
 
         this.personasService.updatePersona(personaNuevo).subscribe((persona)=>{

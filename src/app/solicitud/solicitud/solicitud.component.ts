@@ -90,7 +90,7 @@ export class SolicitudComponent implements OnInit {
   }
 
   /* Crear Persona  */
-  crearPersona(tipo:string){
+  crearPersona(tipo:string,nroAutorizante:number){
 
     if(tipo === 'autorizante'){
       const modalPersona = this.dialog.open(AutorizanteComponent,{
@@ -98,7 +98,8 @@ export class SolicitudComponent implements OnInit {
         data: {
           modal:{
             tipoDialogo:'solicitud',
-            accionModal:'agregar'
+            accionModal:'agregar',
+            persona:nroAutorizante
           }
         }
       });

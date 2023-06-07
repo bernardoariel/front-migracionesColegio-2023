@@ -77,11 +77,11 @@ export class AutorizanteComponent implements OnInit {
     /* reviso si en la ruta existe la palabra nueva */
     this.activatedRoute.url.subscribe(url => {
       this.rutaActual = url.map(segment => segment.path).join('/');
-      console.log(this.rutaActual); // Imprime la ruta actual como una cadena de texto cada vez que cambia
+      
       if(this.rutaActual=='nueva') this.precarga = true
 
     });
-    console.log(this.activatedRoute.params);// Imprime la ruta actual como una cadena de texto
+    
 
     this.activatedRoute.params.subscribe((params) => {
 
@@ -89,43 +89,43 @@ export class AutorizanteComponent implements OnInit {
         // El objeto params tiene un parámetro 'id'
         this.autorizantesService.getAutorizanteId(params['id']).subscribe((autorizante) => {
           this.autorizante = autorizante
-          console.log('this.menor.fecha_de_nacimiento ', this.autorizante.fecha_de_nacimiento);
-          console.log('Este es un menor', this.autorizante);
+          
+          
         });
       } else {
         // El objeto params no tiene un parámetro 'id'
-        console.log('El parámetro id no está presente');
+        
       }
 
     });
 
     this.nacionalidadesService.getNacionalidades().subscribe((nacionalidad)=>{
       this.nacionalidades = nacionalidad
-      // console.log( this.nacionalidades)
+      
     })
 
     this.tipoDocumentoService.getTipoDocumentos().subscribe((tipoDocumento)=>{
       this.tipoDocumentos = tipoDocumento
-      // console.log(this.tipoDocumentos)
+      
     })
 
     this.emisorDocumentosService.getTipoDocumentos().subscribe((emisorDocumento)=>{
       this.emisorDocumentos = emisorDocumento
-      // console.log("->",this.emisorDocumentos)
+      
     })
 
     this.sexoService.getSexo().subscribe((sexo)=>{
       this.sexo = sexo
-      // console.log(this.sexo)
+      
     })
     this.caracterAutorizanteService.getCaracterAutorizantes().subscribe((autorizante)=>{
       this.caracterAutorizantes = autorizante
-     console.log(this.caracterAutorizantes)
+     
     })
     this.acreditacionVinculoService.getAcreditarVinculos()
     .subscribe((acreditacionVinculo)=>{
       this.acreditacionVinculos = acreditacionVinculo
-      // console.log(this.sexo)
+      
     })
 
   }
@@ -136,15 +136,15 @@ export class AutorizanteComponent implements OnInit {
     }
 
 
-    // console.log("pregarga",this.precarga,this.autorizante.id )
+    
     if(this.autorizante.id){
 
       this.autorizante.fecha_de_nacimiento = new Date(this.autorizante.fecha_de_nacimiento).toLocaleDateString('fr-CA')
 
       this.autorizantesService.actualizarAutorizado(this.autorizante)
         .subscribe(autorizante => {
-          console.log(autorizante)
-          console.log('precarga:', this.precarga)
+          
+          
           // this.mostrarMensaje('Registro Actualizado')
           if(!this.precarga) {
 
@@ -164,7 +164,7 @@ export class AutorizanteComponent implements OnInit {
       this.autorizante.fecha_de_nacimiento = new Date(this.autorizante.fecha_de_nacimiento).toLocaleDateString('fr-CA')
       this.autorizantesService.agregarAutorizante(this.autorizante)
       .subscribe(resp =>{
-        console.log('Respuesta', resp)
+        
 
         if(!this.precarga) {
 
@@ -181,13 +181,13 @@ export class AutorizanteComponent implements OnInit {
   }
 
   eliminarAutorizante(id:number){
-    console.log("Eliminar: ",id)
-    this.autorizantesService.eliminarAutorizante(id).subscribe(console.log)
+    
+    
   }
 
   cancelar(){
-    console.log('cancelar')
-    console.log('this.precarga',this.precarga)
+    
+    
     if(!this.precarga) {
 
       this.router.navigate(['/autorizantes/listado'])

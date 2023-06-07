@@ -21,7 +21,7 @@ export class MensajeConfirmacionComponent{
 
   clearInputs() {
     // aquí limpias los valores de los inputs
-    console.log('limpiarimputs');
+   
     this.mensajeConfirmacionService.confirmClearInputs();
     this.dialogRef.close();
   }

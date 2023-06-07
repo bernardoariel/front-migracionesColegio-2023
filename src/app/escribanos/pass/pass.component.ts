@@ -27,10 +27,10 @@ export class PassComponent implements OnInit {
           escribano.password = contrasena;
           this.escribanosService.actualizarEscribano(escribano).subscribe(
             ()=> {
-              console.log('se han cambiado las contraseñas')
+             
             },
             (error)=>{
-              console.log('hubo un error')
+             
             }
           )
         })

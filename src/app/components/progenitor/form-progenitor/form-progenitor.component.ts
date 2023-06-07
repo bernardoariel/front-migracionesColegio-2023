@@ -39,7 +39,7 @@ export class FormProgenitorComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.activatedRoute.params);
+    
     this.activatedRoute.params
       .pipe(
         switchMap(({id})=> this.progenitoresService.getProgenitorId(id))
@@ -49,7 +49,7 @@ export class FormProgenitorComponent implements OnInit {
     )
     this.tipoDocumentoService.getTipoDocumentos().subscribe((tipoDocumento)=>{
       this.tipoDocumentos = tipoDocumento
-      // console.log(this.tipoDocumentos)
+      
     })
 
   }
@@ -63,7 +63,7 @@ export class FormProgenitorComponent implements OnInit {
 
       this.progenitoresService.actualizarProgenitor(this.progenitor)
         .subscribe(progenitor => {
-          console.log(progenitor)
+          
           // this.mostrarMensaje('Registro Actualizado')
          this.router.navigate(['/progenitores'])
         })
@@ -71,8 +71,7 @@ export class FormProgenitorComponent implements OnInit {
 
       this.progenitoresService.agregarProgenitor(this.progenitor)
       .subscribe(resp =>{
-        console.log('Respuesta', resp)
-      //  this.mostrarMensaje('Registro Creado')
+       
          this.router.navigate(['/progenitores'])
       })
     }

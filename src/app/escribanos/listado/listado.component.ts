@@ -44,7 +44,7 @@ export class ListadoComponent implements OnInit {
         this.dataSource = new MatTableDataSource<Escribano>( this.escribanos );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        // console.log(this.escribanos);
+
       }
     )
 

@@ -62,18 +62,18 @@ export class AcompaneanteComponent implements OnInit {
     });
   }
   onClearInputs() {
-    console.log('limpiandoInputs');
+    
     this.mensajeConfirmacionService.confirmClearInputs();
   }
   ngOnInit(): void {
     /* reviso si en la ruta existe la palabra nueva */
     this.activatedRoute.url.subscribe(url => {
       this.rutaActual = url.map(segment => segment.path).join('/');
-      console.log(this.rutaActual); // Imprime la ruta actual como una cadena de texto cada vez que cambia
+      
       if(this.rutaActual=='nueva') this.precarga = true
 
     });
-    console.log(this.activatedRoute.params);
+    
 
     this.activatedRoute.params.subscribe((params) => {
 
@@ -81,16 +81,16 @@ export class AcompaneanteComponent implements OnInit {
         // El objeto params tiene un parámetro 'id'
         this.acompaneantesService.getProgenitorId(params['id']).subscribe((progenitor) => {
           this.progenitor = progenitor
-          // console.log('this.menor.fecha_de_nacimiento ', this.progenitor.fecha_de_nacimiento);
-          // console.log('Este es un menor', this.autorizante);
+          
+          
         });
       } else {
         // El objeto params no tiene un parámetro 'id'
-        console.log('El parámetro id no está presente');
+        
       }
 
     });
-    console.log(this.activatedRoute.params);
+    
 
     this.activatedRoute.params.subscribe((params) => {
 
@@ -98,18 +98,18 @@ export class AcompaneanteComponent implements OnInit {
         // El objeto params tiene un parámetro 'id'
         this.acompaneantesService.getProgenitorId(params['id']).subscribe((progenitor) => {
           this.progenitor = progenitor
-          // console.log('this.menor.fecha_de_nacimiento ', this.progenitor.fecha_de_nacimiento);
-          // console.log('Este es un menor', this.autorizante);
+          
+          
         });
       } else {
         // El objeto params no tiene un parámetro 'id'
-        console.log('El parámetro id no está presente');
+        
       }
 
     });
     this.tipoDocumentoService.getTipoDocumentos().subscribe((tipoDocumento)=>{
       this.tipoDocumentos = tipoDocumento
-      // console.log(this.tipoDocumentos)
+      
     })
 
   }
@@ -139,7 +139,7 @@ export class AcompaneanteComponent implements OnInit {
     tipo_acompaneante:''
   }
     this.acompaneantes.push(nuevoAcompaneante)
-    console.log('this.acompaneantes::: ', this.acompaneantes);
+    
 
     this.openModal()
 
@@ -153,7 +153,7 @@ export class AcompaneanteComponent implements OnInit {
   }
 
   limpiandoInputs(){
-    console.log('limpiandoInputs')
+    
     this.progenitor = {
       apellido:'',
       segundo_apellido: null,
@@ -174,8 +174,8 @@ export class AcompaneanteComponent implements OnInit {
 
       this.acompaneantesService.actualizarProgenitor(this.progenitor)
         .subscribe(progenitor => {
-          console.log(progenitor)
-          console.log('precarga:', this.precarga)
+          
+          
           // this.mostrarMensaje('Registro Actualizado')
           if(!this.precarga) {
 
@@ -193,8 +193,8 @@ export class AcompaneanteComponent implements OnInit {
 
       this.acompaneantesService.agregarProgenitor(this.progenitor)
       .subscribe(resp =>{
-        console.log('Respuesta', resp)
-        console.log("->***",this.precarga);
+        
+        
         return null;
       //  this.mostrarMensaje('Registro Creado')
       if(!this.precarga) {
@@ -212,8 +212,8 @@ export class AcompaneanteComponent implements OnInit {
 
   }
   cancelar(){
-    console.log('cancelar')
-    console.log('this.precarga',this.precarga)
+    
+    
 
     if(!this.precarga) {
 

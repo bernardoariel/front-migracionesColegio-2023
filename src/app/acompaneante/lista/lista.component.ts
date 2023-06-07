@@ -47,7 +47,7 @@ export class ListaComponent implements OnInit {
     this.activatedRoute.url.subscribe(url => {
 
       this.rutaActual = url.map(segment => segment.path).join('/');
-      console.log(this.rutaActual); // Imprime la ruta actual como una cadena de texto cada vez que cambia
+      
       if(this.rutaActual=='nueva' || this.rutaActual.includes('solicitudes')){
         this.precarga = true
       }
@@ -66,7 +66,7 @@ export class ListaComponent implements OnInit {
    cargarMenores(){
       this.personasService.getPersonasAcompaneantesJoin().subscribe(
        (personas)=>{
-        console.log('personas::: ', personas);
+        
 
          this.personas = personas.filter(persona => persona.id !== 1);
          this.dataSource = new MatTableDataSource<IPersona>( this.personas );
@@ -100,7 +100,7 @@ export class ListaComponent implements OnInit {
 
   }
   seleccionarAcompanenante(acompanenante:IPersona){
-    console.log('acompanenante::: ', acompanenante);
+    
 
     const modalMenor = this.dialog.open(AcompaneanteComponent,{
       width: '70vw',

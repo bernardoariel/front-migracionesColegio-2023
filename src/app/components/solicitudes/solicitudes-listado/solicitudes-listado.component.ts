@@ -40,7 +40,7 @@ export class SolicitudesListadoComponent implements OnInit {
     this.ordenesService.getOrdenesFormateado()
    .subscribe(
       (ordenes)=>{
-        console.log(this.ordenes);
+        
         // (ordenes.aprobacion)? ordenes.aprobacion = ordenes.aprobacion : ordenes.aprobacion= '';
         // const ordenFiltrada = ordenes.aprobacion ?? ''
 
@@ -51,7 +51,7 @@ export class SolicitudesListadoComponent implements OnInit {
         this.dataSource = new MatTableDataSource<OrdenFormateada>( this.ordenes );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        console.log(this.ordenes);
+        
     })
 
   }

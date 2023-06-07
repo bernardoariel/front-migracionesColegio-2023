@@ -52,13 +52,13 @@ export class EscribanoComponent implements OnInit {
 
   }
   guardar(){
-    // console.log(this.escribano)
+    
     if(this.escribano.nombre.trim().length === 0){
       return;
     }
 
     if(this.escribano.id){
-      console.log('actualizando contenido')
+      
       //Actualizar
       this.escribanosService.actualizarEscribano(this.escribano)
         .subscribe(escribano => {
@@ -68,7 +68,7 @@ export class EscribanoComponent implements OnInit {
     }else{
       this.escribanosService.agregarEscribano(this.escribano)
       .subscribe(resp =>{
-        console.log('Respuesta', resp)
+        
         this.mostrarMensaje('Registro Creado')
         this.router.navigate(['/escribanos/listado'])
       })

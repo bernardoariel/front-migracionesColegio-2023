@@ -57,12 +57,12 @@ export class LoginComponent implements OnInit {
 
     this.auth.login(this.usuario)
       .subscribe(resp => {
-        console.log('aca tengo la respuesta'+resp)
+        
         Swal.close();
         if(this.recordarme){
           localStorage.setItem('email',this.usuario.email?? '')
         }
-        console.log('me estoy logueando')
+        
         this.logueado = true;
         this.router.navigate(['/dashboard'])
     }, (error=>{
