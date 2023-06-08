@@ -11,20 +11,20 @@ import { MenoresService } from './menores.service';
   providedIn: 'root'
 })
 export class PdfService {
-  respuesta: any ={
-    "nro_foja": "054050",
-    "matricula":"1442",
-    "apellidoescribano":"Rinher",
-    "nombreescribano":"Jose",
-    "apellidomenor":"Baez",
-    "nombremenor":"misael",
-    "nrodocumento":"48123654",
-    "nacionalidad":"argentino",
-    "fechanacimiento":"10102006",
-    "fechahastacuando":"10102023",
-    "autorizante":"Noelia ",
-    "acompañanante":"Jose paco gabriel"
 
+  respuesta: any ={
+    "nro_foja": "",
+    "matricula":"",
+    "apellidoescribano":"",
+    "nombreescribano":"",
+    "apellidomenor":"",
+    "nombremenor":"",
+    "nrodocumento":"",
+    "nacionalidad":"",
+    "fechanacimiento":"",
+    "fechahastacuando":"",
+    "autorizante":" ",
+    "acompañanante":""
   }
   fechaPdf:string='';
   fojasPdf:string=''
@@ -37,11 +37,12 @@ export class PdfService {
     private escribanosServices:EscribanosService,
     private personasServices:PersonasService ) { }
 
-  imprimirPDF(id:number){
-
+  imprimirPDF(id:number,respuesta:any){
+    this.respuesta = respuesta
     // datos de la orden
     this.ordenesService.getOrdenId(id).subscribe(
       (orden)=>{
+        console.log('orden::: ', orden);
 
         this.respuesta.nro_foja = orden.nro_foja
         this.respuesta.fechahastacuando = orden.fecha_vigencia_hasta

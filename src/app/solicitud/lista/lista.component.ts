@@ -7,6 +7,7 @@ import { OrdenFormateada } from 'src/app/interfaces/orden-formateada';
 import { EscribanosService } from 'src/app/services/escribanos.service';
 import { OrdenesService } from 'src/app/services/ordenes.service';
 import { PdfService } from 'src/app/services/pdf.service';
+import { PersonasService } from 'src/app/services/personas.service';
 import { SoapService } from 'src/app/services/soap.service';
 
 @Component({
@@ -22,6 +23,7 @@ export class ListaComponent implements OnInit {
   dataSource: any;
   ordenes:OrdenFormateada[] = [];
   userId:number;
+  respuesta: any
   @ViewChild(MatPaginator,{static:true}) paginator!: MatPaginator ;
   @ViewChild(MatSort,{static:true}) sort!: MatSort;
   constructor(
@@ -29,7 +31,7 @@ export class ListaComponent implements OnInit {
     private router:Router,
     private soapService:SoapService,
     private pdfService: PdfService,
-    private escribanosService:EscribanosService) {
+    ) {
 
       this.userId = Number(localStorage.getItem('userId'));
       
@@ -39,8 +41,12 @@ export class ListaComponent implements OnInit {
     ngOnInit(): void {
       this.cargarOrdenes()
     }
+
     crearPdf(id:number){
-      this.pdfService.imprimirPDF(id);
+        
+      
+       let respuesta:any
+      this.pdfService.imprimirPDF(id,respuesta);
     }
 
     applyFilter(event: Event) {

@@ -39,7 +39,8 @@ export class ListadoComponent implements OnInit {
       this.cargarOrdenes()
     }
     crearPdf(id:number){
-      this.pdfService.imprimirPDF(id);
+      let respuesta:any
+      this.pdfService.imprimirPDF(id,respuesta);
     }
 
     applyFilter(event: Event) {
