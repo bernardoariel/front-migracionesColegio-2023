@@ -82,87 +82,85 @@ export class ListaComponent implements OnInit {
     }
     
   crearPdf(id: number) {
-  this.ordenesService.getOrdenId(id).pipe(
-    tap((orden) => {
-      console.log('orden::: ', orden);
-      this.respuesta = {
-        certificacion: orden.numero_actuacion_notarial_cert_firma,
-        fechadesde: orden.fecha_vigencia_desde,
-        fechahasta: orden.fecha_vigencia_hasta,
-        aprobacion: orden.aprobacion as string,
-        escribano: {
-          matricula: '', // Se llenará más adelante
-          apellidoescribano: '',
-          nombreescribano: '',
-        },
-        menor: {
-          apellidomenor: '',
-          nombremenor: '',
-          nrodocumento: undefined,
-          nacionalidad: undefined,
-          fechanacimiento: null,
-        },
-        autorizante: [],
-        acompaneante: [],
+    this.ordenesService.getOrdenId(id).pipe(
+      tap((orden) => {
+        console.log('orden::: ', orden);
+        this.respuesta = {
+          certificacion: orden.numero_actuacion_notarial_cert_firma,
+          fechadesde: orden.fecha_vigencia_desde,
+          fechahasta: orden.fecha_vigencia_hasta,
+          aprobacion: orden.aprobacion as string,
+          escribano: {
+            matricula: '', // Se llenará más adelante
+            apellidoescribano: '',
+            nombreescribano: '',
+          },
+          menor: {
+            apellidomenor: '',
+            nombremenor: '',
+            nrodocumento: undefined,
+            nacionalidad: undefined,
+            fechanacimiento: null,
+          },
+          autorizante: [],
+          acompaneante: [],
+        };
+      }),
+      switchMap((orden) => {
+        return this.ordenesItemsService.getOrdenId(id);
+      }),
+      tap((items) => {
+        console.log('items::: ', items);
+      }),
+      switchMap((items: any[]) => {
+        const escribanoId = items[0]?.id_detalle;
+        const menorId = items[1]?.id_detalle;
+        const autorizanteIds = items
+          .filter((item: { tipo: string }) => item.tipo === 'autorizante')
+          .map((item: { id_detalle: any }) => item.id_detalle);
+        const acompananteIds = items
+          .filter((item: { tipo: string }) => item.tipo === 'acompaneante')
+          .map((item: { id_detalle: any }) => item.id_detalle);
+
+        const escribanoObservable = escribanoId ? this.escribanosService.getEscribanoId(escribanoId) : of(null);
+        const menorObservable = menorId ? this.personasService.getPersonaById(menorId) : of(null);
+        const autorizantesObservables = autorizanteIds.map((id: number) => this.personasService.getPersonaById(id));
+        const acompanantesObservables = acompananteIds.map((id: number) => this.personasService.getPersonaById(id));
+
+        return forkJoin([
+          escribanoObservable,
+          menorObservable,
+          forkJoin(autorizantesObservables),
+          forkJoin(acompanantesObservables),
+        ]).pipe(
+          map(([escribano, menor, autorizantes, acompanantes]) => {
+            return { escribano, menor, autorizantes, acompanantes };
+          })
+        );
+      }),
+    tap(({ escribano, menor, autorizantes, acompanantes }) => {
+      // Asignar valores de escribano y menor a this.respuesta
+      this.respuesta.escribano = {
+        matricula: escribano?.matricula ?? '',
+        apellidoescribano: escribano?.apellido ?? '',
+        nombreescribano: escribano?.nombre ?? '',
       };
-    }),
-    switchMap((orden) => {
-      return this.ordenesItemsService.getOrdenId(id);
-    }),
-    tap((items) => {
-      console.log('items::: ', items);
-    }),
-   switchMap((items: any[]) => {
-  const escribanoId = items[0]?.id_detalle;
-  const menorId = items[1]?.id_detalle;
-  const autorizanteIds = items
-    .filter((item: { tipo: string }) => item.tipo === 'autorizante')
-    .map((item: { id_detalle: any }) => item.id_detalle);
-  const acompananteIds = items
-    .filter((item: { tipo: string }) => item.tipo === 'acompaneante')
-    .map((item: { id_detalle: any }) => item.id_detalle);
 
-  const escribanoObservable = escribanoId ? this.escribanosService.getEscribanoId(escribanoId) : of(null);
-  const menorObservable = menorId ? this.personasService.getPersonaById(menorId) : of(null);
-  const autorizantesObservables = autorizanteIds.map((id: number) => this.personasService.getPersonaById(id));
-  const acompanantesObservables = acompananteIds.map((id: number) => this.personasService.getPersonaById(id));
+      this.respuesta.menor = {
+        apellidomenor: menor?.apellido ?? '',
+        nombremenor: menor?.nombre ?? '',
+        nrodocumento: menor?.numero_de_documento as any,
+        nacionalidad: menor?.nationality_id ?? undefined,
+        fechanacimiento: menor?.fecha_de_nacimiento ?? null,
+      };
 
-  return forkJoin([
-    escribanoObservable,
-    menorObservable,
-    forkJoin(autorizantesObservables),
-    forkJoin(acompanantesObservables),
-  ]).pipe(
-    map(([escribano, menor, autorizantes, acompanantes]) => {
-      return { escribano, menor, autorizantes, acompanantes };
-    })
-  );
-}),
-tap(({ escribano, menor, autorizantes, acompanantes }) => {
-  // Asignar valores de escribano y menor a this.respuesta
-  this.respuesta.escribano = {
-    matricula: escribano?.matricula ?? '',
-    apellidoescribano: escribano?.apellido ?? '',
-    nombreescribano: escribano?.nombre ?? '',
-  };
-
-  this.respuesta.menor = {
-    apellidomenor: menor?.apellido ?? '',
-    nombremenor: menor?.nombre ?? '',
-    nrodocumento: menor?.numero_de_documento as any,
-    nacionalidad: menor?.nationality_id ?? undefined,
-    fechanacimiento: menor?.fecha_de_nacimiento ?? null,
-  };
-
-  // Asignar valores de autorizantes a this.respuesta.autorizante
-  // Asignar valores de autorizantes a this.respuesta.autorizante
-  this.respuesta.autorizante = autorizantes.map((autorizante) => {
-    return {
-      apellidoautorizante: autorizante.apellido,
-      nombreautorizante: autorizante.nombre ?? '',
-      nrodocumentoautorizante: autorizante.numero_de_documento != null ? Number(autorizante.numero_de_documento) : undefined,
-    };
-  });
+      this.respuesta.autorizante = autorizantes.map((autorizante) => {
+        return {
+          apellidoautorizante: autorizante.apellido,
+          nombreautorizante: autorizante.nombre ?? '',
+          nrodocumentoautorizante: autorizante.numero_de_documento != null ? Number(autorizante.numero_de_documento) : undefined,
+        };
+      });
 
   // Asignar valores de acompañantes a this.respuesta.acompaneante
   this.respuesta.acompaneante = acompanantes.map((acompanante) => {
@@ -179,7 +177,7 @@ tap(({ escribano, menor, autorizantes, acompanantes }) => {
     this.pdfService.imprimirPDF(id, this.respuesta);
     console.log('this.respuesta::: ', this.respuesta);
   });
-}
+  }
 
 
     applyFilter(event: Event) {
