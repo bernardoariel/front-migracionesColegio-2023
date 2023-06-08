@@ -14,8 +14,9 @@ import { PersonasService } from 'src/app/services/personas.service';
 import { SoapService } from 'src/app/services/soap.service';
 
 interface QR{
-  nro_foja: string;
-  fechahastacuando: string,
+  certificacion: string;
+  fechadesde:string
+  fechahasta: string,
   aprobacion: string,
   escribano: Escribano
   menor: Menor
@@ -85,8 +86,9 @@ export class ListaComponent implements OnInit {
     tap((orden) => {
       console.log('orden::: ', orden);
       this.respuesta = {
-        nro_foja: orden.nro_foja,
-        fechahastacuando: orden.fecha_vigencia_hasta,
+        certificacion: orden.numero_actuacion_notarial_cert_firma,
+        fechadesde: orden.fecha_vigencia_desde,
+        fechahasta: orden.fecha_vigencia_hasta,
         aprobacion: orden.aprobacion as string,
         escribano: {
           matricula: '', // Se llenará más adelante
@@ -174,8 +176,9 @@ tap(({ escribano, menor, autorizantes, acompanantes }) => {
 
 
   ).subscribe(() => {
-  this.pdfService.imprimirPDF(id, this.respuesta);
-});
+    this.pdfService.imprimirPDF(id, this.respuesta);
+    console.log('this.respuesta::: ', this.respuesta);
+  });
 }
 
 
