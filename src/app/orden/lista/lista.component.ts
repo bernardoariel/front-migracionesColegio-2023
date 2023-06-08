@@ -81,99 +81,103 @@ export class ListaComponent implements OnInit {
     }
     
   crearPdf(id: number) {
-    this.ordenesService.getOrdenId(id).pipe(
-      tap((orden) => {
-        console.log('orden::: ', orden);
-        this.respuesta = {
-          nro_foja: orden.nro_foja,
-          fechahastacuando: orden.fecha_vigencia_hasta,
-          aprobacion: orden.aprobacion as string,
-          escribano: {
-            matricula: '', // Se llenará más adelante
-            apellidoescribano: '',
-            nombreescribano: '',
-          },
-          menor: {
-            apellidomenor: '',
-            nombremenor: '',
-            nrodocumento: undefined,
-            nacionalidad: undefined,
-            fechanacimiento: null,
-          },
-          autorizante: [],
-          acompaneante: [],
-        };
-      }),
-      switchMap((orden) => {
-        return this.ordenesItemsService.getOrdenId(id);
-      }),
-      tap((items) => {
-        console.log('items::: ', items);
-      }),
-     switchMap((items: any[]) => {
+  this.ordenesService.getOrdenId(id).pipe(
+    tap((orden) => {
+      console.log('orden::: ', orden);
+      this.respuesta = {
+        nro_foja: orden.nro_foja,
+        fechahastacuando: orden.fecha_vigencia_hasta,
+        aprobacion: orden.aprobacion as string,
+        escribano: {
+          matricula: '', // Se llenará más adelante
+          apellidoescribano: '',
+          nombreescribano: '',
+        },
+        menor: {
+          apellidomenor: '',
+          nombremenor: '',
+          nrodocumento: undefined,
+          nacionalidad: undefined,
+          fechanacimiento: null,
+        },
+        autorizante: [],
+        acompaneante: [],
+      };
+    }),
+    switchMap((orden) => {
+      return this.ordenesItemsService.getOrdenId(id);
+    }),
+    tap((items) => {
+      console.log('items::: ', items);
+    }),
+   switchMap((items: any[]) => {
   const escribanoId = items[0]?.id_detalle;
   const menorId = items[1]?.id_detalle;
   const autorizanteIds = items
     .filter((item: { tipo: string }) => item.tipo === 'autorizante')
     .map((item: { id_detalle: any }) => item.id_detalle);
+  const acompananteIds = items
+    .filter((item: { tipo: string }) => item.tipo === 'acompaneante')
+    .map((item: { id_detalle: any }) => item.id_detalle);
 
   const escribanoObservable = escribanoId ? this.escribanosService.getEscribanoId(escribanoId) : of(null);
   const menorObservable = menorId ? this.personasService.getPersonaById(menorId) : of(null);
   const autorizantesObservables = autorizanteIds.map((id: number) => this.personasService.getPersonaById(id));
+  const acompanantesObservables = acompananteIds.map((id: number) => this.personasService.getPersonaById(id));
 
   return forkJoin([
     escribanoObservable,
     menorObservable,
-    ...autorizantesObservables,
+    forkJoin(autorizantesObservables),
+    forkJoin(acompanantesObservables),
   ]).pipe(
-    map(([escribano, menor, ...autorizantes]: [any, any, ...any[]]) => {
-      return { escribano, menor, autorizantes };
+    map(([escribano, menor, autorizantes, acompanantes]) => {
+      return { escribano, menor, autorizantes, acompanantes };
     })
   );
 }),
-tap(({ escribano, menor, autorizantes }) => {
-  console.log('escribano::: ', escribano);
-  console.log('menor::: ', menor);
-  console.log('autorizantes::: ', autorizantes);
-
+tap(({ escribano, menor, autorizantes, acompanantes }) => {
   // Asignar valores de escribano y menor a this.respuesta
-
   this.respuesta.escribano = {
-    matricula: escribano?.matricula,
-    apellidoescribano: escribano?.apellido,
-    nombreescribano: escribano?.nombre
+    matricula: escribano?.matricula ?? '',
+    apellidoescribano: escribano?.apellido ?? '',
+    nombreescribano: escribano?.nombre ?? '',
   };
 
   this.respuesta.menor = {
-    apellidomenor: menor?.apellido,
-    nombremenor: menor?.nombre,
-    nrodocumento: menor?.numero_de_documento,
-    nacionalidad: menor?.nacionalidad,
-    fechanacimiento: menor?.fecha_nacimiento,
+    apellidomenor: menor?.apellido ?? '',
+    nombremenor: menor?.nombre ?? '',
+    nrodocumento: menor?.numero_de_documento as any,
+    nacionalidad: menor?.nationality_id ?? undefined,
+    fechanacimiento: menor?.fecha_de_nacimiento ?? null,
   };
 
-  autorizantes.forEach((autorizante) => {
-    this.respuesta.autorizante.push({
-      apellidoautorizante: autorizante?.apellido,
-      nombreautorizante: autorizante?.nombre as string,
-      nrodocumentoautorizante: autorizante?.numero_de_documento as number,
-    });
+  // Asignar valores de autorizantes a this.respuesta.autorizante
+  // Asignar valores de autorizantes a this.respuesta.autorizante
+  this.respuesta.autorizante = autorizantes.map((autorizante) => {
+    return {
+      apellidoautorizante: autorizante.apellido,
+      nombreautorizante: autorizante.nombre ?? '',
+      nrodocumentoautorizante: autorizante.numero_de_documento != null ? Number(autorizante.numero_de_documento) : undefined,
+    };
   });
-}),
-    ).subscribe((respuesta) => {
-        console.log('respuesta:::', respuesta);
-        console.log('this.respuesta::: ', this.respuesta);
-    });
-  }
 
-/* switchMap(() => this.personasService.getPersonaById(41)), //autorizante
-      tap((acompaneante)=>{
-        this.respuesta.acompaneante.push({
-        apellidoacompaneante: acompaneante.apellido,
-        nombreacompaneante: acompaneante.nombre as string,
-        nrodocumentoacompaneante: acompaneante.numero_de_documento as number,
-        });
-      }), */
+  // Asignar valores de acompañantes a this.respuesta.acompaneante
+  this.respuesta.acompaneante = acompanantes.map((acompanante) => {
+    return {
+      apellidoacompaneante: acompanante.apellido,
+      nombreacompaneante: acompanante.nombre ?? '',
+      nrodocumentoacompaneante: acompanante.numero_de_documento != null ? Number(acompanante.numero_de_documento) : undefined,
+    };
+  });
+})
+
+
+  ).subscribe(() => {
+  this.pdfService.imprimirPDF(id, this.respuesta);
+});
+}
+
 
     applyFilter(event: Event) {
       const filterValue = (event.target as HTMLInputElement).value;

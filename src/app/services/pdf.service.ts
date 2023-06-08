@@ -39,48 +39,8 @@ export class PdfService {
 
   imprimirPDF(id:number,respuesta:any){
     this.respuesta = respuesta
-    // datos de la orden
-    this.ordenesService.getOrdenId(id).subscribe(
-      (orden)=>{
-        console.log('orden::: ', orden);
-
-        this.respuesta.nro_foja = orden.nro_foja
-        this.respuesta.fechahastacuando = orden.fecha_vigencia_hasta
-        this.respuesta.aprobacion = orden.aprobacion
-        this.idEscribano = orden.notary_id!
-        this.idMenor = orden.minor_id!
-        this.fechaPdf = `Fecha: ${orden.fecha_del_instrumento}`
-        this.fojasPdf = `Nº de serie y Nº de foja/ actuación notarial: ${ orden.serie_foja} ${orden.numero_actuacion_notarial_cert_firma}`
-        this.aprobacionPdf = `Nº  de autorización otorgado por el Ministerio del Interior - Migraciones: ${orden.aprobacion}`
-
-         // datos escribano
-        this.escribanosServices.getEscribanoId(this.idEscribano).subscribe(
-          (escribano)=>{
-            this.respuesta.matricula = escribano.matricula
-            this.respuesta.apellidoescribano = escribano.apellido
-            this.respuesta.nombreescribano = escribano.nombre
-        })
-        //datos menores
-        // this.menoresServices.getMenorId(this.idMenor).subscribe(
-       this.personasServices.getPersonaById(this.idMenor).subscribe(
-          (menor)=>{
-            this.respuesta.apellidomenor = menor.apellido
-            this.respuesta.nombremenor = menor.nombre
-            this.respuesta.nrodocumento = menor.numero_de_documento
-            this.respuesta.nacionalidad = menor.nationality_id
-            this.respuesta.fechanacimiento = menor.fecha_de_nacimiento
-        })
-        //datos Autorizantes
-
-        //datos Acompañanates
-
-        //datos progenitores
-        this.respuesta.autorizante = ''
-        this.respuesta.acompaneante = ''
-
-        this.imprimendoPdf()
-      })
-
+    // this.fojasPdf = 'Fojas: ' + this.respuesta.nro_foja
+    this.imprimendoPdf()
   }
 
   async imprimendoPdf(){
