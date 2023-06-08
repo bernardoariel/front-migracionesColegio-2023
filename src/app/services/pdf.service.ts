@@ -61,9 +61,14 @@ export class PdfService {
   doc.setFontSize(11);
   doc.text(`Nro. de Aprobación: ${this.respuesta.aprobacion}`, 10, 30); // Ajustar las coordenadas para la posición vertical
   doc.text(`Nro. de Certificacion: ${this.respuesta.certificacion}`, 120, 30); // Ajustar las coordenadas para la posición vertical
-  doc.text(`Fecha de Vigencia desde: ${this.respuesta.fechadesde}`, 10, 35); // Ajustar las coordenadas para la posición vertical
-  doc.text(`Fecha de Vigencia hasta: ${this.respuesta.fechahasta}`, 120, 35); // Ajustar las coordenadas para la posición vertical
-  // Ajustar las coordenadas para la posición vertical
+ 
+// Formatear la fecha de vigencia desde
+const fechaDesde = new Date(this.respuesta.fechadesde).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+doc.text(`Fecha de Vigencia desde: ${fechaDesde}`, 10, 35); // Ajustar las coordenadas para la posición vertical
+
+// Formatear la fecha de vigencia hasta
+const fechaHasta = new Date(this.respuesta.fechahasta).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+doc.text(`Fecha de Vigencia hasta: ${fechaHasta}`, 120, 35); // Ajustar las coordenadas para la posición vertical // Ajustar las coordenadas para la posición vertical
 
   // Coordenadas del recuadro y el código QR
   const posicionRecuadroX = 10;
