@@ -113,32 +113,45 @@ export class ListaComponent implements OnInit {
         console.log('items::: ', items);
       }),
       switchMap((items: any[]) => {
-        const escribanoId = items[0]?.id_detalle;
-        const menorId = items[1]?.id_detalle;
-        const autorizanteIds = items
-          .filter((item: { tipo: string }) => item.tipo === 'autorizante')
-          .map((item: { id_detalle: any }) => item.id_detalle);
-        const acompananteIds = items
-          .filter((item: { tipo: string }) => item.tipo === 'acompaneante')
-          .map((item: { id_detalle: any }) => item.id_detalle);
+  const escribanoId = items[0]?.id_detalle;
+  const menorId = items[1]?.id_detalle;
+  const autorizanteIds = items
+    .filter((item: { tipo: string }) => item.tipo === 'autorizante')
+    .map((item: { id_detalle: any }) => item.id_detalle);
 
-        const escribanoObservable = escribanoId ? this.escribanosService.getEscribanoId(escribanoId) : of(null);
-        const menorObservable = menorId ? this.personasService.getPersonaById(menorId) : of(null);
-        const autorizantesObservables = autorizanteIds.map((id: number) => this.personasService.getPersonaById(id));
-        const acompanantesObservables = acompananteIds.map((id: number) => this.personasService.getPersonaById(id));
+   // Agregar esta línea
 
-        return forkJoin([
-          escribanoObservable,
-          menorObservable,
-          forkJoin(autorizantesObservables),
-          forkJoin(acompanantesObservables),
-        ]).pipe(
-          map(([escribano, menor, autorizantes, acompanantes]) => {
-            return { escribano, menor, autorizantes, acompanantes };
-          })
-        );
-      }),
+  const acompananteIds = items
+    .filter((item: { tipo: string }) => item.tipo === 'acompaneante')
+    .map((item: { id_detalle: any }) => item.id_detalle);
+
+  const escribanoObservable = escribanoId ? this.escribanosService.getEscribanoId(escribanoId) : of(null);
+  const menorObservable = menorId ? this.personasService.getPersonaById(menorId) : of(null);
+
+  const autorizantesObservables = autorizanteIds.map((id: number) => {
+    console.log(`Llamando a this.personasService.getPersonaById(${id})`);
+    return this.personasService.getPersonaById(id);
+  });
+console.log('items1:::', items);
+  const acompanantesObservables = acompananteIds.map((id: number) => {
+    console.log(`Llamando a this.personasService.getPersonaById(${id})`);
+    return this.personasService.getPersonaById(id);
+  });
+
+  return forkJoin([
+    escribanoObservable,
+    menorObservable,
+    forkJoin(autorizantesObservables),
+    acompanantesObservables.length > 0 ? forkJoin(acompanantesObservables) : of([]), // Utilizar 'of' para emitir un arreglo vacío
+  ]).pipe(
+    map(([escribano, menor, autorizantes, acompanantes]) => {
+      return { escribano, menor, autorizantes, acompanantes };
+    })
+  );
+}),
+      
     tap(({ escribano, menor, autorizantes, acompanantes }) => {
+    
       // Asignar valores de escribano y menor a this.respuesta
       this.respuesta.escribano = {
         matricula: escribano?.matricula ?? '',
@@ -163,13 +176,15 @@ export class ListaComponent implements OnInit {
       });
 
   // Asignar valores de acompañantes a this.respuesta.acompaneante
-  this.respuesta.acompaneante = acompanantes.map((acompanante) => {
-    return {
-      apellidoacompaneante: acompanante.apellido,
-      nombreacompaneante: acompanante.nombre ?? '',
-      nrodocumentoacompaneante: acompanante.numero_de_documento != null ? Number(acompanante.numero_de_documento) : undefined,
-    };
-  });
+  if (acompanantes.length > 0) {
+    this.respuesta.acompaneante = acompanantes.map((acompanante) => {
+      return {
+        apellidoacompaneante: acompanante.apellido,
+        nombreacompaneante: acompanante.nombre ?? '',
+        nrodocumentoacompaneante: acompanante.numero_de_documento != null ? Number(acompanante.numero_de_documento) : undefined,
+      };
+    });
+  }
 })
 
 
