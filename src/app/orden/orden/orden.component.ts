@@ -53,7 +53,7 @@ export class OrdenComponent implements OnInit, OnDestroy {
     { nombre: 'NO', valor: false }
   ];
   mayoriaEdadControl = new FormControl<boolean>(false, Validators.required);
-
+   
   fechaDesdeControl = new FormControl(new Date(), Validators.required);
   fechaHastaControl = new FormControl(new Date(), Validators.required);
   ordenForm = new FormGroup({
@@ -99,12 +99,12 @@ export class OrdenComponent implements OnInit, OnDestroy {
 
         }
 
-        this.fechaHastaControl.disable();
+        // this.fechaHastaControl.disable();
 
       } else {
 
         this.fechaHastaControl.setValue(new Date());
-        this.fechaHastaControl.enable();
+        // this.fechaHastaControl.enable();
 
       }
 
@@ -144,22 +144,32 @@ export class OrdenComponent implements OnInit, OnDestroy {
 
   }
   agregarSolicitud() {
-    const valoresFormulario = this.ordenForm.value;
+
+   const valoresFormulario = this.ordenForm.value;
+   console.log('valoresFormulario::: ', valoresFormulario);
+    const fechaDesde = valoresFormulario.fechaDesde as Date; // Convertir a tipo Date si no lo es
+   const fechaDesdeFormatted = fechaDesde.toISOString().slice(0, 10); // Obtener la fecha en formato yyyy-mm-dd
+  
+   const fechaHasta = valoresFormulario.fechaHasta as Date; // Convertir a tipo Date si no lo es
+   const fechaHastaFormatted = fechaHasta.toISOString().slice(0, 10); // Obtener la fecha en formato yyyy-mm-dd
+   console.log('fechaHastaFormatted::: ', fechaHastaFormatted); 
+
     let orden: IOrdenDatos = {
       numero_actuacion_notarial_cert_firma: (valoresFormulario.nroActuacionCertificacionFirma as string),
       cualquier_pais:valoresFormulario.tipoCualquierPais===true?'y':'n',
       serie_foja:'A',
       tipo_foja:0,
       vigencia_hasta_mayoria_edad:valoresFormulario.mayoriaEdad===true?'y':'n',
-      fecha_vigencia_desde:valoresFormulario.fechaDesde ? valoresFormulario.fechaDesde.toISOString().slice(0, 10) : this.fechaHoy,
-      fecha_vigencia_hasta:valoresFormulario.fechaHasta ? valoresFormulario.fechaHasta.toISOString().slice(0, 10) : this.fechaHoy,
+      fecha_vigencia_desde:fechaDesdeFormatted,
+      fecha_vigencia_hasta:fechaHastaFormatted,
       fecha_del_instrumento:valoresFormulario.fechaInstrumento ? valoresFormulario.fechaInstrumento.toISOString().slice(0, 10) : this.fechaHoy,
       instrumento:(valoresFormulario.tipoInstrumento==='PAPEL')?'P':'D',
       nro_foja:'0',
       paises_desc:valoresFormulario.paises||'',
     }
+    
     this.solicitudService.agregarSolicitud(orden);
-    // if(Object.keys(this.solicitud.menor).length !== 0 && Object.keys(this.solicitud.autorizante1).length !== 0){
+   
         this.ordenNueva ={
           ...orden,
           autorizante1_id:this.solicitud.autorizante1.id,
@@ -176,11 +186,8 @@ export class OrdenComponent implements OnInit, OnDestroy {
             
           }
         });
-      // }else{
-      //   alert('faltan datos')
-      // }
-
-
+        console.log('orden::: ', orden);
+     
   }
   validarNumero(evento: KeyboardEvent) {
 
@@ -198,12 +205,5 @@ export class OrdenComponent implements OnInit, OnDestroy {
     }
 
   }
-  /* fechaIgualesError(fechaDesde: Date | null, fechaHasta: Date | null): string | null {
-    
-    
-    if (fechaDesde && fechaHasta && fechaDesde.getTime() === fechaHasta.getTime()) {
-      return 'Las fechas no pueden ser iguales';
-    }
-    return null;
-  } */
+  
 }
