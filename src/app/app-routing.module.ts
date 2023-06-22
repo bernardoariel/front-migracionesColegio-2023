@@ -54,11 +54,7 @@ const routes: Routes = [
     loadChildren: ()=> import('./ordenes/ordenes.module').then( m => m.OrdenesModule),
     canActivate:[AuthGuard]
   },
-  {
-    path: 'precargas',
-    loadChildren: ()=> import('./precargas/precargas.module').then( m => m.PrecargasModule),
-    canActivate:[AuthGuard]
-  },
+ 
   {
     path: 'acompaneante',
     loadChildren: ()=> import('./acompaneante/acompaneante.module').then( m => m.AcompaneanteModule),
