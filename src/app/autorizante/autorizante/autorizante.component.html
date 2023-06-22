@@ -199,7 +199,8 @@
   
       </div>
   
-     </div>
+    </div>
+    
     <!-- Fecha de Nacimiento Sexo Domicilio -->
     <div class="row mt-3 mb-3">
       <!-- Fecha de Nacimiento -->
@@ -275,24 +276,38 @@
         </button>
       </div>
       <div class="col">
-        <button *ngIf="modal.tipoDialogo!='solicitud'"
+        <button
+          *ngIf="modal.tipoDialogo!='solicitud'"
           class="float-end"
           mat-flat-button
-          [disabled]="personaForm.invalid"
+          [disabled]="!areCamposValidos()"
           color="warn"
-          (click)="guardar()">
+          (click)="guardar()"
+        >
           Guardar
         </button>
-        <button *ngIf="modal.tipoDialogo=='solicitud'"
+  
+        <button
+          *ngIf="modal.tipoDialogo=='solicitud' && modal.accionModal=='agregar'"
           class="float-end"
           mat-flat-button
-          [disabled]="personaForm.invalid"
+          [disabled]="!areCamposValidos()"
           color="accent"
-          (click)="guardar()">
+          (click)="guardar()"
+        >
+          Seleccionar
+        </button>
+        <button
+          *ngIf="modal.tipoDialogo=='solicitud' && modal.accionModal=='editar'"
+          class="float-end"
+          mat-flat-button
+          [disabled]="!areCamposValidos()"
+          color="accent"
+          (click)="guardar()"
+        >
           Seleccionar
         </button>
       </div>
-  
   
     </div>
   </form>

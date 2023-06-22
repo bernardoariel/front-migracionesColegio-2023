@@ -36,5 +36,5 @@ export interface OrdenFormateada {
   notary_id: number;
   nombreCompletoEscribano?: string;
   nombreescribano?:string;
-apellidoescribano?:string;
+  apellidoescribano?:string;
 }

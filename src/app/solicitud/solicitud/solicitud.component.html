@@ -141,12 +141,12 @@
         <small class="text-warning ms-3">
           {{solicitud.menor.apellido | uppercase}} {{solicitud.menor.nombre |titlecase}}
         </small>
-        <button
+       <!--  <button
           matTooltip="Editar menor de la solicitud"
           mat-icon-button color="basic"
           (click)="seleccionarMenor(solicitud.menor)">
           <mat-icon>edit</mat-icon>
-        </button>
+        </button> -->
 
         <button
           matTooltip="Sacar menor de la solicitud"
@@ -164,12 +164,12 @@
         <small class="text-warning ms-3">
           {{solicitud.autorizante1.apellido | uppercase}} {{solicitud.autorizante1.nombre |titlecase}}
         </small>
-        <button
+        <!-- <button
           matTooltip="Editar menor de la solicitud"
           mat-icon-button color="basic"
-          (click)="seleccionarMenor(solicitud.autorizante1)">
+          (click)="seleccionarAutorizante1(solicitud.autorizante1)">
           <mat-icon>edit</mat-icon>
-        </button>
+        </button> -->
 
         <button
           matTooltip="Sacar menor de la solicitud"
@@ -187,12 +187,12 @@
         <small class="text-warning ms-3">
           {{solicitud.autorizante2.apellido | uppercase}} {{solicitud.autorizante2.nombre |titlecase}}
         </small>
-        <button
+       <!--  <button
           matTooltip="Editar menor de la solicitud"
           mat-icon-button color="basic"
-          (click)="seleccionarMenor(solicitud.autorizante1)">
+          (click)="seleccionarAutorizante2(solicitud.autorizante1)">
           <mat-icon>edit</mat-icon>
-        </button>
+        </button> -->
 
         <button
           matTooltip="Sacar menor de la solicitud"
@@ -209,12 +209,12 @@
         <small class="text-warning ms-3">
           {{acompanante.apellido | uppercase}} {{acompanante.nombre |titlecase}}
         </small>
-        <button
+        <!-- <button
           matTooltip="Editar acompañante de la solicitud"
           mat-icon-button color="basic"
           (click)="seleccionarAcompaneante(acompanante)">
           <mat-icon>edit</mat-icon>
-        </button>
+        </button> -->
         <button
           matTooltip="Eliminar acompañante de la solicitud"
           mat-icon-button color="warn"

@@ -35,7 +35,7 @@
 
   </div>
 
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+  <table mat-table [dataSource]="dataSource" matSort>
 
     <!-- Name Column -->
     <ng-container matColumnDef="apellido">
@@ -95,8 +95,8 @@
         <button *ngIf="!precarga" mat-flat-button (click)="seleccionarAutorizante(element)" color="accent"> Editar! </button>
         <button *ngIf="precarga" class="ms-3 float-left" mat-flat-button matStepperNext color="accent" (click)="asignarAutorizante(element)"> Seleccionar </button>
         <button *ngIf="!element.nationality_id" mat-flat-button color="disable" class="text-end">
-          <small>faltan datos</small>
-          <mat-icon>warning</mat-icon>
+          <mat-icon color="primary">warning</mat-icon>
+          <small class="text-warning">Se requieren más datos para ser autorizante.</small>
         </button>
       </td>
 

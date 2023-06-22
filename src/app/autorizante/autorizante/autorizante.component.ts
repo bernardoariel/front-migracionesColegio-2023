@@ -28,6 +28,7 @@ import { AcreditacionVinculoService } from 'src/app/services/acreditacion-vincul
   styleUrls: ['./autorizante.component.scss']
 })
 export class AutorizanteComponent implements OnInit {
+
   @ViewChild('apellidoInput') apellidoInput!: ElementRef<HTMLInputElement>;
   private subscriptions = new Subscription(); /// para hacer el Ondestroy
 
@@ -37,7 +38,7 @@ export class AutorizanteComponent implements OnInit {
   rutaActual: string ='';
   idPersona: number | null = null;
   modal:IModal = {} as IModal;
-
+  isBotonSeleccionarDisabled: boolean = true;
   /* Persona Por defecto */
   persona: IPersona = {
     apellido:'',
@@ -97,8 +98,8 @@ export class AutorizanteComponent implements OnInit {
     Validators.minLength(3),
     Validators.maxLength(200),
   ]);
-  caracterAutorizanteControl = new FormControl<number>(13, [Validators.required]);
-  acreditacionVinculoControl = new FormControl<number>(13, [Validators.required]);
+  caracterAutorizanteControl = new FormControl<number>(13);
+  acreditacionVinculoControl = new FormControl<number>(13);
   /* validador especifico */
   fechaNacimientoValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -130,6 +131,7 @@ export class AutorizanteComponent implements OnInit {
     caracterAutorizante:this.caracterAutorizanteControl,
     acreditacionVinculo: this.acreditacionVinculoControl
   });
+
   constructor(
     private nacionalidadesService: NacionalidadesService,
     private tipoDocumentoService:TipoDocumentoService,
@@ -147,9 +149,7 @@ export class AutorizanteComponent implements OnInit {
        
       if(data?.persona){
         
-        
         this.persona = data.persona!
-        
         this.personaForm.setValue({
           apellido: this.persona.apellido,
           segundoApellido: this.persona.segundo_apellido ?? '',
@@ -168,7 +168,13 @@ export class AutorizanteComponent implements OnInit {
       }
       if(data?.modal){
         this.modal = data.modal
-        console.log('persoa::: ', data.modal);    
+        
+        if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'editar'){
+          this.personaForm.patchValue({
+            caracterAutorizante: 13 || null,
+            acreditacionVinculo: 13 || null
+          });
+        }
       }
 
   }
@@ -182,6 +188,28 @@ export class AutorizanteComponent implements OnInit {
     });
 
   }
+
+  areCamposValidos(): boolean {
+    const caracterAutorizante = this.caracterAutorizanteControl.value;
+    const acreditarVinculo = this.acreditacionVinculoControl.value;
+
+    // si estoy editando un autorizante fuera de la solicitud
+    if(this.modal.tipoDialogo == 'autorizante' && this.modal.accionModal == 'editar'){
+      return this.personaForm.valid
+    }
+    if(this.modal.tipoDialogo == 'autorizante' && this.modal.accionModal == 'agregar'){
+      return this.personaForm.valid
+    }
+    if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'editar'){
+      return (this.personaForm.invalid || (caracterAutorizante === 13 || acreditarVinculo === 13)) ?  false : true;
+    }
+    if(this.modal.tipoDialogo == 'solicitud' && this.modal.accionModal == 'agregar'){
+      return (this.personaForm.invalid || (caracterAutorizante === 13 || acreditarVinculo === 13)) ?  false : true;
+    }
+   
+    return false;
+  }
+
   ngOnInit(): void {
 
     this.subscriptions.add(
@@ -189,11 +217,13 @@ export class AutorizanteComponent implements OnInit {
         this.nacionalidades = nacionalidad
       })
     )
+
     this.subscriptions.add(
       this.tipoDocumentoService.getTipoDocumentos().subscribe((tipoDocumento)=>{
         this.tipoDocumentos = tipoDocumento
       })
     )
+    
     this.subscriptions.add(
       this.emisorDocumentosService.getTipoDocumentos().subscribe((emisorDocumento)=>{
         this.emisorDocumentos = emisorDocumento
@@ -273,10 +303,8 @@ export class AutorizanteComponent implements OnInit {
 
           // this.personaForm.reset();
 
-
         })
       )
-
     }
     // EDITAR DESDE EL MODULO DEL MENOR
     if(this.modal.tipoDialogo == 'autorizante' && this.modal.accionModal == 'editar'){
@@ -369,6 +397,7 @@ export class AutorizanteComponent implements OnInit {
     }
 
   }
+
   validarNumero(evento: KeyboardEvent) {
 
     const esNumero = /^[0-9]$/.test(evento.key);
@@ -413,4 +442,5 @@ export class AutorizanteComponent implements OnInit {
     }
 
   }
+
 }
