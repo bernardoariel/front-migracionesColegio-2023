@@ -2,169 +2,110 @@ import { IOrdenDatos } from './../interfaces/IOrden-datos';
 import { Injectable } from '@angular/core';
 import { IPersona } from '../interfaces/IPersona';
 import { Escribano } from '../interfaces/escribano';
-import { BehaviorSubject, Observable, take } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, of, switchMap, take, tap } from 'rxjs';
 import { EscribanosService } from './escribanos.service';
 
 // crear interface para la solicitud
 export interface ISolicitud {
-  escribano: Escribano
-  menor: IPersona
-  autorizante1: IPersona,
-  autorizante2: IPersona,
-  acompaneantes: IPersona[]
-  solicitud: IOrdenDatos
+  escribano: Escribano;
+  menores: IPersona[];
+  autorizante1: IPersona;
+  autorizante2: IPersona;
+  acompaneantes: IPersona[];
+  solicitud: IOrdenDatos;
 }
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SolicitudService {
-  escribanoLogueado!: Escribano  ;
-  constructor(private escribanosService: EscribanosService){
+  private solicitud$ = new BehaviorSubject<ISolicitud>({
+    escribano: {} as Escribano,
+    menores: [],
+    autorizante1: {} as IPersona,
+    autorizante2: {} as IPersona,
+    acompaneantes: [],
+    solicitud: {} as IOrdenDatos,
+  });
 
+  constructor(private escribanosService: EscribanosService) {}
+
+  private getEscribanoIdFromLocalStorage(): number {
+    if (localStorage.getItem('token') && localStorage.getItem('userId')) {
+      return Number(localStorage.getItem('userId')) ?? 0;
+    }
+    return 0;
   }
-  private solicitud$ = new BehaviorSubject<ISolicitud | null>(
-    null
-  );
 
-  agregarSolicitud(solicitud: IOrdenDatos): Observable<ISolicitud | null> {
-    this.solicitud$
+  agregarSolicitud(solicitud: IOrdenDatos): Observable<ISolicitud> {
+    const solicitudActual = this.solicitud$.value;
+    solicitudActual.solicitud = solicitud;
+    this.solicitud$.next(solicitudActual);
+    return this.solicitud$.asObservable();
+  }
+  agregarEscribano(escribano: Escribano): Observable<ISolicitud> {
+    const solicitud = this.solicitud$.value;
+    solicitud.escribano = escribano;
+    console.log('agregarEscribano::: ', solicitud);
+    this.solicitud$.next(solicitud);
+    return this.solicitud$.asObservable();
+  }
+
+  agregarMenor(menor: IPersona): Observable<ISolicitud> {
+    const solicitud = this.solicitud$.value;
+    solicitud.menores.push(menor);
+    console.log('agregarMenor::: ', solicitud);
+    this.solicitud$.next(solicitud);
+    return this.solicitud$.asObservable();
+  }
+
+  agregarAutorizante1(autorizante1: IPersona): Observable<ISolicitud> {
+    const solicitud = this.solicitud$.value;
+    solicitud.autorizante1 = autorizante1;
+    console.log('agregarAutorizante1::: ', solicitud);
+    this.solicitud$.next(solicitud);
+    return this.solicitud$.asObservable();
+  }
+
+  agregarAutorizante2(autorizante2: IPersona): Observable<ISolicitud> {
+    const solicitud = this.solicitud$.value;
+    solicitud.autorizante2 = autorizante2;
+    console.log('agregarAutorizante2::: ', solicitud);
+    this.solicitud$.next(solicitud);
+    return this.solicitud$.asObservable();
+  }
+
+  agregarAcompaneante(acompaneante: IPersona): Observable<ISolicitud> {
+    const solicitud = this.solicitud$.value;
+    solicitud.acompaneantes.push(acompaneante);
+    console.log('agregarAcompaneante::: ', solicitud);
+    this.solicitud$.next(solicitud);
+    return this.solicitud$.asObservable();
+  }
+
+  obtenerSolicitud(): Observable<ISolicitud> {
+    const escribanoId = this.getEscribanoIdFromLocalStorage();
+    this.escribanosService
+      .getEscribanoId(escribanoId)
       .pipe(
-        take(1)
+        tap((escribano) => {
+          this.agregarEscribano(escribano).subscribe();
+        }),
+        catchError((err) => {
+          // Handle the error here.
+          // For now, we'll just return an empty observable.
+          return of();
+        })
       )
-      .subscribe({
-        next: (solicitudActual) => {
-          if (solicitudActual !== null) {
-            solicitudActual.solicitud = solicitud;
-            this.solicitud$.next(solicitudActual);
-          }
-        }
-      });
+      .subscribe();
     return this.solicitud$.asObservable();
   }
-
-  // crear un metodo para agregar un menor a la solicitud
-  agregarEscribano(escribano: Escribano): Observable<ISolicitud | null>{
+  eliminarCampo( solicitud: ISolicitud,campoAEliminar: keyof ISolicitud,indiceAEliminar?: number): void {
+      console.log('campoAEliminar::: ', campoAEliminar);
+    if (campoAEliminar !== 'menores' && campoAEliminar !== 'acompaneantes') solicitud[campoAEliminar] = {} as any;
     
-   this.solicitud$
-   .pipe(
-    take(1)
-   ).subscribe({
-      next: (solicitud)=>{
-        if (solicitud !== null) {
-          solicitud.escribano = escribano;
-          this.solicitud$.next(solicitud);
-        }
-      }
-   })
-   return this.solicitud$.asObservable();
+    if (campoAEliminar === 'acompaneantes')  solicitud.acompaneantes.splice(indiceAEliminar!, 1);
+   
+    if (campoAEliminar === 'menores') solicitud.menores.splice(indiceAEliminar!, 1);
+   
   }
-  // crear un metodo para agregar un menor a la solicitud
-  agregarMenor(menor: IPersona): Observable<ISolicitud | null>{
-    // obtene el userID del escribano logueado localstorage
-    let escriLocalStorage: number = Number(localStorage.getItem('userId'))?? '0';
-    if(localStorage.getItem('token')){
-
-      if(localStorage.getItem('userId')){
-        escriLocalStorage =  Number(localStorage.getItem('userId')) ?? '0';
-
-      }
-    }
-    this.escribanosService.getEscribanoId(escriLocalStorage).subscribe(
-      (escribano)=>{
-
-      this.escribanoLogueado = escribano;
-
-      this.agregarEscribano(this.escribanoLogueado).subscribe();
-      }
-    )
-
-   this.solicitud$
-   .pipe(
-    take(1)
-   ).subscribe({
-      next: (solicitud)=>{
-        if (solicitud !== null) {
-          solicitud.menor = menor;
-          this.solicitud$.next(solicitud);
-        }
-      }
-   })
-   return this.solicitud$.asObservable();
-  }
-
-  agregarAutorizante1(autorizante1: IPersona): Observable<ISolicitud | null>{
-    
-   this.solicitud$
-   .pipe(
-    take(1)
-   ).subscribe({
-      next: (solicitud)=>{
-        
-        if (solicitud !== null) {
-          solicitud.autorizante1 = autorizante1;
-          
-          this.solicitud$.next(solicitud);
-        }
-      }
-   })
-   return this.solicitud$.asObservable();
-  }
-
-  agregarAutorizante2(autorizante2: IPersona): Observable<ISolicitud | null>{
-   this.solicitud$
-   .pipe(
-    take(1)
-   ).subscribe({
-      next: (solicitud)=>{
-        if (solicitud !== null) {
-          solicitud.autorizante2 = autorizante2;
-          
-          this.solicitud$.next(solicitud);
-        }
-      }
-   })
-
-   return this.solicitud$.asObservable();
-  }
-
-  agregarAcompaneante(acompaneante: IPersona): Observable<ISolicitud | null>{
-
-    this.solicitud$
-    .pipe(
-     take(1)
-    ).subscribe({
-       next: (solicitud)=>{
-         if (solicitud !== null) {
-          solicitud.acompaneantes.push(acompaneante);
-          
-           this.solicitud$.next(solicitud);
-         }
-       }
-    })
-
-    return this.solicitud$.asObservable();
-  }
-
-  //get para obtener la solicitud
-  obtenerSolicitud():Observable<ISolicitud | null>{
-    this.solicitud$.next({
-      escribano: {} as Escribano,
-      menor: {} as IPersona,
-      autorizante1: {} as IPersona,
-      autorizante2: {} as IPersona,
-      acompaneantes: [] as IPersona[],
-      solicitud: {} as IOrdenDatos
-    })
-    return this.solicitud$.asObservable();
-  }
-
-  eliminarCampo(solicitud: ISolicitud, campoAEliminar: keyof ISolicitud,indiceAEliminar?: number): void {
-    if (campoAEliminar === 'acompaneantes') {
-      solicitud.acompaneantes.splice(indiceAEliminar!, 1);
-    } else {
-      solicitud[campoAEliminar] = {} as any; // o null, dependiendo del tipo del campo
-    }
-  }
-
 }

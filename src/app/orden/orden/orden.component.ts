@@ -93,11 +93,11 @@ export class OrdenComponent implements OnInit, OnDestroy {
 
       if (value === true) {
 
-        if(this.solicitud.menor.fecha_de_nacimiento){
+       /*  if(this.solicitud.menor.fecha_de_nacimiento){
 
           this.calcularMayoriaEdad(this.solicitud.menor.fecha_de_nacimiento)
 
-        }
+        } */
 
         // this.fechaHastaControl.disable();
 
@@ -174,7 +174,7 @@ export class OrdenComponent implements OnInit, OnDestroy {
           ...orden,
           autorizante1_id:this.solicitud.autorizante1.id,
           autorizante2_id:this.solicitud.autorizante2.id,
-          minor_id:this.solicitud.menor.id!,
+          menores:this.solicitud.menores,
           notary_id:this.solicitud.escribano.id || null,
           acompaneantes:this.solicitud.acompaneantes
 

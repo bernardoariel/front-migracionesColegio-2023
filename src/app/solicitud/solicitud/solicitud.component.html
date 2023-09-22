@@ -133,29 +133,21 @@
   <div class="col-md-3">
 
     <mat-list>
-
-      <mat-list-item *ngIf="solicitud.menor.id">
-
-        <p class="mt-p pt-0 mb-0 mt-0"><small>Menor</small></p>
+      <mat-list-item *ngFor="let menor of solicitud.menores; let i = index">
+        <p class="mt-p pt-0 mb-0 mt-0"><small>Menor {{i+1}}</small></p>
         <mat-divider></mat-divider>
         <small class="text-warning ms-3">
-          {{solicitud.menor.apellido | uppercase}} {{solicitud.menor.nombre |titlecase}}
+          {{menor.apellido | uppercase}} {{menor.nombre |titlecase}}
         </small>
-       <!--  <button
-          matTooltip="Editar menor de la solicitud"
-          mat-icon-button color="basic"
-          (click)="seleccionarMenor(solicitud.menor)">
-          <mat-icon>edit</mat-icon>
-        </button> -->
-
+       
         <button
           matTooltip="Sacar menor de la solicitud"
           mat-icon-button color="warn"
-          (click)="eliminarMenor()">
+          (click)="eliminarMenor(i)">
           <mat-icon>delete</mat-icon>
         </button>
-
       </mat-list-item>
+     
 
       <mat-list-item *ngIf="solicitud.autorizante1.id">
 
