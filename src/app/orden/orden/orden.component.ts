@@ -93,11 +93,11 @@ export class OrdenComponent implements OnInit, OnDestroy {
 
       if (value === true) {
 
-       /*  if(this.solicitud.menor.fecha_de_nacimiento){
-
-          this.calcularMayoriaEdad(this.solicitud.menor.fecha_de_nacimiento)
-
-        } */
+      this.solicitud.menores.forEach((menor) => {
+        if (menor.fecha_de_nacimiento) {
+          this.calcularMayoriaEdad(menor.fecha_de_nacimiento);
+        }
+      });
 
         // this.fechaHastaControl.disable();
 
@@ -147,7 +147,7 @@ export class OrdenComponent implements OnInit, OnDestroy {
 
    const valoresFormulario = this.ordenForm.value;
    console.log('valoresFormulario::: ', valoresFormulario);
-    const fechaDesde = valoresFormulario.fechaDesde as Date; // Convertir a tipo Date si no lo es
+   const fechaDesde = valoresFormulario.fechaDesde as Date; // Convertir a tipo Date si no lo es
    const fechaDesdeFormatted = fechaDesde.toISOString().slice(0, 10); // Obtener la fecha en formato yyyy-mm-dd
   
    const fechaHasta = valoresFormulario.fechaHasta as Date; // Convertir a tipo Date si no lo es
